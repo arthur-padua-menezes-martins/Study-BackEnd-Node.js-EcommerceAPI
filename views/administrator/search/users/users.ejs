@@ -1,0 +1,38 @@
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+
+<% if( USERS  &&  id == undefined ) { %>
+
+
+    <%= USERS %>
+
+
+<% } else if( USERS  &&  id ) { %>
+
+
+    <%= USERS.name %>   <hr/>   <%= USERS.email %>  <hr/>
+
+    <button class="btn btn-primary" type="button">UPDATE</button>
+    <button class="btn btn-warning" type="button" value="delete" name="delete">DELETE</button>
+    
+    
+<% } %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

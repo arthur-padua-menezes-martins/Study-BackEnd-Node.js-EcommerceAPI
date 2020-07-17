@@ -1,0 +1,111 @@
+
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-3">
+            <h2>CADASTRAR / ATUALIZAR PRODUTO</h2><br>
+
+            <form action="/administrator/control/products" method="post" enctype="multipart/form-data" >
+
+                <div class="form-goup">
+
+                    <input class="form-control" type="text" placeholder="reference"/> 
+                    <input class="form-control" type="text" placeholder="product" name="product"/> 
+                    <input class="form-control" type="text" placeholder="category" name="category"/> 
+                    <input class="form-control" type="text" placeholder="name" name="name"/>
+                    <input class="form-control" type="text" placeholder="value" name="value"/>
+                    <label for="file" class="btn btn-primary">UPLOAD</label> 
+                    <input hidden="true" id="file" name="file" type="file" multiple/>
+
+                </div>
+
+                <button value="referenceForCreate" class="btn btn-success insert" type="submit">CADASTRAR</button>
+                <button value="referenceForUpdate" class="btn btn-success insert" type="submit">ATUALIZAR</button>
+            
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-3">
+            <hr><h2>VISUALIZAR PRODUTO</h2><br>
+
+            <form id="formReferenceForView" name="formReferenceForView" action="http://localhost:10001/administrator/control/products" method="post" >
+
+                <div class="form-goup">
+
+                    <input id="referenceForView" class="form-control" type="text" placeholder="referência do produto" name="referenceForView"/> 
+                    <input id="product" disabled class="form-control" type="text" placeholder="product"/> 
+                    <input id="category" disabled class="form-control" type="text" placeholder="category"/> 
+                    <input id="images" disabled class="form-control" type="text" placeholder="images"/> 
+                    <input id="name" disabled class="form-control" type="text" placeholder="name"/> 
+                    <input id="value" disabled class="form-control" type="text" placeholder="value"/> 
+                   
+                </div>
+
+                <button class="btn btn-warning" type="submit">VISUALIZAR</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+let button = document.querySelectorAll('button.insert')
+button.forEach( Button => 
+{ 
+    Button.addEventListener( 'click', () =>
+    {
+        document.querySelector( 'input[placeholder="reference"]' ).setAttribute( 'name', event.target.getAttribute( 'value' ) ) 
+    })   
+})
+
+let form = document.getElementById( 'formReferenceForView' )
+let input = document.getElementById( 'referenceForView' )
+
+form.addEventListener( 'submit', referenceForView )
+function referenceForView()
+{
+
+    let ajax = new XMLHttpRequest()
+    let parameters = 'referenceForView=' + input.value
+
+    ajax.open( 'POST', 'http://localhost:10001/administrator/control/products' )
+    ajax.setRequestHeader( 'Content-type' ,'application/x-www-form-urlencoded' )
+    ajax.onreadystatechange = function()
+    {
+        if(ajax.status === 200 && ajax.readyState === 4)
+        { 
+            
+            let RESULT = JSON.parse(ajax.response)
+            let keys = [ 'product', 'category', 'images', 'name', 'value' ]
+  
+            setResult(keys, RESULT)
+            function setResult (keys, RESULT)
+            { 
+                for ( let i = 0; i <= keys.length -1; i++ )
+                {
+                    document.getElementById(keys[i]).value = RESULT[keys[i]]
+                }
+            }
+
+        }
+    }
+    ajax.send(parameters)
+    event.preventDefault()   
+}
+
+
+</script>

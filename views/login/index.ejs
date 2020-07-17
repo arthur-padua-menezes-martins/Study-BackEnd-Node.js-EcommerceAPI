@@ -1,0 +1,63 @@
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-3">
+            <h2>LOGAR-SE</h2> <hr> <br>
+
+            <div class="alert"></div> 
+
+            <form method="post">
+
+                <div class="form-goup">
+
+                    <input class="form-control" placeholder="digite seu e-mail" type="text" name="email" />
+                    <input class="form-control" placeholder="digite sua senha" type="text" name="password" />
+
+                </div>
+
+                <button class="btn btn-primary" type="submit">LOGIN</button>
+            
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+let form = document.querySelector( 'form' )
+    form.setAttribute( 'action', window.location.href )
+    form.addEventListener( 'submit', login )
+
+    function login()
+    {
+        event.preventDefault()
+        let
+            ajax = new XMLHttpRequest(),
+            body = 
+                'email='      + document.querySelector('input[name="email"]').value  +
+                '&password='  + document.querySelector('input[name="password"]').value
+console.log(body)
+        ajax.open( 'POST', window.location.href )
+        ajax.setRequestHeader( 'Content-type' ,'application/x-www-form-urlencoded' )
+        ajax.onreadystatechange = function()
+        {
+            if(ajax.status === 200 && ajax.readyState === 4)
+            {
+                let RESULT = JSON.parse(ajax.response)
+                console.log(RESULT)
+                document.querySelector('.alert').innerHTML  =  RESULT.success  ?  
+                    `<div class="alert alert-success">${RESULT.success}</div>`  :   `<div class="alert alert-warning">${RESULT.errors}</div>`  
+            }
+        }
+        
+        ajax.send(body)
+    }
+    
+</script>
