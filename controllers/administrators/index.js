@@ -1,12 +1,29 @@
 
 
+/*BASIC MODULES*/
+const express = require('express')
+const app = express()
+
 /*CRYPTOGRAPHY MODULES*/
 const crypto = require('crypto')
 
 /*DATABASE MODULES*/
-const define = require('../../models/database/define/define.js')
+const mysqlConnection = require('../../models/database/define/connect.js')[0]
+
+/*HELPERS MODULES*/
+helpers = require('../../helpers/function.js')
 
 
+app.locals.message = 
+{
+    controlProductsInsertError : `requisição inválida, preencha todos os campos obrigatórios`
+}
+
+app.locals.sql =
+{
+    controlProductsSelect : `SELECT * FROM products WHERE reference = ?`,
+    controlVariationsSelect : `SELECT * FROM variations WHERE productId = ?`
+}
 
 
 class administratorsController 
@@ -16,7 +33,6 @@ class administratorsController
 /*SEARCH*/
 /**********************************************************************************************************************************/
 
-/*search*/
 search( request, response, next ) { response.render( 'administrator/search/users' ) }
 
 
@@ -24,7 +40,23 @@ search( request, response, next ) { response.render( 'administrator/search/users
 
 async searchUsers( request, response, next )
 { try {
-    
+
+    const { id } = request.params
+
+    if( id )
+    {
+        mysqlConnection.query( administratorsSearchUsersSelect, required, ( error, user, fields ) =>
+        { searchUsers( response, user ) } )
+    }
+    else
+    {
+        mysqlConnection.query( administratorsSearchUsersSelectAll, required, ( error, users, fields ) =>
+            { searchUsers( response, users ) } )
+    }
+
+    function searchUsers( response, info )
+        { return response.render( `administrator/search/users/users.js`, { info } ) }
+/*
     var 
         { id } = request.params,
         keys = new Array ( 'password', 'salt', 'recovery', 'updatedAt' ),
@@ -46,8 +78,8 @@ async searchUsers( request, response, next )
         }).catch( error => { response.send( error ) } )
     
     function render( response, USERS, RESULT ) { response.render( `administrator/search/users/users.ejs`, { USERS, ...RESULT } )  }
-
-} catch (error) { console.error(error) }}
+*/
+} catch ( error ) {} }
 
 
 
@@ -63,52 +95,174 @@ control( request, response, next ) { response.render( 'administrator/control' ) 
 
 async controlProducts( request, response, next )
 {
+    const { method, body } = request
+    body.reference = body.insert
+
+    if( method == 'POST' )
+    {
+        const { select, insert, update, product, category, name, value } = body
+        var
+            { files } = request,
+            files = ( Boolean(files)  &&  Boolean(files[0]) )  ?  files  :  [{}],
+            images = String()
+            
+            body.images = setImages( images )
+            
+        if( select )
+        {
+            mysqlConnection.query( app.locals.sql.controlProductsSelect, select, ( error, p, fields ) =>
+            {
+                mysqlConnection.query( app.locals.sql.controlVariationsSelect, p[0].id, ( errors, v, fields ) =>
+                {
+                    if( p && v ) 
+                        { response.send( [p, v] ) }
+                } )
+            } )
+        }
+
+
+        if( insert )
+        {
+            body.insert = ''
+
+            let 
+                [ productsSql, productsRequired, productsRequiredValues, variationsSql, variationsRequired, variationsRequiredValues ] = helpers.ControlProductsSqlConstructor( body, true ),
+                Psql = `INSERT INTO products ( ${ productsSql } ) VALUES ( ${ productsRequired } )`,
+                Vsql = `INSERT INTO variations ( productId,${ variationsSql } ) VALUES ( LAST_INSERT_ID(), ${ variationsRequired } )`
+
+            
+            mysqlConnection.query( Psql, productsRequiredValues, ( errors, success, fields ) =>
+            {
+                if( !errors )
+                {
+                    mysqlConnection.query( Vsql, variationsRequiredValues, ( error, success, fields ) =>
+                    { 
+
+                        response.redirect('/administrator/control/products') 
+                    } )
+                }
+            } )   
+        }
+
+
+        if( update )
+        {
+            let 
+                [ productsSql, productsRequiredValues, variationsSql, variationsRequiredValues ] = helpers.ControlProductsSqlConstructor( body, false, true ),
+                pSql = `UPDATE products SET ${ productsSql } WHERE reference = ?`,
+                vSql = `UPDATE variations SET ${ variationsSql } WHERE productId = ?`
+
+            mysqlConnection.query( pSql, [ ...productsRequiredValues, update ], ( erro, success, fields ) =>
+            { 
+                mysqlConnection.query( app.locals.sql.controlProductsSelect, update, ( error, product, fields ) =>
+                {
+                    mysqlConnection.query( vSql, [ ...variationsRequiredValues, product[0].id ], ( errors, success, fields ) =>
+                    { 
+                        if( !erro  &&  !error  &&  !errors ) 
+                                { response.redirect('/administrator/control/products') } 
+                    } )
+                 } )
+            } )
+        }
+    }
+    else 
+        { response.render( `administrator/control/products` ) }
+
+    function setImages( images )
+    {
+        for( let i = 0; i <= files.length - 1; i++ ) 
+        {
+            Boolean( files[i] )  ?  images += `${files[i].path}─`  :  undefined
+            if( i == files.length - 1) { return images }
+        }
+    }
+/*
+
     if( request.method == 'POST' )
     {
-        const { referenceForUpdate, referenceForView, referenceForCreate, product, category, name, value } = request.body
+        const { update, select, insert, product, category, name, value } = request.body
         var 
             files  =  request.files != undefined  &&  request.files[0] != undefined  ?  request.files  :  new Array( new Object( { null : true } ) ),
-            update = new Object(),
-            keys = new Array( 'createdAt', 'updatedAt', 'referenceForUpdate' ),
+            updates = new Object(),
+            keys = new Array( 'createdAt', 'updatedAt', 'update' ),
             images = ''
             images = setImages(images)
 
-            if( referenceForUpdate )
-            { 
-                images  ?  update['images'] = images  :  keys.push('images')
+        if( update )
+        {
+            let [ sql, required ] = helpers.ControlProductsSqlConstructor( request.body ); 
 
-                for( const key in request.body ) { request.body[key] != undefined  ?  update[key] = request.body[key]  :  keys.push(key) }
-  
-                define[2].update( update, { where : { reference : referenceForUpdate }, attributes : { exclude : keys } }).then( (product) =>  
-                    { response.render( 'administrator/control/products' ) } ).catch( ( error ) => { response.json( { error } ) } ) 
-            }
+            sql = `UPDATE products SET ${sql.replace( /,$/, '' )} WHERE reference = '${update}'`
+            required = ( required.replace( /,$/, '' ) ).split(',')
+
+            mysqlConnection.query( sql, required, ( error, products, fields ) =>
+                {  response.send( { success : products } ) } )
+        }
 
 
-            if( referenceForView ) 
+        if( select )
+        {
+            mysqlConnection.query( app.locals.sql.controlProductsSelect, select, ( error, products, fields ) =>
             {
-                define[2].findOne({ where : { reference : referenceForView } } ).then( (RESULT) =>  
-                    { response.send( RESULT ) } ).catch( ( error ) => { response.json( { error } ) } ) 
-            }
+                if( products )
+                    { response.send( products[0] ) }
+                else
+                    { response.send( { errors : error } ) }
+            } )
+        }
 
 
-            if( referenceForCreate )
-            {
-                const create = 
-                { 
-                    reference : referenceForCreate, product, category,
-                    variations : [ { name, value, images } ] 
-                }
+        if( insert )
+        {
+            request.body.reference = request.body.insert 
+            request.body.insert = ''
+            
+            let 
+                [ productsSql, productsRequired, productsRequiredValues, variationsSql, variationsRequired, variationsRequiredValues ] = helpers.ControlProductsSqlConstructor( request.body, true ),
+                pSql = `INSERT INTO products ( ${ productsSql.replace( /,$/, '' ) } ) VALUES ( ${ productsRequired.replace( /,$/, '' ) } )`,
+                vSql = `INSERT INTO variations ( variations.productId, ${ variationsSql.replace( /,$/, '' ) } ) VALUES ( LAST_INSERT_ID(), ${ variationsRequired.replace( /,$/, '' ) } )`
+                
+                variationsRequiredValues = ( variationsRequiredValues.replace( /,$/, '' ) ).split(',')
+                
+                console.log(pSql)
+                //console.log(productsSql)
+                //console.log(productsRequired)
+                console.log(productsRequiredValues)
+                console.log(vSql)
+                //console.log(variationsSql)
+                //console.log(variationsRequired)
+                console.log(variationsRequiredValues)
 
-                define[2].create(  create, { include : [ { model : define[3], as : 'variations' } ] } ).then( ( product ) => 
-                { 
-                    response.render( 'administrator/control/products' ) 
-                } ).catch( ( error ) => { response.json( { error } ) } ) 
-            }
+
+                mysqlConnection.query( pSql, productsRequiredValues, ( error, success, fields ) =>
+                {
+                    mysqlConnection.query( vSql, variationsRequiredValues, ( error, success, fields ) =>
+                    {
+
+                    } )
+                } )                
+
+            
+                
+            //console.log(productsSql)
+            //console.log(variationsSql)
+            //console.log(productsRequired)
+            //console.log(variationsRequired)
+            //console.log(sql)
+            //console.log(required)
+            //console.log([ ...productsRequired, ...variationsRequired ])
+
+            //mysqlConnection.query( sql, [ ...productsRequired, ...variationsRequired ], ( error, products, fields ) =>
+                //{ response.send( { success : products } ) } )
+        }
 
     function setImages(images) { for( let i = 0; i <= files.length - 1; i++ ) { files[i].path  ?  images += `${files[i].path}🖼️` : undefined; if( i == files.length -1 ) { return images } } }
 
     } 
-    else response.render( 'administrator/control/products', { RESULT : null } ) }
+    else response.render( 'administrator/control/products', { RESULT : null } ) 
+
+*/
+}
 
 
 

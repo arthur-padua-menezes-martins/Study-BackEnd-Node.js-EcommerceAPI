@@ -39,21 +39,21 @@
     
    
 
-    <% for( let i = 0; i < result.length; i++ ) { %>   
+    <% for( let i = 0; i < products.length; i++ ) { %>   
     
-    <div class="id"><%= result[i]['id'] %></div>        
+    <div class="id"><%= products[i]['id'] %></div>        
 
-    <div class="reference"><%= result[i]['reference'] %></div>
+    <div class="reference"><%= products[i]['reference'] %></div>
 
-    <div class="product"><%= result[i]['product'] %></div>
+    <div class="product"><%= products[i]['product'] %></div>
 
-    <div class="category"><%= result[i]['category'] %></div>
+    <div class="category"><%= products[i]['category'] %></div>
 
-    <div class="value"><%= result[i]['value'] %></div>
+    <div class="value"><%= products[i]['value'] %></div>
 
-    <div class="name"><%= result[i]['name'] %></div>
+    <div class="name"><%= products[i]['name'] %></div>
 
-    <a class="link" style="display:flex; justify-content:center; align-items:center; width:120px; height:40px; color:white; text-decoration:none; background-color:darkslateblue; border-radius:6px;" href="<%= result[i]['link'] %>">COMPRAR</a>
+    <a class="link" style="display:flex; justify-content:center; align-items:center; width:120px; height:40px; color:white; text-decoration:none; background-color:darkslateblue; border-radius:6px;" href="<%= products[i]['link'] %>">COMPRAR</a>
 
     <hr>
 
@@ -80,19 +80,19 @@
 
 
 
-    <% for( let i = 0; i < result.length; i++ ) { %>   
+    <% for( let i = 0; i < products.length; i++ ) { %>   
     
-    <div class="id"><%= result[i]['id'] %></div>        
+    <div class="id"><%= products[i]['id'] %></div>        
     
-    <div class="reference"><%= result[i]['reference'] %></div>
+    <div class="reference"><%= products[i]['reference'] %></div>
     
-    <div class="product"><%= result[i]['product'] %></div>
+    <div class="product"><%= products[i]['product'] %></div>
     
-    <div class="category"><%= result[i]['category'] %></div>
+    <div class="category"><%= products[i]['category'] %></div>
 
-    <div class="value"><%= result[i]['value'] %></div>
+    <div class="value"><%= products[i]['value'] %></div>
     
-    <div class="name"><%= result[i]['name'] %></div>
+    <div class="name"><%= products[i]['name'] %></div>
     
     <hr>
     
@@ -142,7 +142,7 @@
                 let
                     ajax = new XMLHttpRequest(),
                     body = 
-                        'productId='  + '<%= result[0]["id"] %>' + 
+                        'productId='  + '<%= products[0]["id"] %>' + 
                         '&userId='     + '<%= session.id %>' + 
                         '&stars='      + document.querySelector('input[name="STARS"]').value + 
                         '&comment='    + document.querySelector('input[name="COMMENT"]').value
@@ -154,12 +154,12 @@
                 {
                     if(ajax.status === 200 && ajax.readyState === 4)
                     {
-                        let { result } =  JSON.parse(ajax.response)
+                        let { products } =  JSON.parse(ajax.response)
         
                         console.log(ajax.response)
-                            console.log(result)
+                            console.log(products)
         
-                        document.getElementById('message').innerHTML = `${ result.success ? '<div class="alert alert-success">' + result.success + '</div>'  :  '<div class="alert alert-warning">' +result.error + '</div>' }`  
+                        document.getElementById('message').innerHTML = `${ products.success ? '<div class="alert alert-success">' + products.success + '</div>'  :  '<div class="alert alert-warning">' +products.error + '</div>' }`  
                     }
                 }
                 ajax.send(body)
@@ -270,40 +270,40 @@ try{
             { 
                 
                 let 
-                    result =  JSON.parse(ajax.response), 
+                    products =  JSON.parse(ajax.response), 
                     options = [ 'id', 'reference', 'product', 'category', 'value', 'name' ]
                     console.log(ajax.response)
-                    console.log(result)
+                    console.log(products)
                     
-                showProducts( result, options )
+                showProducts( products, options )
                 
-                if(result.length < 3)  
-                    hideProducts( result, options )
+                if(products.length < 3)  
+                    hideProducts( products, options )
             }
         }
         event.preventDefault()
         ajax.send(body)
     }
 
-    function showProducts( result, options )
+    function showProducts( products, options )
     {
-        for( let i = 0; i < result.length; i++ )
+        for( let i = 0; i < products.length; i++ )
         {
             for( let I = 0; I < options.length; I++ )
             {
 
-                console.log(result[i][ options[I] ])
-                document.getElementsByClassName( options[I] )[i].innerHTML = `${result[i][ options[I] ]}`
+                console.log(products[i][ options[I] ])
+                document.getElementsByClassName( options[I] )[i].innerHTML = `${products[i][ options[I] ]}`
                 
                 if( I == 5)
-                    { document.getElementsByClassName('link')[i].attributes[2].value = `${result[i]['link']}` }
+                    { document.getElementsByClassName('link')[i].attributes[2].value = `${products[i]['link']}` }
             }
         }
     }
 
-    function hideProducts( result, options )
+    function hideProducts( products, options )
     {
-        for( let i = result.length, I = 2; I >= i; I-- )
+        for( let i = products.length, I = 2; I >= i; I-- )
         {
             options.forEach( (options) => { document.getElementsByClassName( options )[I].innerHTML = '' } ) 
         }

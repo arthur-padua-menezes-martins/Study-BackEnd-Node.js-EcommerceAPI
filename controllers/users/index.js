@@ -8,8 +8,10 @@ const app = express()
 const crypto = require('crypto')
 
 /*DATABASE MODULES*/
-const define = require('../../models/database/define/define.js')
 const mysqlConnection = require('../../models/database/define/connect.js')[0]
+
+/*HELPERS MODULES*/
+helpers = require('../../helpers/function.js')
 
 //TODO
 // reconfigurar a rota delete para quando o cliente desejar remover sua conta remova somente seu login e senha de usuário mantento os demais dados de pedidos
@@ -42,7 +44,7 @@ app.locals.message =
 {
     loginErrorMessage : `informações de autenticação inválidas`,
 
-    registerErrorMesssage : `não é possivel gerar uma autenticação válida com os dados fornecidos, por favor tente novamente com outras informações`,
+    registerErrorMessage : `não é possivel gerar uma autenticação válida com os dados fornecidos, por favor tente novamente com outras informações`,
 
 
     recoverErrorMessage : `e-mail de recuperação de senha não cadastrado`, 
@@ -80,21 +82,22 @@ async login( request, response, next )
     {
         mysqlConnection.query( sql, email, ( error, objectUser, fields ) =>
         { 
-            let user = objectUser[0]
-
-            if( !error  &&  user != undefined )
+            if( !error  &&  objectUser[0] != undefined )
             {
-                if( user.email == email  &&  user.password == crypto.pbkdf2Sync( password, user.salt, 8, 256, 'sha512' ).toString('hex') )
+                let user = objectUser[0]
+
+                if( user.email == email  &&  user.password == helpers.crypto( password, user.salt ) )
                 { 
                     request.user = user
                     return next() 
                 }
             } 
-
+    
             if( Continue ) 
                 { errors( response ) } 
             else 
                 { validate( app.locals.sql.loginAdministrators, email, password, true ) }
+
         } ) 
     } 
 
@@ -111,7 +114,7 @@ async register( request, response, next )
     const
         { name, email, password } = request.body,   
         salt = crypto.randomBytes(16).toString('hex'),
-        required = [ `${name}`, `${email}`, `${crypto.pbkdf2Sync( password, salt, 8, 256, 'sha512' ).toString('hex')}`, `${salt}` ]
+        required = [ `${name}`, `${email}`, `${helpers.crypto( password, salt )}`, `${salt}` ]
 
     if( Boolean( required ) )
     {
@@ -132,7 +135,7 @@ async register( request, response, next )
     else
         { errors( response ) }
 
-    function errors( response ) { response.send( { errors : app.locals.message.registerErrorMesssage } ) }
+    function errors( response ) { response.send( { errors : app.locals.message.registerErrorMessage } ) }
 
 } catch (error) {}  }  
 
@@ -183,7 +186,7 @@ async newPassword( request, response, next )
         {
             if( parseInt( user.recovery ) > new Date().getTime() )
             {
-                mysqlConnection.query( app.locals.sql.newPasswordUpdate, [ `${crypto.pbkdf2Sync( password, user.salt, 8, 256, 'sha512' ).toString('hex')}`, ...required ], ( error, update, fields ) =>
+                mysqlConnection.query( app.locals.sql.newPasswordUpdate, [ `${helpers.crypto( password, user.salt )}`, ...required ], ( error, update, fields ) =>
                     { response.send( { success : app.locals.message.newPasswordSuccessMessage } ) } )
             }
             else
@@ -205,61 +208,40 @@ async update( request, response, next )
 { try {
     
     const 
+        { body } = request,
         { user } = request.session,
         { email, salt } = user
     let
-        sql = 'UPDATE users SET ',
-        required = ''
+        sql = `UPDATE users SET `,
+        required = String()
 
-        for( const key in request.body ) 
-        { 
-            if( key == 'password' ) 
-            {
-                sql += `updatedAt = NOW(), ${key}=?,`
-                required += `${crypto.pbkdf2Sync( request.body[key], salt, 8, 256, 'sha512' ).toString('hex')},`
-            }
-            if( key != 'password' ) 
-            {
-                sql += `${key}=?,`
-                required += `${request.body[key]},`
-            }   
-        }
-        
-        sql = `${ sql.replace( /,$/, '' ) } WHERE email=?`
-        required = ( required + email ).split(',')
-
-        await mysqlConnection.query( sql, required, ( error, updates, fields) => 
-        { 
-            mysqlConnection.query( app.locals.sql.accountUpdateSelect, `${request.body.email}`, ( error, updated, fields ) =>
-            {
-                request.updated = updated[0]
-                next ()
-            } )
-        } )
-
-       
-
-
-/*
-    var { user } = request.session, { email } = user, update = new Object(), keys = new Array( 'createdAt' )
-
-    for( const key in request.body ) 
+    for( const key in body ) 
     { 
-        //request.body[key]  ?  update[key] = request.body[key]  :  keys.push(key)
-        if( request.body['password']) 
-            update += `${key} = ${crypto.pbkdf2Sync( update['password'], user.salt, 8, 256, 'sha512' ).toString('hex')}`
-        update += `${key} = ${request.body[key]} `
+        if( key == 'password' ) 
+        {
+            sql += `${key}=?,`
+            required += `${helpers.crypto( body[key], salt )},`
+        }
+        if( key != 'password' ) 
+        {
+            sql += `${key}=?,`
+            required += `${body[key]},`
+        }   
     }
-    update.search
-    await update['password']  ?  update['password'] = crypto.pbkdf2Sync( update['password'], user.salt, 8, 256, 'sha512' ).toString('hex')  :  update['password']
+        
+    sql += `updatedAt=NOW() WHERE email=?`
+    required = ( required + email ).split(',')
 
-    define[0].update( update, { where : { email } } ).then( () =>
-    {
-        request.update = update
-        next () 
-    })
-*/
-} catch (error) {}  } 
+    await mysqlConnection.query( sql, required, ( error, updates, fields) => 
+    { 
+        mysqlConnection.query( app.locals.sql.accountUpdateSelect, `${body.email}`, ( error, updated, fields ) =>
+        {
+            request.updated = updated[0]
+            next ()
+        } )
+    } )
+
+} catch( error ) {} } 
 
 
 
@@ -274,18 +256,10 @@ async delete( request, response, next )
     mysqlConnection.query( accountDeleteDelete, email, ( error, deleted, fields ) =>
     {
         user.destroy( error =>
-            { response.redirect('/login') })
+            { response.redirect( `/login` ) })
     } )
-/*
-    const { email } = request.session.user
 
-    define[0].destroy( { where: { email } } ).then( ( success ) => 
-    {
-        request.session.destroy( error =>  
-            { console.log(response); response.redirect( '/login' ) } )
-    } ) 
-*/ 
-} catch (error) {}  } 
+} catch( error ) {} } 
 
 
 
@@ -294,9 +268,10 @@ async comments( request, response, next )
 { try {
 
     const 
-        { method, ref } = request.body,
-        { user } = request.session,
-        { body, comments } = request
+    { body, comments } = request,
+    { method, ref } = body,
+    { user } = request.session
+        
 
     if( comments )
     {
@@ -316,14 +291,13 @@ async comments( request, response, next )
 
             if( !Boolean( ref ) )
             {
-                allComments  ?  response.render('account/comments', { errors:null, warning:null, success:null, allComments } )  :  response.render('account/comments', { errors:commentsErrorMessage, warning:null, success:null, allComments:null } ) 
+                allComments  ?  response.render( `account/comments`, { errors:null, warning:null, success:null, allComments } )  :  response.render('account/comments', { errors:commentsErrorMessage, warning:null, success:null, allComments:null } ) 
             }
 
 
-            if( request.method == 'POST' )
-            {
-                
-                if( method == 'update' )
+            if( request.method == `POST` )
+            {   
+                if( method == `update` )
                 {
                     var
                         update = new Object(),
@@ -341,7 +315,7 @@ async comments( request, response, next )
                 }
 
                 
-                if( method == 'delete' )
+                if( method == `delete` )
                 {
                     mysqlConnection.query( accountCommentsDelete, required, ( error, updated, fields ) =>
                     {
@@ -355,74 +329,6 @@ async comments( request, response, next )
 
         } )
     }
-
-
-
-
-
-
-
-    const { method, ref } = request.body 
-    const { user } = request.session
-
-    if ( request.comments != undefined )
-    {
-        const { userId, productId, stars, comment } = request.comments
-
-        if( userId  &&  productId  &&  stars  &&  comment )
-        {
-            define[4].create({ userId, productId, stars, comment }).then( () => 
-            { 
-                response.send({ success : app.locals.successMessage[3] } ) 
-            }).catch( (error) => { next() } )
-        }
-        else
-            response.send({ error : app.locals.errorMessage[7] })
-    }
-
-
-    await define[4].findAndCountAll({ where : { userId : user.id }, include : [ { model : define[2] } ] }).then( ( COMMENTS )=>
-    {
-
-       
-        if( ref == undefined )
-        { 
-            COMMENTS['count'] != false  ?  app.locals.success[3]( response, COMMENTS )  :  app.locals.error[8]( response ) 
-        }
-
-
-    
-        if( request.method == 'POST' )
-        {
-            if( method == 'update' )
-            {
-                var
-                    update = new Object(),
-                    keys = new Array( 'ref' )
-
-                for( const key in request.body ) { request.body[key]  ?  update[key] = request.body[key]  :  keys.push(key) }
-            
-                define[4].update( update, { where : { userId : user.id, id : ref  }, attributes : { exclude : keys } }).then( ( result ) =>
-                {
-                    if( result[0] != false ) 
-                        response.send( { update : app.locals.successMessage[3] } )
-                    else
-                        response.send( { errors : app.locals.errorMessage[8] } )
-                } ) }
-
-
-
-            if( method == 'delete' )
-            {
-                define[4].destroy({ where : { id : ref } }).then( ( result ) =>
-                {
-                    if( result[0] != false ) 
-                        response.send( { delete : app.locals.successMessage[4] } )
-                    else
-                        response.send( { errors : app.locals.errorMessage[8] } )
-                } ) } }
-
-    }).catch( (error) => { app.locals.error[8]( response ) } )
 
 } catch (error) {} }
 
@@ -504,7 +410,7 @@ app.locals.success = new Array
 )
 
 
- 
+
 
 /*EXPORTS*/
 /**********************************************************************************************************************************/

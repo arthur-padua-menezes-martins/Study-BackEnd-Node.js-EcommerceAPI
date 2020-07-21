@@ -32,7 +32,7 @@ async check ( request, response, next )
     else
         app.locals.error[0]( response )
 
-    function validation() { return  user.hierarchy  ?  true  :  false }
+    function validation() { return  user.hierarchy == 1  ?  true  :  false }
 }
 
 
