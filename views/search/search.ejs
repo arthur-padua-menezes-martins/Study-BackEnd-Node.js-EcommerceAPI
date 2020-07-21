@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+=======
+
+>>>>>>> a307a9aaae09c707a379e005287f7875e082a571
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -21,7 +25,11 @@
 <body>
 
 
+<<<<<<< HEAD
 <% if( product  &&  category == undefined  &&  reference == undefined ) { %>
+=======
+<% if( PRODUCT  &&  CATEGORY == undefined  &&  REFERENCE == undefined ) { %>
+>>>>>>> a307a9aaae09c707a379e005287f7875e082a571
 
 
 
@@ -30,15 +38,23 @@
     <form id="filterForm" method="post" style="display:flex;">
         <select>
             <option value="">padrão</option>
+<<<<<<< HEAD
             <option value="value-DESC">maior preço</option>
             <option value="value-ASC">menor preço</option>
             <option value="name-ASC">A_Z</option>
             <option value="name-DESC">Z_A</option>
+=======
+            <option value="value DESC">maior preço</option>
+            <option value="value ASC">menor preço</option>
+            <option value="name ASC">A_Z</option>
+            <option value="name DESC">Z_A</option>
+>>>>>>> a307a9aaae09c707a379e005287f7875e082a571
         </select>
     </form> 
     
    
 
+<<<<<<< HEAD
     <% for( let i = 0; i < products.length; i++ ) { %>   
     
     <div class="id"><%= products[i]['id'] %></div>        
@@ -54,6 +70,23 @@
     <div class="name"><%= products[i]['name'] %></div>
 
     <a class="link" style="display:flex; justify-content:center; align-items:center; width:120px; height:40px; color:white; text-decoration:none; background-color:darkslateblue; border-radius:6px;" href="<%= products[i]['link'] %>">COMPRAR</a>
+=======
+    <% for( let i = 0; i < RESULT['rows'].length; i++ ) { %>   
+    
+    <div class="id"><%= RESULT['rows'][i]['id'] %></div>        
+
+    <div class="reference"><%= RESULT['rows'][i]['reference'] %></div>
+
+    <div class="product"><%= RESULT['rows'][i]['product'] %></div>
+
+    <div class="category"><%= RESULT['rows'][i]['category'] %></div>
+
+    <div class="value"><%= RESULT['rows'][i]['value'] %></div>
+
+    <div class="name"><%= RESULT['rows'][i]['name'] %></div>
+
+    <a class="link" style="display:flex; justify-content:center; align-items:center; width:120px; height:40px; color:white; text-decoration:none; background-color:darkslateblue; border-radius:6px;" href="<%= RESULT['rows'][i]['link'] %>">COMPRAR</a>
+>>>>>>> a307a9aaae09c707a379e005287f7875e082a571
 
     <hr>
 
@@ -62,7 +95,11 @@
 
     <form id="paginationForm" method="post" style="display:flex;">
 
+<<<<<<< HEAD
     <% for( let i = 0; i < pages; i++ ) { %>
+=======
+    <% for( let i = 0; i < PAGES; i++ ) { %>
+>>>>>>> a307a9aaae09c707a379e005287f7875e082a571
         <button style="display:flex; flex-direction:row; justify-content:center; align-items:center; width:40px; height:40px; color:white; font-size:22px;; background-color:black;" type="button">
             <%= i + 1 %>
             <input disabled type="hidden" value="<%= i + 1 %>" name="INPUT"/>
@@ -245,7 +282,6 @@ try{
                 select.children[i].removeAttribute('thisfilter', 'true')
             } 
 } } )
-
     
     function pagination()
     {

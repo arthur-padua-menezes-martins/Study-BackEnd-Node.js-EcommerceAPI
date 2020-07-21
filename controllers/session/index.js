@@ -67,9 +67,8 @@ async logout( request, response, next )
     const { session } = request
 
     session.destroy( error => 
-    {
-        response.redirect('/login')
-} ) }
+        { response.redirect('/login') } ) 
+}
 
 
 }
