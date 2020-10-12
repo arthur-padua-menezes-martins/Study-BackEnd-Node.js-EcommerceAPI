@@ -1,121 +1,229 @@
+const
+    /*DATABASE MODULES*/
+    categories = require(`../../models/database/MongoDB/Schema/categories.js`),
+    products = require(`../../models/database/MongoDB/Schema/products.js`),
+    variations = require(`../../models/database/MongoDB/Schema/variations.js`),
+
+    /*HELPERS MODULES*/
+    constructors = require(`../../helpers/function/constructors.js`),
+    classExtensions = require(`../../helpers/classExtensions/index.js`)
 
 
-/*BASIC MODULES*/
-const express = require('express')
-const app = express()
-
-/*CRYPTOGRAPHY MODULES*/
-const crypto = require('crypto')
-
-/*DATABASE MODULES*/
-const mysqlConnection = require('../../models/database/define/connect.js')[0]
-
-/*HELPERS MODULES*/
-helpers = require('../../helpers/function.js')
+class searchController {
 
 
+    async searchRequests(request, response, next) {
+        try {
 
+            const { params } = request
+            var query = { $or: [{ 'title': { $regex: new RegExp(params.categories, 'i') } }, { 'description': new RegExp(params.name, 'i') }] }, offset = Number(params.offset || 0), limit = Number(params.limit || 30), error = new Error()
 
-class searchsController 
-{
-
-
-async page404( request, response, next ) { response.render( `search/404.ejs` ) }
-
-
-async products( request, response, next )
-{ try {
-
-    if( request.method == 'GET' )
-    {
-        const 
-            { params } = request,
-            { product, category, reference } = params
-
-        if( product  &&  !category  &&  !reference )   
-            { select( params, 3, 0 ) }
-
-
-        if( product  &&  category  &&  !reference )
-            { select( params, 3, 0 ) } 
-
-
-        if( product  &&  category  &&  reference )
-            { select( params, 1, 0 ) } 
-
-            
-        function select( iterator, limit, offset )
-        {
-            let [ sql, required ] = helpers.searchSqlConstructor( iterator ),
-            count = `SELECT COUNT(*) AS 'count' FROM products WHERE ${sql}`                
-            sql = `SELECT * FROM products INNER JOIN variations ON products.id = variations.productId AND ${sql} LIMIT ? OFFSET ?`
-
-            mysqlConnection.query( count, required, ( error, pages, fields ) =>
-            {
-                mysqlConnection.query( sql, [ ...required, limit, offset ], ( error, products, fields ) =>
-                    { !error  ?  response.render( 'search/search.ejs', { products, product, category, reference, pages : Math.ceil( pages[0]['count'] / 3 ), session : request.session.user } )  :  next() } )
+            products.paginate(query, { offset, limit, populate: `categories` }).then((Products) => {
+                if (Boolean(Products)) {
+                    response.send(Products)
+                }
             })
-        }     
+
+        } catch (error) { console.error(error) }
     }
 
 
-    if( request.method == 'POST' )
-    {
-        const 
-            { body } = request,
-            { product, category, reference, pages, filter, productId, userId, stars, comment } = body,
-            offset  =  pages != 1  ?  3 * parseInt( pages - 1 )  :  0,
-            order = filter  ?  `variations.${ filter.split('-')[0] } ${ filter.split('-')[1] }`  :  null
-
-        if( productId  &&  userId  &&  stars  &&  comment )
-        { 
-            request.comments = { productId, userId, stars, comment }
-            next()  
-        }
-        if( empty(pages)  &&  empty(filter) )
-        { 
-            request.comments = {}
-            next() 
-        }
-        
-
-        if( product  &&  empty(category)  &&  empty(reference)  &&  empty(filter) ) 
-            { pagination( body, 3, offset ) }
-        if( product  &&  empty(category)  &&  empty(reference)  &&  filter ) 
-            { pagination( body, 3, offset, order ) }
 
 
-        if( product  &&  category  &&  empty(reference)  &&  empty(filter) ) 
-            { pagination( body, 3, offset ) }
-        if( product  &&  category  &&  empty(reference)  &&  filter ) 
-            { pagination( body, 3, offset, order ) }
+    async searchReference(request, response, next) {
+        try {
 
+            const { params } = request
+            var paginationQuery = { availability: true }
 
-        function pagination( iterator, limit, offset, order = '' )
-        {
-            let [ sql, required ] = helpers.searchSqlConstructor( iterator )
-                
-            if( empty(order) )
-                sql = `SELECT * FROM products INNER JOIN variations ON products.id = variations.productId AND ${sql} LIMIT ? OFFSET ?` 
-            else
-                sql = `SELECT * FROM products INNER JOIN variations ON products.id = variations.productId AND ${sql} ORDER BY ${order} LIMIT ? OFFSET ?` 
-            
-            mysqlConnection.query( sql, [ ...required, limit, offset ], ( error, products, fields ) =>
-                { !error  ?  response.send( products )  :  response.status(204) } )
-        }
+            if (params.reference) {
+
+                products.findOne({
+                    ...paginationQuery, reference: params.reference
+                })
+                    .populate({ path: 'variations' }).populate({ path: 'categories', select: 'name' })
+                    .then(Product => (
+                        response.send({ Product })
+                    ))
+
+            }
+
+            if (!params.reference) {
+
+            }
+
+        } catch (error) { console.error(error) }
     }
-  
-    function empty( reference ) 
-        { return reference == ''  ?  true  :  false }
 
-} catch ( error ) { next() } }
 
+
+
+    async searchProducts(request, response, next) {
+        try {
+
+            const { params, query } = request
+            var paginationQuery = { availability: true }, options = {}, select, selectType, _id = [], names = new Set(), types = new Set(), collections = []
+
+            if (params.category && params.type) {
+
+                if (query.search) {
+
+                    if (query.paginate) {
+
+                    } else {
+
+                    }
+
+                } else {
+
+                    selectType = params.type.split(',') ? params.type.split(',') : params.type
+
+                    return products.find({
+
+                        $or: [
+                            ...selectType.map(type => ({ type: type }))
+                        ],
+                        collections: { $in: (query.collections).split(',') }
+
+                    }, {}, await classExtensions.getOffsetAndLimit({ skip: query.offset, limit: query.limit }))
+
+                        .select('reference categories variations')
+                        .populate({ path: 'categories' }).populate({ path: 'variations' })
+                        .then(Products => (
+
+                            response.send({
+                                Products: Products.filter(
+                                    Product => Product.categories.name === params.category
+                                )
+                            })
+
+                        ))
+
+                }
+
+            }
+
+            if (params.category) {
+
+                if (query.search) {
+
+                    if (query.paginate) {
+
+                    } else {
+
+                    }
+
+                }
+
+                if (query.paginate) {
+
+                    if (query.sort) {
+                        options = { ...options, ...(await classExtensions.getSort(query.sort)) }
+                    }
+
+                    if (query.offset || query.limit) {
+                        options = { ...options, ...(await classExtensions.getOffsetAndLimit({ offset: query.offset, limit: query.limit })) }
+                    }
+
+                    await products.paginate(
+
+                        { ...paginationQuery, categories: params.category },
+                        { ...options, populate: ['variations'] }
+
+                    ).then(Products => (
+                        response.send({ ProductsPagination: Products })
+                    ))
+
+                }
+
+                if (params.category === '*') {
+
+                    if (query.select) {
+
+                        select = query.select.split(',')
+
+                        return categories.find({
+
+                            $or: [
+                                ...select.map(name => ({ name: name }))
+                            ]
+
+                        })
+                            .select('name products')
+                            .populate({ path: 'products', select: ['type', 'collections'] })
+                            .then(Categories => {
+
+                                Categories.forEach(Category => {
+                                    _id.push(Category._id)
+                                    names.add(Category.name)
+                                })
+
+                                Categories.forEach(Category => (Category.products).forEach(
+                                    Products => {
+                                        Products.type !== null && types.add(Products.type)
+                                        Products.collections !== null && collections.push(...Products.collections)
+                                    }
+                                ))
+
+                                return response.send({ subHeaders: Categories, _id, names: [...names], types: [...types], collections })
+
+                            })
+
+                    }
+
+                }
+
+            }
+
+        } catch (error) { console.error(error) }
+    }
+
+
+
+
+    async searchTerm(request, response, next) {
+        try {
+
+            const { params, query } = request, { searchTerm } = params, searchTermIn = (searchTerm.split(' ')).filter(term => term !== '')
+            var options = {}
+
+            if (query.sort) {
+                options = { ...options, ...(await classExtensions.getSort(query.sort)) }
+            }
+
+            if (query.offset || query.limit) {
+                options = { ...options, ...(await classExtensions.getOffsetAndLimit({ offset: query.offset, limit: query.limit })) }
+            }
+
+            if (params.searchTerm) {
+
+                return products.paginate(
+
+                    {
+                        $or: [
+                            ...searchTermIn.map(term => ({ type: { $regex: term, $options: "i" } })),
+                            ...searchTermIn.map(term => ({ title: { $regex: term, $options: "i" } })),
+                            ...searchTermIn.map(term => ({ description: { $regex: term, $options: "i" } })),
+                            ...searchTermIn.map(term => ({ tags: { $regex: term, $options: "i" } }))
+                        ]
+                    },
+                    {
+                        ...options,
+                        populate: ['categories', 'variations']
+                    }
+
+                ).then(Products => (
+                    Products.total !== 0 ?
+                        response.send({ researchProducts: Products }) :
+                        response.send(undefined)
+                ))
+
+            } else {
+                return response.send(undefined)
+            }
+
+        } catch (error) { console.error(error) }
+    }
 
 }
-
-
-
-
-/*EXPORTS*/
-/**********************************************************************************************************************************/
-module.exports = searchsController
+module.exports = searchController
