@@ -18,7 +18,12 @@ export class SignUpController {
 
     return {
       statusCode: 400,
-      body: {},
+      body: {
+        name: '',
+        email: '',
+        password: '',
+        passwordConfirmation: ''
+      },
       errorMessage: new MissingParamError(MissingFields)
     }
   }
