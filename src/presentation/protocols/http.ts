@@ -1,16 +1,16 @@
 export interface IHttpRequest {
   body: {
-    name?: string
-    email?: string
-    password?: string
-    passwordConfirmation?: string
+    name?: string | undefined
+    email?: string | undefined
+    password?: string | undefined
+    passwordConfirmation?: string | undefined
     address?: {
-      cep?: string
-      street?: string
-      number?: string
-      neighborhood?: string
-      city?: string
-      state?: string
+      cep: string | undefined
+      street: string | undefined
+      number: string | undefined
+      neighborhood: string | undefined
+      city: string | undefined
+      state: string | undefined
     }
   }
 }
@@ -20,4 +20,5 @@ export interface IHttpResponse {
   body: object
   successMessage?: string
   errorMessage?: Error
+  invalidFields? : string[]
 }
