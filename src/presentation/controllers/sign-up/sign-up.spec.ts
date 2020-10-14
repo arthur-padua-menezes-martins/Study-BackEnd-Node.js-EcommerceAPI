@@ -16,14 +16,23 @@ const makeSignUpController = (): ISignUpControllerTypes => {
 describe('presentation/controllers/sign-up.spec.ts', () => {
   test('returns from httpResponde "statusCode 400" if any fields do not exist <version 0.0.1>', async () => {
     const { systemUnderTest } = makeSignUpController()
-    const httpRequestFields: string[] = ['name', 'email', 'password', 'passwordConfirmation']
+    const httpRequestBodyFields: string[] = ['name', 'email', 'password', 'passwordConfirmation']
+    const httpRequestBodyAddressFields: string[] = ['cep', 'street', 'number', 'neighborhood', 'city', 'state']
 
     const expectedHttpRequest: IHttpRequest = {
       body: {
         name: '@test-field-name-valid',
         email: '@test-field-email-valid',
         password: '@test-field-password-valid',
-        passwordConfirmation: '@test-field-password-valid'
+        passwordConfirmation: '@test-field-password-valid',
+        address: {
+          cep: '@test-field-cep-valid',
+          street: '@test-field-street-valid',
+          number: '@test-field-number-valid',
+          neighborhood: '@test-field-neighborhood-valid',
+          city: '@test-field-city-valid',
+          state: '@test-field-state-valid'
+        }
       }
     }
     const httpRequest: IHttpRequest = {
@@ -37,8 +46,13 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
     const httpRequestBodyLength = (Object.values(httpRequest.body)).length
 
     var MissingFields: string = ''
-    for (const field of httpRequestFields) {
+    for (const field of httpRequestBodyFields) {
       MissingFields += !(field in httpRequest.body) ? `${field} ` : ''
+    }
+    if ('address' in httpRequest.body && httpRequest.body.address !== undefined) {
+      for (const addressField of httpRequestBodyAddressFields) {
+        MissingFields += !(addressField in httpRequest.body.address) ? `${addressField} ` : ''
+      }
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
