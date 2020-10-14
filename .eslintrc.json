@@ -1,0 +1,6 @@
+{
+    "extends": "standard-with-typescript", // extensão das funcionaldiades
+    "parserOptions": {
+        "project": "./tsconfig.json" // utilização das configurações para typescript
+    }
+}
