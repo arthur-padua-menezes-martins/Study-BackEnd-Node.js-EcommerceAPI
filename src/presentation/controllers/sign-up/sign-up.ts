@@ -1,5 +1,6 @@
 import { IHttpRequest, IHttpResponse } from './sign-up-protocols'
-import { MissingParamError } from '../../errors/export-all'
+import { MissingParamError, InvalidParamError } from '../../errors/export-all'
+import { badRequest } from '../../helpers/export-all'
 
 export class SignUpController {
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
@@ -16,15 +17,11 @@ export class SignUpController {
       }
     }
 
-    return {
-      statusCode: 400,
-      body: {
-        name: '',
-        email: '',
-        password: '',
-        passwordConfirmation: ''
-      },
-      errorMessage: new MissingParamError(MissingFields)
+    const { password, passwordConfirmation } = httpRequest.body
+    if (password !== passwordConfirmation) {
+      return badRequest({}, '', new InvalidParamError('passwordConfirmation'))
     }
+
+    return badRequest({}, '', new MissingParamError(MissingFields))
   }
 }
