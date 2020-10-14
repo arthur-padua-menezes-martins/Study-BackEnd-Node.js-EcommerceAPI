@@ -1,4 +1,5 @@
 import { IHttpRequest, IHttpResponse } from './sign-up-protocols'
+import { MissingParamError } from '../../errors/export-all'
 
 export class SignUpController {
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
@@ -6,7 +7,8 @@ export class SignUpController {
       statusCode: 400,
       body: {
 
-      }
+      },
+      errorMessage: new MissingParamError()
     }
   }
 }
