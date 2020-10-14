@@ -16,6 +16,7 @@ const makeSignUpController = (): ISignUpControllerTypes => {
 describe('presentation/controllers/sign-up.spec.ts', () => {
   test('returns from httpResponde "statusCode 400" if any fields do not exist <version 0.0.1>', async () => {
     const { systemUnderTest } = makeSignUpController()
+    const httpRequestFields: string[] = ['name', 'email', 'password', 'passwordConfirmation']
 
     const expectedHttpRequest: IHttpRequest = {
       body: {
@@ -35,9 +36,14 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
     const expectedHttpRequestBodyLength = (Object.values(expectedHttpRequest.body)).length
     const httpRequestBodyLength = (Object.values(httpRequest.body)).length
 
+    var MissingFields: string = ''
+    for (const field of httpRequestFields) {
+      MissingFields += !(field in httpRequest.body) ? `${field} ` : ''
+    }
+
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpRequestBodyLength).not.toBe(expectedHttpRequestBodyLength)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.errorMessage).toEqual(new MissingParamError())
+    expect(httpResponse.errorMessage).toEqual(new MissingParamError(MissingFields))
   })
 })
