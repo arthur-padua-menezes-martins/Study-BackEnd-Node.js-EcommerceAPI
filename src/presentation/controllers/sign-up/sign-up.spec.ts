@@ -1,0 +1,29 @@
+import { SignUpController } from './sign-up'
+import { IHttpRequest } from './sign-up-protocols'
+
+interface ISignUpControllerTypes {
+  systemUnderTest: SignUpController
+}
+const makeSignUpController = (): ISignUpControllerTypes => {
+  const systemUnderTest = new SignUpController()
+
+  return {
+    systemUnderTest
+  }
+}
+
+describe('presentation/controllers/sign-up.spec.ts', () => {
+  test('returns from httpResponde "statusCode 400" if any fields do not exist <version 0.0.1>', async () => {
+    const { systemUnderTest } = makeSignUpController()
+    const httpRequest: IHttpRequest = {
+      body: {
+        email: '@test-field-email-valid',
+        password: '@test-field-password-valid',
+        passwordConfirmation: '@test-field-password-valid'
+      }
+    }
+
+    const httpResponse = await systemUnderTest.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+  })
+})
