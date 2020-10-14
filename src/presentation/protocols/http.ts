@@ -1,10 +1,10 @@
 export interface IHttpRequest {
-  body?: any
+  body: object
 }
 
 export interface IHttpResponse {
   statusCode: number
-  body: any
+  body: object
   successMessage?: string
   errorMessage?: Error
 }
