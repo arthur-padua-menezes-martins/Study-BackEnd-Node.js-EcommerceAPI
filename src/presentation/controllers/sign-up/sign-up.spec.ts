@@ -1,7 +1,11 @@
 import { SignUpController } from './sign-up'
 import { IHttpRequest } from './sign-up-protocols'
-import { MissingParamError, InvalidParamError } from '../../errors/export-all'
-import { httpRequestBodyNotMatch, httpRequestBodyMissingField, httpRequestBodyInvalidPasswordConfirmation } from '../../helpers/httpRequestData'
+import { MissingParamError, InvalidParamError, ServerError } from '../../errors/export-all'
+import { RegExpFieldValidation } from '../../regExp/field-validation'
+import {
+  httpRequestBodyFields, httpRequestBodyAddressFields,
+  httpRequestBodyNotMatch, httpRequestBodyMissingField, httpRequestBodyInvalidPasswordConfirmation
+} from '../../helpers/export-all'
 
 interface ISignUpControllerTypes {
   systemUnderTest: SignUpController
@@ -13,9 +17,6 @@ const makeSignUpController = (): ISignUpControllerTypes => {
     systemUnderTest
   }
 }
-
-const httpRequestBodyFields: string[] = ['name', 'email', 'password', 'passwordConfirmation']
-const httpRequestBodyAddressFields: string[] = ['cep', 'street', 'number', 'neighborhood', 'city', 'state']
 
 describe('presentation/controllers/sign-up.spec.ts', () => {
   test('returns from httpResponde "{statusCode: 400}" if any fields do not exist <version 0.0.3>', async () => {
@@ -60,5 +61,20 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
+  })
+
+  test('return from httpResponse "{status Code: 500}" if validating any field returns an error <version 0.0.1>', async () => {
+    const { systemUnderTest } = makeSignUpController()
+
+    const httpRequest: IHttpRequest = {
+      body: {
+        ...httpRequestBodyNotMatch,
+        name: undefined
+      }
+    }
+
+    const httpResponse = await systemUnderTest.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.errorMessage).toEqual(new ServerError())
   })
 })
