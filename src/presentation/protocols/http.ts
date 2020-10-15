@@ -1,22 +1,35 @@
 export interface IHttpRequestBody {
-  body: {
-    name?: any
-    email?: any
-    password?: any
-    passwordConfirmation?: any
-    address?: {
-      cep: any
-      street: any
-      number: any
-      neighborhood: any
-      city: any
-      state: any
-    }
+  name?: string
+  email?: string
+  password?: string
+  passwordConfirmation?: string
+  address?: {
+    cep: string
+    street: string
+    number: string
+    neighborhood: string
+    city: string
+    state: string
+  }
+}
+
+export interface IHttpRequestBodyComplete {
+  name: string
+  email: string
+  password: string
+  passwordConfirmation: string
+  address: {
+    cep: string
+    street: string
+    number: string
+    neighborhood: string
+    city: string
+    state: string
   }
 }
 
 export interface IHttpRequest {
-  body: IHttpRequestBody | any
+  body: IHttpRequestBody | IHttpRequestBodyComplete | any
 }
 
 export interface IHttpResponse {
@@ -24,5 +37,5 @@ export interface IHttpResponse {
   body: object
   successMessage?: string
   errorMessage?: Error
-  invalidFields? : string[]
+  invalidFields?: string[]
 }

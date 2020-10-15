@@ -1,4 +1,4 @@
-import { IHttpRequest, IHttpResponse } from './sign-up-protocols'
+import { IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
 import { MissingParamError, InvalidParamError } from '../../errors/export-all'
 import { RegExpFieldValidation } from '../../regExp/field-validation'
 import {
@@ -7,6 +7,12 @@ import {
 } from '../../helpers/export-all'
 
 export class SignUpController {
+  private readonly addAccount
+
+  constructor (addAccount: IAddAccount) {
+    this.addAccount = addAccount
+  }
+
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse | any> {
     try {
       var MissingFields: string = ''
@@ -28,7 +34,7 @@ export class SignUpController {
         return badRequest({}, '', new MissingParamError(MissingFields))
       }
 
-      const regExpFieldValidation = await new RegExpFieldValidation()
+      const regExpFieldValidation = new RegExpFieldValidation()
       let invalidFields: string[] = []
       for (const field of httpRequestBodyFields) {
         invalidFields.push(await regExpFieldValidation.options(field, httpRequest.body[field]))
@@ -36,10 +42,20 @@ export class SignUpController {
       for (const field of httpRequestBodyAddressFields) {
         invalidFields.push(await regExpFieldValidation.options(field, httpRequest.body[field]))
       }
-      invalidFields = (invalidFields.filter(value => value !== undefined))
+      invalidFields = (invalidFields.filter(field => field !== undefined))
       if (invalidFields.length > 0) {
         return badRequest({}, '', null, invalidFields)
       }
+
+      const { name, email, address } = httpRequest.body
+      const httpRequestBodyValid = {
+        name,
+        email,
+        password,
+        passwordConfirmation,
+        address
+      }
+      this.addAccount.add(httpRequestBodyValid)
     } catch (error) {
       return serverError()
     }

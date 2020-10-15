@@ -16,6 +16,8 @@ export class RegExpFieldValidation {
 
     if (field in options) {
       return (await options[field](value)) ? undefined : field
+    } else {
+      return await Promise.resolve(undefined)
     }
   }
 }
