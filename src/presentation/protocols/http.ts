@@ -1,18 +1,22 @@
-export interface IHttpRequest {
+export interface IHttpRequestBody {
   body: {
-    name?: string | undefined
-    email?: string | undefined
-    password?: string | undefined
-    passwordConfirmation?: string | undefined
+    name?: any
+    email?: any
+    password?: any
+    passwordConfirmation?: any
     address?: {
-      cep: string | undefined
-      street: string | undefined
-      number: string | undefined
-      neighborhood: string | undefined
-      city: string | undefined
-      state: string | undefined
+      cep: any
+      street: any
+      number: any
+      neighborhood: any
+      city: any
+      state: any
     }
   }
+}
+
+export interface IHttpRequest {
+  body: IHttpRequestBody | any
 }
 
 export interface IHttpResponse {

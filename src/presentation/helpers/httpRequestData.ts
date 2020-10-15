@@ -1,8 +1,12 @@
+export const httpRequestBodyFields: string[] = ['name', 'email', 'password', 'passwordConfirmation']
+
+export const httpRequestBodyAddressFields: string[] = ['cep', 'street', 'number', 'neighborhood', 'city', 'state']
+
 export const httpRequestBodyMatch = {
   name: 'name lastName',
   email: 'arthur.software.developer@gmail.com',
-  password: 'password',
-  passwordConfirmation: 'password',
+  password: 'password123',
+  passwordConfirmation: 'password123',
   address: {
     cep: '60741-025',
     street: 'Rua Dr. Justa Araújo',
@@ -15,7 +19,7 @@ export const httpRequestBodyMatch = {
 
 export const httpRequestBodyNotMatch = {
   name: 'name',
-  email: '$#@!%¨&*()_+[]{}`^?:;/~',
+  email: '$#@!%¨&*()_+[]{}`^?:;/~@',
   password: 'password',
   passwordConfirmation: 'password',
   address: {
