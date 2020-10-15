@@ -1,7 +1,6 @@
 import { SignUpController } from './sign-up'
 import { IHttpRequest } from './sign-up-protocols'
 import { MissingParamError, InvalidParamError, ServerError } from '../../errors/export-all'
-import { RegExpFieldValidation } from '../../regExp/field-validation'
 import {
   httpRequestBodyFields, httpRequestBodyAddressFields,
   httpRequestBodyNotMatch, httpRequestBodyMissingField, httpRequestBodyInvalidPasswordConfirmation

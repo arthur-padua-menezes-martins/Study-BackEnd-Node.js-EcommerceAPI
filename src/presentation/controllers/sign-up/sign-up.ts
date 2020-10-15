@@ -1,9 +1,9 @@
 import { IHttpRequest, IHttpResponse } from './sign-up-protocols'
-import { MissingParamError, InvalidParamError, ServerError } from '../../errors/export-all'
+import { MissingParamError, InvalidParamError } from '../../errors/export-all'
 import { RegExpFieldValidation } from '../../regExp/field-validation'
 import {
   httpRequestBodyFields, httpRequestBodyAddressFields,
-  badRequest
+  badRequest, serverError
 } from '../../helpers/export-all'
 
 export class SignUpController {
@@ -41,11 +41,7 @@ export class SignUpController {
         return badRequest({}, '', null, invalidFields)
       }
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: {},
-        errorMessage: new ServerError()
-      }
+      return serverError()
     }
   }
 }
