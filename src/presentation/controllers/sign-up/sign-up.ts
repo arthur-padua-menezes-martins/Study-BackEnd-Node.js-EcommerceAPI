@@ -3,7 +3,7 @@ import { MissingParamError, InvalidParamError } from '../../errors/export-all'
 import { RegExpFieldValidation } from '../../regExp/field-validation'
 import {
   httpRequestBodyFields, httpRequestBodyAddressFields,
-  badRequest, serverError
+  ok, badRequest, serverError
 } from '../../helpers/export-all'
 
 export class SignUpController {
@@ -48,14 +48,16 @@ export class SignUpController {
       }
 
       const { name, email, address } = httpRequest.body
-      const httpRequestBodyValid = {
+      const httpRequestBody = {
         name,
         email,
         password,
         passwordConfirmation,
         address
       }
-      this.addAccount.add(httpRequestBodyValid)
+      const newAccount = await this.addAccount.add(httpRequestBody)
+
+      return ok(newAccount)
     } catch (error) {
       return serverError()
     }

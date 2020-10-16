@@ -7,27 +7,25 @@ import {
   httpRequestBodyMatchComplete
 } from '../../helpers/export-all'
 
-const makeAddAccount = (): IAddAccount => {
+const makeAddAccount = async (): Promise<IAddAccount> => {
   class AddAccountStub {
-    add (account: IAddAccountModel): IAccountModel {
-      const fakeAccount = {
-        id: '5f22f7d096695c2878f37d5f',
-        ...httpRequestBodyMatchComplete
-      }
-
-      return fakeAccount
+    async add (account: IAddAccountModel): Promise<IAccountModel> {
+      return await Promise.resolve({
+        id: '',
+        ...account
+      })
     }
   }
 
-  return new AddAccountStub()
+  return await Promise.resolve(new AddAccountStub())
 }
 
 interface ISignUpControllerTypes {
   systemUnderTest: SignUpController
   addAccountStub: IAddAccount
 }
-const makeSignUpController = (): ISignUpControllerTypes => {
-  const addAccountStub = makeAddAccount()
+const makeSignUpController = async (): Promise<ISignUpControllerTypes> => {
+  const addAccountStub = await makeAddAccount()
   const systemUnderTest = new SignUpController(addAccountStub)
 
   return {
@@ -38,7 +36,7 @@ const makeSignUpController = (): ISignUpControllerTypes => {
 
 describe('presentation/controllers/sign-up.spec.ts', () => {
   test('returns from httpResponde "{statusCode: 400}" if any fields do not exist <version 0.0.3>', async () => {
-    const { systemUnderTest } = makeSignUpController()
+    const { systemUnderTest } = await makeSignUpController()
     var missingFields: string = ''
 
     const httpRequest: IHttpRequest = {
@@ -60,7 +58,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   })
 
   test('returns from httpResponse "{status Code: 400}" if the password confirmation does not match the password <version 0.0.1>', async () => {
-    const { systemUnderTest } = makeSignUpController()
+    const { systemUnderTest } = await makeSignUpController()
     const httpRequest: IHttpRequest = {
       body: httpRequestBodyInvalidPasswordConfirmation
     }
@@ -71,7 +69,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   })
 
   test('returns from httpResponse "{status Code: 400}" if any fields do not match <version 0.0.1>', async () => {
-    const { systemUnderTest } = makeSignUpController()
+    const { systemUnderTest } = await makeSignUpController()
 
     const httpRequest: IHttpRequest = {
       body: httpRequestBodyNotMatch
@@ -82,7 +80,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   })
 
   test('returns from httpResponse "{status Code: 500}" if validating any field throw an error <version 0.0.1>', async () => {
-    const { systemUnderTest } = makeSignUpController()
+    const { systemUnderTest } = await makeSignUpController()
 
     const httpRequest: IHttpRequest = {
       body: {
@@ -97,8 +95,8 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   })
 
   test('must call AddAccount with the correct values <version 0.0.1>', async () => {
-    const { systemUnderTest, addAccountStub } = makeSignUpController()
-    const spyOnAddAccountStubAdd = jest.spyOn(addAccountStub, 'add')
+    const { systemUnderTest, addAccountStub } = await makeSignUpController()
+    const spyOnAddAccountStubAdd = await jest.spyOn(addAccountStub, 'add')
 
     const httpRequest: IHttpRequest = {
       body: httpRequestBodyMatchComplete
@@ -109,6 +107,32 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   })
 
   test('returns from httpResponse "{status Code: 500}" if AddAccount throw error <version 0.0.1>', async () => {
+    const { systemUnderTest, addAccountStub } = await makeSignUpController()
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
 
+    const httpRequest: IHttpRequest = {
+      body: httpRequestBodyMatchComplete
+    }
+
+    const httpResponse = await systemUnderTest.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.errorMessage).toEqual(new ServerError())
+  })
+
+  test('returns from httpResponse "{status Code: 200}" if valid information is sent to AddAccount <version 0.0.2>', async () => {
+    const { systemUnderTest } = await makeSignUpController()
+
+    const httpRequest: IHttpRequest = {
+      body: httpRequestBodyMatchComplete
+    }
+
+    const httpResponse = await systemUnderTest.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse.body).toEqual({
+      id: '',
+      ...httpRequestBodyMatchComplete
+    })
   })
 })
