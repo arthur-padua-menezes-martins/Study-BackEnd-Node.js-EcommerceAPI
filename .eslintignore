@@ -2,6 +2,10 @@
 node_modules
 dist
 
+# testing
+/coverage
+coverage
+
 # dashboard dependencies
 dashboard/node_modules
 

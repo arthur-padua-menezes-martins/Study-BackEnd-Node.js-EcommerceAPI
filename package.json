@@ -44,8 +44,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --passWithNoTests --watch",
-    "test:staged": "jest --passWithNoTests",
+    "test": "jest --passWithNoTests --silent --runInBand", 
+    "test:verbose": "jest --passWithNoTests --runInBand", 
+    "test:unit": "npm test -- --watch -c jest-unit-config.js --runInBand",
+    "test:integration": "npm test -- --watch -c jest-integration-config.js --runInBand",
+    "test:staged": "npm test -- --findRelatedTests --runInBand",
+    "test:ci": "npm test -- --coverage --runInBand",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
