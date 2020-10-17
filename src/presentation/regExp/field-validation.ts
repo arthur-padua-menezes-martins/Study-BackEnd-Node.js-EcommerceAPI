@@ -1,23 +1,19 @@
-export class RegExpFieldValidation {
-  options = async (field: string, value: string): Promise<boolean | any> => {
-    const options: object | any = {
-      name: async (value: string): Promise<boolean> => await Promise.resolve(
-        Boolean(value.match(/^[a-zA-Z\u00C0-\u017F´]+\s+[a-zA-Z\u00C0-\u017F´]{0,}$/))
-      ),
+import { IFieldValidationFieldsWithRegex, IFieldValidationWithRegex } from '../protocols/regExp/field-validation'
 
-      email: async (value: string): Promise<boolean> => await Promise.resolve(
-        Boolean(value.match(/^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/))
-      ),
+export class FieldValidationWithRegex implements IFieldValidationWithRegex {
+  private readonly fieldValidationOptionsWithRegex: any = {}
 
-      password: async (value: string): Promise<boolean> => await Promise.resolve(
-        Boolean(value.match(/^(?=.*\d)(?=.*[a-zA-Z])(?!.*[\W_\x7B-\xFF]).{8,16}$/))
-      )
+  constructor (fields: IFieldValidationFieldsWithRegex) {
+    for (const key in fields) {
+      this.fieldValidationOptionsWithRegex[key] = fields[key]
     }
+  }
 
-    if (field in options) {
-      return (await options[field](value)) ? undefined : field
+  options = async (field: string, value: string): Promise<string> => {
+    if (field in this.fieldValidationOptionsWithRegex) {
+      return (await this.fieldValidationOptionsWithRegex[field](value)) ? '' : field
     } else {
-      return await Promise.resolve(undefined)
+      return await Promise.resolve('')
     }
   }
 }

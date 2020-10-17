@@ -1,6 +1,6 @@
 import { IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
 import { MissingParamError, InvalidParamError } from '../../errors/export-all'
-import { RegExpFieldValidation } from '../../regExp/field-validation'
+import { FieldValidationWithRegex } from '../../regExp/field-validation'
 import {
   httpRequestBodyFields, httpRequestBodyAddressFields,
   ok, badRequest, serverError
@@ -34,15 +34,25 @@ export class SignUpController {
         return badRequest({}, '', new MissingParamError(MissingFields))
       }
 
-      const regExpFieldValidation = new RegExpFieldValidation()
+      const fieldValidationWithRegex = new FieldValidationWithRegex({
+        name: async (value: string): Promise<boolean> => await Promise.resolve(
+          Boolean(value.match(/^[a-zA-Z\u00C0-\u017F´]+\s+[a-zA-Z\u00C0-\u017F´]{0,}$/))
+        ),
+        email: async (value: string): Promise<boolean> => await Promise.resolve(
+          Boolean(value.match(/^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/))
+        ),
+        password: async (value: string): Promise<boolean> => await Promise.resolve(
+          Boolean(value.match(/^(?=.*\d)(?=.*[a-zA-Z])(?!.*[\W_\x7B-\xFF]).{8,16}$/))
+        )
+      })
       let invalidFields: string[] = []
       for (const field of httpRequestBodyFields) {
-        invalidFields.push(await regExpFieldValidation.options(field, httpRequest.body[field]))
+        invalidFields.push(await fieldValidationWithRegex.options(field, httpRequest.body[field]))
       }
       for (const field of httpRequestBodyAddressFields) {
-        invalidFields.push(await regExpFieldValidation.options(field, httpRequest.body[field]))
+        invalidFields.push(await fieldValidationWithRegex.options(field, httpRequest.body[field]))
       }
-      invalidFields = (invalidFields.filter(field => field !== undefined))
+      invalidFields = (invalidFields.filter(field => field !== ''))
       if (invalidFields.length > 0) {
         return badRequest({}, '', null, invalidFields)
       }

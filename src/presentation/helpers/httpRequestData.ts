@@ -4,7 +4,7 @@ export const httpRequestBodyFields: string[] = ['name', 'email', 'password', 'pa
 
 export const httpRequestBodyAddressFields: string[] = ['cep', 'street', 'number', 'neighborhood', 'city', 'state']
 
-const httpRequestBodyMatchData = {
+const httpRequestBodyMatchData: any = {
   name: 'name lastName',
   email: 'arthur.software.developer@gmail.com',
   password: 'password123',
@@ -67,4 +67,12 @@ export const httpRequestBodyInvalidPasswordConfirmation: IHttpRequestBody = {
     city: 'Fortaleza',
     state: 'CE'
   }
+}
+
+export const getHttpRequestBodyNotMatchField = (fieldName: string, addressFieldName?: string): string => {
+  return (fieldName && addressFieldName) ? httpRequestBodyNotMatch[fieldName][addressFieldName] : httpRequestBodyNotMatch[fieldName]
+}
+
+export const getHttpRequestBodyMatchField = (fieldName: string, addressFieldName?: string): string => {
+  return (fieldName && addressFieldName) ? httpRequestBodyMatch[fieldName][addressFieldName] : httpRequestBodyMatch[fieldName]
 }
