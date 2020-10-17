@@ -4,7 +4,7 @@ import { getHttpRequestBodyMatchField, getHttpRequestBodyNotMatchField } from '.
 interface IPasswordValidatorAdapterTypes {
   systemUnderTest: PasswordValidatorAdapter
 }
-const makeSignUpController = async (): Promise<IPasswordValidatorAdapterTypes> => {
+const makeSystemUnderTest = async (): Promise<IPasswordValidatorAdapterTypes> => {
   const systemUnderTest = new PasswordValidatorAdapter()
 
   return {
@@ -14,7 +14,7 @@ const makeSignUpController = async (): Promise<IPasswordValidatorAdapterTypes> =
 
 describe('PasswordValidatorAdapter', () => {
   test('Should return false if validator returns false <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSignUpController()
+    const { systemUnderTest } = await makeSystemUnderTest()
     jest.spyOn(systemUnderTest, 'isValid').mockReturnValueOnce(Promise.resolve(false))
     const isValid = await systemUnderTest.isValid(getHttpRequestBodyNotMatchField('password'))
 
@@ -22,7 +22,7 @@ describe('PasswordValidatorAdapter', () => {
   })
 
   test('Should return true if validator returns true <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSignUpController()
+    const { systemUnderTest } = await makeSystemUnderTest()
     jest.spyOn(systemUnderTest, 'isValid').mockReturnValueOnce(Promise.resolve(true))
     const isValid = await systemUnderTest.isValid(getHttpRequestBodyMatchField('password'))
 

@@ -4,7 +4,7 @@ import { getHttpRequestBodyMatchField, getHttpRequestBodyNotMatchField } from '.
 interface INameValidatorAdapterTypes {
   systemUnderTest: NameValidatorAdapter
 }
-const makeSignUpController = async (): Promise<INameValidatorAdapterTypes> => {
+const makeSystemUnderTest = async (): Promise<INameValidatorAdapterTypes> => {
   const systemUnderTest = new NameValidatorAdapter()
 
   return {
@@ -14,7 +14,7 @@ const makeSignUpController = async (): Promise<INameValidatorAdapterTypes> => {
 
 describe('NameValidatorAdapter', () => {
   test('Should return false if validator returns false <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSignUpController()
+    const { systemUnderTest } = await makeSystemUnderTest()
     jest.spyOn(systemUnderTest, 'isValid').mockReturnValueOnce(Promise.resolve(false))
     const isValid = await systemUnderTest.isValid(getHttpRequestBodyNotMatchField('name'))
 
@@ -22,7 +22,7 @@ describe('NameValidatorAdapter', () => {
   })
 
   test('Should return true if validator returns true <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSignUpController()
+    const { systemUnderTest } = await makeSystemUnderTest()
     jest.spyOn(systemUnderTest, 'isValid').mockReturnValueOnce(Promise.resolve(true))
     const isValid = await systemUnderTest.isValid(getHttpRequestBodyMatchField('name'))
 
