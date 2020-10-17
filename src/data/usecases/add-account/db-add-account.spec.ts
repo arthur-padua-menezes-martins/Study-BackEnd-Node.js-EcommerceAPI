@@ -2,17 +2,21 @@ import { DatabaseAddAccount } from './db-add-account'
 import { Encrypter } from '../../protocols/encrypter'
 import { httpRequestBodyMatchComplete } from '../../../presentation/helpers/export-all'
 
+const makeEncrypter = async (): Promise<any> => {
+  class EncrypterStub implements Encrypter {
+    async encrypt (value: string): Promise<string> {
+      return await Promise.resolve('encrypted_password')
+    }
+  }
+  return new EncrypterStub()
+}
+
 interface ISystemUnderTestTypes {
   systemUnderTest: DatabaseAddAccount
   encrypterStub: Encrypter
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
-  class EncrypterStub {
-    async encrypt (value: string): Promise<string> {
-      return await Promise.resolve('encrypted_password')
-    }
-  }
-  const encrypterStub = new EncrypterStub()
+  const encrypterStub = await makeEncrypter()
   const systemUnderTest = new DatabaseAddAccount(encrypterStub)
 
   return {
