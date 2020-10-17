@@ -4,7 +4,7 @@ import { getHttpRequestBodyMatchField, getHttpRequestBodyNotMatchField } from '.
 interface IEmailValidatorAdapterTypes {
   systemUnderTest: EmailValidatorAdapter
 }
-const makeEmailValidatorAdapter = async (): Promise<IEmailValidatorAdapterTypes> => {
+const makeSignUpController = async (): Promise<IEmailValidatorAdapterTypes> => {
   const systemUnderTest = new EmailValidatorAdapter()
 
   return {
@@ -14,7 +14,7 @@ const makeEmailValidatorAdapter = async (): Promise<IEmailValidatorAdapterTypes>
 
 describe('EmailValidatorAdapter', () => {
   test('Should return false if validator returns false <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeEmailValidatorAdapter()
+    const { systemUnderTest } = await makeSignUpController()
     jest.spyOn(systemUnderTest, 'email').mockReturnValueOnce(Promise.resolve(false))
     const isValid = await systemUnderTest.email(getHttpRequestBodyNotMatchField('email'))
 
@@ -22,7 +22,7 @@ describe('EmailValidatorAdapter', () => {
   })
 
   test('Should return true if validator returns true <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeEmailValidatorAdapter()
+    const { systemUnderTest } = await makeSignUpController()
     jest.spyOn(systemUnderTest, 'email').mockReturnValueOnce(Promise.resolve(true))
     const isValid = await systemUnderTest.email(getHttpRequestBodyMatchField('email'))
 

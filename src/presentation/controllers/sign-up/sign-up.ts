@@ -15,23 +15,30 @@ export class SignUpController {
 
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse | any> {
     try {
-      var MissingFields: string = ''
+      var missingFields: string = ''
+      var typeofIsString: boolean[] = []
       for (const field of httpRequestBodyFields) {
-        MissingFields += !(field in httpRequest.body) ? `${field} ` : ''
+        missingFields += !(field in httpRequest.body) ? `${field} ` : ''
+        typeofIsString.push(typeof httpRequest.body !== 'undefined' && true)
       }
       if ('address' in httpRequest.body && httpRequest.body.address !== undefined) {
         for (const addressField of httpRequestBodyAddressFields) {
-          MissingFields += !(addressField in httpRequest.body.address) ? `${addressField} ` : ''
+          missingFields += !(addressField in httpRequest.body.address) ? `${addressField} ` : ''
+          typeofIsString.push(typeof httpRequest.body !== 'undefined' && true)
         }
+      }
+
+      if (missingFields) {
+        return badRequest({}, '', new MissingParamError(missingFields))
+      }
+
+      if (!typeofIsString.every(isString => Boolean(isString))) {
+        return badRequest({}, '', new MissingParamError())
       }
 
       const { password, passwordConfirmation } = httpRequest.body
       if (password !== passwordConfirmation) {
         return badRequest({}, '', new InvalidParamError('passwordConfirmation'))
-      }
-
-      if (MissingFields !== '') {
-        return badRequest({}, '', new MissingParamError(MissingFields))
       }
 
       const fieldValidationWithRegex = new FieldValidationWithRegex({
