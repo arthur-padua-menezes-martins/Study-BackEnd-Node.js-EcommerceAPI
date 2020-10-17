@@ -1,6 +1,7 @@
 import { IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
 import { MissingParamError, InvalidParamError } from '../../errors/export-all'
 import { FieldValidationWithRegex } from '../../regExp/field-validation'
+import { NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from '../../../utils/validation/export-all'
 import {
   httpRequestBodyFields, httpRequestBodyAddressFields,
   ok, badRequest, serverError
@@ -19,12 +20,12 @@ export class SignUpController {
       var typeofIsString: boolean[] = []
       for (const field of httpRequestBodyFields) {
         missingFields += !(field in httpRequest.body) ? `${field} ` : ''
-        typeofIsString.push(typeof httpRequest.body !== 'undefined' && true)
+        typeofIsString.push(typeof httpRequest.body[field] === 'string' && true)
       }
-      if ('address' in httpRequest.body && httpRequest.body.address !== undefined) {
+      if (typeof httpRequest.body.address !== 'undefined') {
         for (const addressField of httpRequestBodyAddressFields) {
           missingFields += !(addressField in httpRequest.body.address) ? `${addressField} ` : ''
-          typeofIsString.push(typeof httpRequest.body !== 'undefined' && true)
+          typeofIsString.push(typeof httpRequest.body.address[addressField] === 'string' && true)
         }
       }
 
@@ -33,7 +34,7 @@ export class SignUpController {
       }
 
       if (!typeofIsString.every(isString => Boolean(isString))) {
-        return badRequest({}, '', new MissingParamError())
+        return serverError()
       }
 
       const { password, passwordConfirmation } = httpRequest.body
@@ -42,15 +43,9 @@ export class SignUpController {
       }
 
       const fieldValidationWithRegex = new FieldValidationWithRegex({
-        name: async (value: string): Promise<boolean> => await Promise.resolve(
-          Boolean(value.match(/^[a-zA-Z\u00C0-\u017F´]+\s+[a-zA-Z\u00C0-\u017F´]{0,}$/))
-        ),
-        email: async (value: string): Promise<boolean> => await Promise.resolve(
-          Boolean(value.match(/^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/))
-        ),
-        password: async (value: string): Promise<boolean> => await Promise.resolve(
-          Boolean(value.match(/^(?=.*\d)(?=.*[a-zA-Z])(?!.*[\W_\x7B-\xFF]).{8,16}$/))
-        )
+        name: (new NameValidatorAdapter()).isValid,
+        email: (new EmailValidatorAdapter()).isValid,
+        password: (new PasswordValidatorAdapter()).isValid
       })
       let invalidFields: string[] = []
       for (const field of httpRequestBodyFields) {

@@ -1,22 +1,22 @@
-import { EmailValidatorAdapter } from './email-adapter'
+import { PasswordValidatorAdapter } from './password-adapter'
 import { getHttpRequestBodyMatchField, getHttpRequestBodyNotMatchField } from '../../presentation/helpers/export-all'
 
-interface IEmailValidatorAdapterTypes {
-  systemUnderTest: EmailValidatorAdapter
+interface IPasswordValidatorAdapterTypes {
+  systemUnderTest: PasswordValidatorAdapter
 }
-const makeSignUpController = async (): Promise<IEmailValidatorAdapterTypes> => {
-  const systemUnderTest = new EmailValidatorAdapter()
+const makeSignUpController = async (): Promise<IPasswordValidatorAdapterTypes> => {
+  const systemUnderTest = new PasswordValidatorAdapter()
 
   return {
     systemUnderTest
   }
 }
 
-describe('EmailValidatorAdapter', () => {
+describe('PasswordValidatorAdapter', () => {
   test('Should return false if validator returns false <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSignUpController()
     jest.spyOn(systemUnderTest, 'isValid').mockReturnValueOnce(Promise.resolve(false))
-    const isValid = await systemUnderTest.isValid(getHttpRequestBodyNotMatchField('email'))
+    const isValid = await systemUnderTest.isValid(getHttpRequestBodyNotMatchField('password'))
 
     expect(isValid).toBe(false)
   })
@@ -24,7 +24,7 @@ describe('EmailValidatorAdapter', () => {
   test('Should return true if validator returns true <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSignUpController()
     jest.spyOn(systemUnderTest, 'isValid').mockReturnValueOnce(Promise.resolve(true))
-    const isValid = await systemUnderTest.isValid(getHttpRequestBodyMatchField('email'))
+    const isValid = await systemUnderTest.isValid(getHttpRequestBodyMatchField('password'))
 
     expect(isValid).toBe(true)
   })
