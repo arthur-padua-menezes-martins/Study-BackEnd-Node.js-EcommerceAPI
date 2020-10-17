@@ -4,7 +4,7 @@ import { httpRequestBodyMatchComplete } from '../../../presentation/helpers/expo
 
 const makeEncrypter = async (): Promise<any> => {
   class EncrypterStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
+    async encrypt(value: string): Promise<string> {
       return await Promise.resolve('encrypted_password')
     }
   }
@@ -26,11 +26,19 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
 }
 
 describe('DatabaseAddAccount Usecases', () => {
-  test('<Should call Encrypter with correct password <version: 0.0.1>', async () => {
+  test('Should call Encrypter with correct password <version: 0.0.1>', async () => {
     const { systemUnderTest, encrypterStub } = await makeSystemUnderTest()
     const spyOnEncrypter = jest.spyOn(encrypterStub, 'encrypt')
     await systemUnderTest.add(httpRequestBodyMatchComplete)
 
     expect(spyOnEncrypter).toHaveBeenCalledWith(httpRequestBodyMatchComplete.password)
+  })
+
+  test('Should throw if Encrypter throws <version: 0.0.1>', async () => {
+    const { systemUnderTest, encrypterStub } = await makeSystemUnderTest()
+    jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()))
+    const promiseNewAccount = systemUnderTest.add(httpRequestBodyMatchComplete)
+
+    await expect(promiseNewAccount).rejects.toThrow()
   })
 })
