@@ -10,7 +10,7 @@ export class BcryptAdapter implements IEncrypter {
 
   async encrypt (value: string): Promise<string> {
     return await Promise.resolve(
-      bcrypt.hash(value, this.salt)
+      await bcrypt.hash(value, this.salt)
     )
   }
 }
