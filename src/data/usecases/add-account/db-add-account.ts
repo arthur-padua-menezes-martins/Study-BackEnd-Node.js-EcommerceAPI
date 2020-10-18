@@ -18,7 +18,6 @@ export class DatabaseAddAccount implements IAddAccount {
       ...accountData,
       password: encryptedPassword
     })
-    console.log(account)
     return await Promise.resolve(account)
   }
 }
