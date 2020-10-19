@@ -1,4 +1,4 @@
-import { IFieldValidationFieldsWithRegex, IFieldValidationWithRegex } from '../protocols/regExp/field-validation'
+import { IFieldValidationFieldsWithRegex, IFieldValidationWithRegex } from '../protocols/regEx/field-validation'
 
 export class FieldValidationWithRegex implements IFieldValidationWithRegex {
   private readonly fieldValidationOptionsWithRegex: any = {}

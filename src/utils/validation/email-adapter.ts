@@ -1,4 +1,4 @@
-import { EmailValidatorWithRegex } from '../../presentation/regExp/email-validation'
+import { EmailValidatorWithRegex } from '../../presentation/protocols/regEx/email-validation'
 
 export class EmailValidatorAdapter implements EmailValidatorWithRegex {
   async isValid (value: string): Promise<boolean> {

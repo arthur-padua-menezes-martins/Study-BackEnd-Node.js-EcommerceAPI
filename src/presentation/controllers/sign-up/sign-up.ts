@@ -1,6 +1,6 @@
 import { IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
 import { MissingParamError, InvalidParamError } from '../../errors/export-all'
-import { FieldValidationWithRegex } from '../../regExp/field-validation'
+import { FieldValidationWithRegex } from '../../regEx/field-validation'
 import { NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from '../../../utils/validation/export-all'
 import {
   httpRequestBodyFields, httpRequestBodyAddressFields,

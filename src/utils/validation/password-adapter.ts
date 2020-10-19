@@ -1,4 +1,4 @@
-import { PasswordValidatorWithRegex } from '../../presentation/regExp/password-validation'
+import { PasswordValidatorWithRegex } from '../../presentation/protocols/regEx/password-validation'
 
 export class PasswordValidatorAdapter implements PasswordValidatorWithRegex {
   async isValid (value: string): Promise<boolean> {

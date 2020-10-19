@@ -1,4 +1,4 @@
-import { NameValidatorWithRegex } from '../../presentation/regExp/name-validation'
+import { NameValidatorWithRegex } from '../../presentation/protocols/regEx/name-validation'
 
 export class NameValidatorAdapter implements NameValidatorWithRegex {
   async isValid (value: string): Promise<boolean> {
