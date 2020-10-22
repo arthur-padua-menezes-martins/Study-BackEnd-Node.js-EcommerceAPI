@@ -1,5 +1,5 @@
 export interface IHttpRequestBody {
-  [field?: string]
+  [field: string]: string | object | undefined
   name?: string
   email?: string
   password?: string

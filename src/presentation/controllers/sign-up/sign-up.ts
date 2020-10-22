@@ -1,4 +1,4 @@
-import { IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
+import { IHttpRequest, IHttpResponse, IAddAccount, IAddAccountModel } from './sign-up-protocols'
 import { MissingParamError, InvalidParamError } from '../../errors/export-all'
 import { FieldValidationWithRegex } from '../../regEx/field-validation'
 import { NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from '../../../utils/validation/export-all'
@@ -58,7 +58,7 @@ export class SignUpController {
       }
 
       const { name, email, address } = httpRequest.body
-      const httpRequestBody = {
+      const httpRequestBody: IAddAccountModel = {
         name,
         email,
         password,

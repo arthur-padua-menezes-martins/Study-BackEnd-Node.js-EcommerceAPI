@@ -1,6 +1,7 @@
 import { IAccountModel } from '../models/account'
 
 export interface IAddAccountModel {
+  [field: string]: string | object
   name: string
   email: string
   password: string
