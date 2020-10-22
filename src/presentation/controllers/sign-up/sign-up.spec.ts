@@ -5,7 +5,7 @@ import {
   httpRequestBodyFields, httpRequestBodyAddressFields,
   httpRequestBodyNotMatch, httpRequestBodyMissingField, httpRequestBodyInvalidPasswordConfirmation,
   httpRequestBodyMatchComplete
-} from '../../helpers/export-all'
+} from '../../../utils/fake-data/httpRequest'
 
 const makeAddAccount = async (): Promise<IAddAccount> => {
   class AddAccountStub {

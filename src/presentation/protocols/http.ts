@@ -1,4 +1,5 @@
 export interface IHttpRequestBody {
+  [field?: string]
   name?: string
   email?: string
   password?: string
@@ -14,6 +15,7 @@ export interface IHttpRequestBody {
 }
 
 export interface IHttpRequestBodyComplete {
+  [field: string]: string | object
   name: string
   email: string
   password: string
@@ -29,7 +31,7 @@ export interface IHttpRequestBodyComplete {
 }
 
 export interface IHttpRequest {
-  body: IHttpRequestBody | IHttpRequestBodyComplete | any
+  body: IHttpRequestBody | IHttpRequestBodyComplete
 }
 
 export interface IHttpResponse {

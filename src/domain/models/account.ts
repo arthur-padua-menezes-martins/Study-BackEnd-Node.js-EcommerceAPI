@@ -1,4 +1,5 @@
 export interface IAccountModel {
+  [field: string]: string | object
   id: string
   name: string
   email: string

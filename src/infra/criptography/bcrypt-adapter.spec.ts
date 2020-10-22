@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { BcryptAdapter } from './bcrypt-adapter'
-import { httpRequestBodyMatchComplete } from '../../presentation/helpers/httpRequestData'
+import { httpRequestBodyMatchComplete } from '../../utils/fake-data/httpRequest'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: BcryptAdapter

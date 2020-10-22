@@ -2,10 +2,8 @@ import { IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
 import { MissingParamError, InvalidParamError } from '../../errors/export-all'
 import { FieldValidationWithRegex } from '../../regEx/field-validation'
 import { NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from '../../../utils/validation/export-all'
-import {
-  httpRequestBodyFields, httpRequestBodyAddressFields,
-  ok, badRequest, serverError
-} from '../../helpers/export-all'
+import { ok, badRequest, serverError } from '../../helpers/export-all'
+import { httpRequestBodyFields, httpRequestBodyAddressFields } from '../../../utils/fake-data/httpRequest'
 
 export class SignUpController {
   private readonly addAccount
