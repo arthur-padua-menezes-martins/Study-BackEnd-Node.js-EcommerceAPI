@@ -20,11 +20,15 @@ describe('AccountMongoRepository', () => {
   beforeAll(async () => {
     await mongoHelper.connect('mongodb://localhost:27017')
   })
+  beforeEach(async () => {
+    const accountCollection = await mongoHelper.getCollection('accounts')
+    await accountCollection.deleteMany({})
+  })
   afterAll(async () => {
     await mongoHelper.disconnect()
   })
 
-  test('Should return an account on success', async () => {
+  test('Should return an account on success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     const account = await systemUnderTest.add(httpRequestBodyMatchComplete)
 
