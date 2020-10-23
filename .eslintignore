@@ -3,7 +3,6 @@ node_modules
 dist
 
 # testing
-/coverage
 coverage
 
 # dashboard dependencies

@@ -1,8 +1,6 @@
-import express from 'express'
+import { app } from './config/app'
+import { port } from './config/port'
 
-const app = express()
-
-const port = 5050
 app.listen(port, () => {
   console.log(`server available at localhost:${port}`)
 })

@@ -24,7 +24,7 @@ interface ISignUpControllerTypes {
   systemUnderTest: SignUpController
   addAccountStub: IAddAccount
 }
-const makeSignUpController = async (): Promise<ISignUpControllerTypes> => {
+const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
   const addAccountStub = await makeAddAccount()
   const systemUnderTest = new SignUpController(addAccountStub)
 
@@ -35,8 +35,8 @@ const makeSignUpController = async (): Promise<ISignUpControllerTypes> => {
 }
 
 describe('presentation/controllers/sign-up.spec.ts', () => {
-  test('returns from httpResponde "{statusCode: 400}" if any fields do not exist <version 0.0.3>', async () => {
-    const { systemUnderTest } = await makeSignUpController()
+  test('returns from httpResponse "{statusCode: 400}" if any fields do not exist <version 0.0.3>', async () => {
+    const { systemUnderTest } = await makeSystemUnderTest()
     var missingFields: string = ''
 
     const httpRequest: IHttpRequest = {
@@ -58,7 +58,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   })
 
   test('returns from httpResponse "{status Code: 400}" if the password confirmation does not match the password <version 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSignUpController()
+    const { systemUnderTest } = await makeSystemUnderTest()
     const httpRequest: IHttpRequest = {
       body: httpRequestBodyInvalidPasswordConfirmation
     }
@@ -69,7 +69,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   })
 
   test('returns from httpResponse "{status Code: 400}" if any fields do not match <version 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSignUpController()
+    const { systemUnderTest } = await makeSystemUnderTest()
 
     const httpRequest: IHttpRequest = {
       body: httpRequestBodyNotMatch
@@ -80,7 +80,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   })
 
   test('returns from httpResponse "{status Code: 500}" if validating any field throw an error <version 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSignUpController()
+    const { systemUnderTest } = await makeSystemUnderTest()
 
     const httpRequest: IHttpRequest = {
       body: {
@@ -95,7 +95,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   })
 
   test('must call AddAccount with the correct values <version 0.0.1>', async () => {
-    const { systemUnderTest, addAccountStub } = await makeSignUpController()
+    const { systemUnderTest, addAccountStub } = await makeSystemUnderTest()
     const spyOnAddAccountStubAdd = await jest.spyOn(addAccountStub, 'add')
 
     const httpRequest: IHttpRequest = {
@@ -107,7 +107,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   })
 
   test('returns from httpResponse "{status Code: 500}" if AddAccount throw error <version 0.0.1>', async () => {
-    const { systemUnderTest, addAccountStub } = await makeSignUpController()
+    const { systemUnderTest, addAccountStub } = await makeSystemUnderTest()
     jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
       throw new Error()
     })
@@ -122,7 +122,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   })
 
   test('returns from httpResponse "{status Code: 200}" if valid information is sent to AddAccount <version 0.0.2>', async () => {
-    const { systemUnderTest } = await makeSignUpController()
+    const { systemUnderTest } = await makeSystemUnderTest()
 
     const httpRequest: IHttpRequest = {
       body: httpRequestBodyMatchComplete

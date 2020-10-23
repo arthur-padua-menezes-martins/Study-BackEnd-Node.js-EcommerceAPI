@@ -16,6 +16,7 @@ export class SignUpController {
     try {
       var missingFields: string = ''
       var typeofIsString: boolean[] = []
+
       for (const field of httpRequestBodyFields) {
         missingFields += !(field in httpRequest.body) ? `${field} ` : ''
         typeofIsString.push(typeof httpRequest.body[field] === 'string' && true)
@@ -24,6 +25,10 @@ export class SignUpController {
         for (const addressField of httpRequestBodyAddressFields) {
           missingFields += !(addressField in httpRequest.body.address) ? `${addressField} ` : ''
           typeofIsString.push(typeof httpRequest.body.address[addressField] === 'string' && true)
+        }
+      } else {
+        for (const addressField of httpRequestBodyAddressFields) {
+          missingFields += `${addressField} `
         }
       }
 
