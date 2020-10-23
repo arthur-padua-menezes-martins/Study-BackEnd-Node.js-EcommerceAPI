@@ -25,7 +25,7 @@ export const httpRequestBodyMatchComplete: IHttpRequestBodyComplete = {
   ...httpRequestBodyMatchData
 }
 
-export const httpRequestBodyNotMatch: IHttpRequestBody = {
+export const httpRequestBodyNotMatch: IHttpRequestBodyComplete = {
   name: 'name' as string,
   email: '$#@!%¨&*()_+[]{}`^?:;/~@' as string,
   password: 'password' as string,
@@ -70,7 +70,7 @@ export const httpRequestBodyInvalidPasswordConfirmation: IHttpRequestBody = {
 }
 
 export const getHttpRequestBodyNotMatchField = (fieldName: string, addressFieldName?: string): string => {
-  return (fieldName && addressFieldName) ? httpRequestBodyNotMatch[fieldName][addressFieldName] : httpRequestBodyNotMatch[fieldName]
+  return (fieldName !== undefined && addressFieldName !== undefined) ? httpRequestBodyNotMatch[fieldName][addressFieldName] : httpRequestBodyNotMatch[fieldName]
 }
 
 export const getHttpRequestBodyMatchField = (fieldName: string, addressFieldName?: string): string => {

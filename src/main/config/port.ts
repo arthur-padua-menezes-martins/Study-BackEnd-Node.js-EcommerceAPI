@@ -1,1 +1,1 @@
-export const port = 5050
+export default 5050
