@@ -1,11 +1,13 @@
 import { SignUpController } from './sign-up'
 import { IHttpRequest, IAddAccount, IAddAccountModel, IAccountModel } from './sign-up-protocols'
 import { MissingParamError, InvalidParamError, ServerError } from '../../errors/export-all'
+import { FieldValidationWithRegex } from '../../regEx/field-validation'
 import {
   httpRequestBodyFields, httpRequestBodyAddressFields,
   httpRequestBodyNotMatch, httpRequestBodyMissingField, httpRequestBodyInvalidPasswordConfirmation,
   httpRequestBodyMatchComplete
 } from '../../../utils/fake-data/httpRequest'
+import { NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from '../../../utils/validation/export-all'
 
 const makeAddAccount = async (): Promise<IAddAccount> => {
   class AddAccountStub {
@@ -20,13 +22,22 @@ const makeAddAccount = async (): Promise<IAddAccount> => {
   return await Promise.resolve(new AddAccountStub())
 }
 
+const makeFieldValidationWithRegex = async (): Promise<FieldValidationWithRegex> => {
+  return new FieldValidationWithRegex({
+    name: (new NameValidatorAdapter()).isValid,
+    email: (new EmailValidatorAdapter()).isValid,
+    password: (new PasswordValidatorAdapter()).isValid
+  })
+}
+
 interface ISignUpControllerTypes {
   systemUnderTest: SignUpController
   addAccountStub: IAddAccount
 }
 const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
   const addAccountStub = await makeAddAccount()
-  const systemUnderTest = new SignUpController(addAccountStub)
+  const fieldValidationWithRegex = await makeFieldValidationWithRegex()
+  const systemUnderTest = new SignUpController(addAccountStub, fieldValidationWithRegex)
 
   return {
     systemUnderTest,

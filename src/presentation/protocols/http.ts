@@ -5,6 +5,7 @@ export interface IHttpRequestBody {
   password?: string
   passwordConfirmation?: string
   address?: {
+    [field: string]: string
     cep: string
     street: string
     number: string
@@ -15,12 +16,13 @@ export interface IHttpRequestBody {
 }
 
 export interface IHttpRequestBodyComplete {
-  [field: string]: string | object | any
+  [field: string]: string | object
   name: string
   email: string
   password: string
   passwordConfirmation: string
   address: {
+    [field: string]: string
     cep: string
     street: string
     number: string
