@@ -1,9 +1,9 @@
 import { AccountMongoRepository } from './account'
 import { mongoHelper } from '../helper/mongo-helper'
 import {
-  httpRequestBodyFields, httpRequestBodyAddressFields,
-  httpRequestBodyMatchComplete
-} from '../../../../utils/fake-data/httpRequest'
+  signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields,
+  signUpHttpRequestBodyMatchComplete
+} from '../../../../utils/fake-data/signUpHttpRequest'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: AccountMongoRepository
@@ -30,14 +30,14 @@ describe('AccountMongoRepository', () => {
 
   test('Should return an account on success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const account = await systemUnderTest.add(httpRequestBodyMatchComplete)
+    const account = await systemUnderTest.add(signUpHttpRequestBodyMatchComplete)
 
     expect(account).toBeTruthy()
-    for (const key of httpRequestBodyFields.slice(0, 2)) {
-      expect(httpRequestBodyMatchComplete[key]).toEqual(account[key])
+    for (const key of signUpHttpRequestBodyFields.slice(0, 2)) {
+      expect(signUpHttpRequestBodyMatchComplete[key]).toEqual(account[key])
     }
-    for (const key of httpRequestBodyAddressFields) {
-      expect(httpRequestBodyMatchComplete[key]).toEqual(account[key])
+    for (const key of signUpHttpRequestBodyAddressFields) {
+      expect(signUpHttpRequestBodyMatchComplete[key]).toEqual(account[key])
     }
   })
 })

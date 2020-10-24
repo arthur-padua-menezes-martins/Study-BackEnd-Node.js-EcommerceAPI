@@ -1,14 +1,14 @@
 import { SignUpController } from './sign-up'
 import { IHttpRequest, IAddAccount, IAddAccountModel, IAccountModel } from './sign-up-protocols'
-import { badRequest, serverError } from '../../helpers/export-all'
 import { FieldValidationWithRegex } from '../../regEx/field-validation'
 import { MissingParamError, InvalidParamError, ServerError } from '../../errors/export-all'
 import {
-  httpRequestBodyFields, httpRequestBodyAddressFields,
-  httpRequestBodyNotMatch, httpRequestBodyMissingField, httpRequestBodyInvalidPasswordConfirmation,
-  httpRequestBodyMatchComplete
-} from '../../../utils/fake-data/httpRequest'
+  badRequest, serverError,
+  signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields,
+  signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation,
+} from '../../helpers/export-all'
 import { NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from '../../../utils/validation/export-all'
+import '../../../main/prototype'
 
 const makeAddAccount = async (): Promise<IAddAccount> => {
   class AddAccountStub {
@@ -46,23 +46,17 @@ const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
   }
 }
 
-describe('presentation/controllers/sign-up.spec.ts', () => {
-  test('returns from httpResponse "{statusCode: 400}" if any fields do not exist <version 0.0.3>', async () => {
+describe('SignUpController', () => {
+  test('returns from httpResponse: "{statusCode: 400}" if any required fields belonging to httpRequestBody do not exist <version 0.0.3>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     var missingFields: string = ''
 
     const httpRequest: IHttpRequest = {
-      body: httpRequestBodyMissingField
+      body: signUpHttpRequestBodyMissingField
     }
 
-    for (const field of httpRequestBodyFields) {
-      missingFields += !(field in httpRequest.body) ? `${field} ` : ''
-    }
-    if ('address' in httpRequest.body && httpRequest.body.address !== undefined) {
-      for (const addressField of httpRequestBodyAddressFields) {
-        missingFields += !(addressField in httpRequest.body.address) ? `${addressField} ` : ''
-      }
-    }
+    missingFields = missingFields.missingFields(signUpHttpRequestBodyFields, httpRequest.body)
+    missingFields = missingFields.missingFields(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object)
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest({}, '', new MissingParamError(missingFields)))
@@ -71,7 +65,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
   test('returns from httpResponse "{status Code: 400}" if the password confirmation does not match the password <version 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     const httpRequest: IHttpRequest = {
-      body: httpRequestBodyInvalidPasswordConfirmation
+      body: signUpHttpRequestBodyInvalidPasswordConfirmation
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
@@ -82,25 +76,25 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
     const httpRequest: IHttpRequest = {
-      body: httpRequestBodyNotMatch
+      body: signUpHttpRequestBodyNotMatch
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe((badRequest({}, '', null)).statusCode)
   })
 
-  test('returns from httpResponse "{status Code: 400}" if validating any field throw an error <version 0.0.1>', async () => {
+  test('returns from httpResponse "{status Code: 500}" if validating any field throw an error <version 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
     const httpRequest: IHttpRequest = {
       body: {
-        ...httpRequestBodyNotMatch,
+        ...signUpHttpRequestBodyNotMatch,
         name: undefined
       }
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest({}, '', new InvalidParamError()))
+    expect(httpResponse).toEqual(serverError(new ServerError(undefined)))
   })
 
   test('must call AddAccount with the correct values <version 0.0.1>', async () => {
@@ -108,11 +102,11 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
     const spyOnAddAccountStubAdd = await jest.spyOn(addAccountStub, 'add')
 
     const httpRequest: IHttpRequest = {
-      body: httpRequestBodyMatchComplete
+      body: signUpHttpRequestBodyMatchComplete
     }
 
     await systemUnderTest.handle(httpRequest)
-    expect(spyOnAddAccountStubAdd).toHaveBeenCalledWith(httpRequestBodyMatchComplete)
+    expect(spyOnAddAccountStubAdd).toHaveBeenCalledWith(signUpHttpRequestBodyMatchComplete)
   })
 
   test('returns from httpResponse "{status Code: 500}" if AddAccount throw error <version 0.0.1>', async () => {
@@ -122,7 +116,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
     })
 
     const httpRequest: IHttpRequest = {
-      body: httpRequestBodyMatchComplete
+      body: signUpHttpRequestBodyMatchComplete
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
@@ -133,14 +127,14 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
     const httpRequest: IHttpRequest = {
-      body: httpRequestBodyMatchComplete
+      body: signUpHttpRequestBodyMatchComplete
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
     expect(httpResponse.body).toEqual({
       id: '',
-      ...httpRequestBodyMatchComplete
+      ...signUpHttpRequestBodyMatchComplete
     })
   })
 })

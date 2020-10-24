@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { BcryptAdapter } from './bcrypt-adapter'
-import { httpRequestBodyMatchComplete } from '../../utils/fake-data/httpRequest'
+import { signUpHttpRequestBodyMatchComplete } from '../../utils/fake-data/signUpHttpRequest'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: BcryptAdapter
@@ -24,14 +24,14 @@ describe('BcryptAdapter', () => {
   test('Should call bcrypt whit correct values <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     const spyOnBcryptHash = jest.spyOn(bcrypt, 'hash')
-    await systemUnderTest.encrypt(httpRequestBodyMatchComplete.password)
+    await systemUnderTest.encrypt(signUpHttpRequestBodyMatchComplete.password)
 
-    expect(spyOnBcryptHash).toHaveBeenLastCalledWith(httpRequestBodyMatchComplete.password, salt)
+    expect(spyOnBcryptHash).toHaveBeenLastCalledWith(signUpHttpRequestBodyMatchComplete.password, salt)
   })
 
   test('Should return a encryptedPassword on success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const encryptedPassword = await systemUnderTest.encrypt(httpRequestBodyMatchComplete.password)
+    const encryptedPassword = await systemUnderTest.encrypt(signUpHttpRequestBodyMatchComplete.password)
 
     expect(encryptedPassword).toBe('encrypted_password')
   })
@@ -39,7 +39,7 @@ describe('BcryptAdapter', () => {
   test('Should throw if bcrypt throws <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     jest.spyOn(bcrypt, 'hash').mockReturnValue(Promise.reject(await new Error()))
-    const encryptedPassword = systemUnderTest.encrypt(httpRequestBodyMatchComplete.password)
+    const encryptedPassword = systemUnderTest.encrypt(signUpHttpRequestBodyMatchComplete.password)
 
     await expect(encryptedPassword).rejects.toThrow()
   })

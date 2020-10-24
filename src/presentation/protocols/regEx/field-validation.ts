@@ -5,6 +5,8 @@ export interface IFieldValidationWithRegex {
 export interface IFieldValidationFieldsWithRegex {
   [name: string]: (value: string) => Promise<boolean>
 
+  name: (value: string) => Promise<boolean>
+
   email: (value: string) => Promise<boolean>
 
   password: (value: string) => Promise<boolean>

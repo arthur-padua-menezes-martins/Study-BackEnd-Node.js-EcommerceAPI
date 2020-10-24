@@ -1,10 +1,10 @@
-import { IHttpRequestBody, IHttpRequestBodyComplete } from '../../presentation/protocols/export-all'
+import { IHttpRequestBody, IHttpRequestBodyComplete } from '../../presentation/protocols/http'
 
-export const httpRequestBodyFields: string[] = ['name', 'email', 'password', 'passwordConfirmation']
+export const signUpHttpRequestBodyFields: string[] = ['name', 'email', 'password', 'passwordConfirmation']
 
-export const httpRequestBodyAddressFields: string[] = ['cep', 'street', 'number', 'neighborhood', 'city', 'state']
+export const signUpHttpRequestBodyAddressFields: string[] = ['cep', 'street', 'number', 'neighborhood', 'city', 'state']
 
-const httpRequestBodyMatchData: any = {
+const signUpHttpRequestBodyMatchData: any = {
   name: 'name lastName' as string,
   email: 'arthur.software.developer@gmail.com' as string,
   password: 'password123' as string,
@@ -18,14 +18,14 @@ const httpRequestBodyMatchData: any = {
     state: 'CE' as string
   }
 }
-export const httpRequestBodyMatch: IHttpRequestBody = {
-  ...httpRequestBodyMatchData
+export const signUpHttpRequestBodyMatch: IHttpRequestBody = {
+  ...signUpHttpRequestBodyMatchData
 }
-export const httpRequestBodyMatchComplete: IHttpRequestBodyComplete = {
-  ...httpRequestBodyMatchData
+export const signUpHttpRequestBodyMatchComplete: IHttpRequestBodyComplete = {
+  ...signUpHttpRequestBodyMatchData
 }
 
-export const httpRequestBodyNotMatch: IHttpRequestBodyComplete = {
+export const signUpHttpRequestBodyNotMatch: IHttpRequestBody = {
   name: 'name' as string,
   email: '$#@!%¨&*()_+[]{}`^?:;/~@' as string,
   password: 'password' as string,
@@ -40,7 +40,7 @@ export const httpRequestBodyNotMatch: IHttpRequestBodyComplete = {
   }
 }
 
-export const httpRequestBodyMissingField: IHttpRequestBody = {
+export const signUpHttpRequestBodyMissingField: IHttpRequestBody = {
   email: 'arthur.software.developer@gmail.com' as string,
   password: 'password' as string,
   passwordConfirmation: 'password' as string,
@@ -54,7 +54,7 @@ export const httpRequestBodyMissingField: IHttpRequestBody = {
   }
 }
 
-export const httpRequestBodyInvalidPasswordConfirmation: IHttpRequestBody = {
+export const signUpHttpRequestBodyInvalidPasswordConfirmation: IHttpRequestBody = {
   name: 'name lastName' as string,
   email: 'arthur.software.developer@gmail.com' as string,
   password: 'password' as string,
@@ -69,10 +69,10 @@ export const httpRequestBodyInvalidPasswordConfirmation: IHttpRequestBody = {
   }
 }
 
-export const getHttpRequestBodyNotMatchField = (fieldName: string, addressFieldName?: string): string => {
-  return (fieldName !== undefined && addressFieldName !== undefined) ? httpRequestBodyNotMatch[fieldName][addressFieldName] : httpRequestBodyNotMatch[fieldName]
+export const getSignUpHttpRequestBodyNotMatchField = (fieldName: string, addressFieldName?: string): string => {
+  return (fieldName && addressFieldName) ? signUpHttpRequestBodyNotMatch[fieldName][addressFieldName] : signUpHttpRequestBodyNotMatch[fieldName]
 }
 
-export const getHttpRequestBodyMatchField = (fieldName: string, addressFieldName?: string): string => {
-  return (fieldName && addressFieldName) ? httpRequestBodyMatch[fieldName][addressFieldName] : httpRequestBodyMatch[fieldName]
+export const getSignUpHttpRequestBodyMatchField = (fieldName: string, addressFieldName?: string): string => {
+  return (fieldName && addressFieldName) ? signUpHttpRequestBodyMatch[fieldName][addressFieldName] : signUpHttpRequestBodyMatch[fieldName]
 }

@@ -1,14 +1,26 @@
-import { Controller } from '../../protocols/export-all'
-import { IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
+import { Controller, IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
 import { FieldValidationWithRegex } from '../../regEx/field-validation'
-import { ok, badRequest, serverError } from '../../helpers/export-all'
 import { MissingParamError, InvalidParamError } from '../../errors/export-all'
-import { httpRequestBodyFields, httpRequestBodyAddressFields } from '../../../utils/fake-data/httpRequest'
+import {
+  ok, badRequest, serverError,
+  signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields
+} from '../../helpers/export-all'
+import '../../../main/prototype'
 
+/**
+* @method handle 
+* validates the insertion of a new account in the database
+*/
 export class SignUpController implements Controller {
   private readonly addAccount
   private readonly fieldValidationWithRegex
 
+  /**
+  * @param { IAddAccount } addAccount 
+  * implementation of the user account record manager in the database contained
+  * @param { FieldValidationWithRegex } fieldValidationWithRegex 
+  * implementation of the request field validator
+  */
   constructor (addAccount: IAddAccount, fieldValidationWithRegex: FieldValidationWithRegex) {
     this.addAccount = addAccount
     this.fieldValidationWithRegex = fieldValidationWithRegex
@@ -17,28 +29,18 @@ export class SignUpController implements Controller {
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       var missingFields: string = ''
-      var typeofIsString: boolean[] = []
+      var typeOfIsNotString: boolean[] = []
 
-      for (const field of httpRequestBodyFields) {
-        missingFields += !(field in httpRequest.body) ? `${field} ` : ''
-        typeofIsString.push(typeof httpRequest.body[field] === 'string' && true)
-      }
-      if (typeof httpRequest.body.address !== 'undefined') {
-        for (const addressField of httpRequestBodyAddressFields) {
-          missingFields += !(addressField in httpRequest.body.address) ? `${addressField} ` : ''
-          typeofIsString.push(typeof httpRequest.body.address[addressField] === 'string' && true)
-        }
-      } else {
-        for (const addressField of httpRequestBodyAddressFields) {
-          missingFields += `${addressField} `
-        }
-      }
+      missingFields = missingFields.missingFields(signUpHttpRequestBodyFields, httpRequest.body)
+      missingFields = missingFields.missingFields(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object)
+      typeOfIsNotString.push(typeOfIsNotString.typeOfIsNotString(signUpHttpRequestBodyAddressFields, httpRequest.body))
+      typeOfIsNotString.push(typeOfIsNotString.typeOfIsNotString(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object))
 
       if (missingFields) {
         return badRequest({}, '', new MissingParamError(missingFields))
       }
 
-      if (!typeofIsString.every(isString => Boolean(isString))) {
+      if (typeOfIsNotString.every(isNotString => Boolean(isNotString))) {
         return badRequest({}, '', new InvalidParamError())
       }
 
@@ -48,10 +50,10 @@ export class SignUpController implements Controller {
       }
 
       var invalidFields: string[] = []
-      for (const field of httpRequestBodyFields) {
+      for (const field of signUpHttpRequestBodyFields) {
         invalidFields.push(await this.fieldValidationWithRegex.options(field, httpRequest.body[field]))
       }
-      for (const field of httpRequestBodyAddressFields) {
+      for (const field of signUpHttpRequestBodyAddressFields) {
         invalidFields.push(await this.fieldValidationWithRegex.options(field, httpRequest.body[field]))
       }
       invalidFields = (invalidFields.filter(field => field !== ''))
