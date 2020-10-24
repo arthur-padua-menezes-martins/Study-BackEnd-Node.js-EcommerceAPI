@@ -1,10 +1,11 @@
+import { Controller } from '../../protocols/export-all'
 import { IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
 import { FieldValidationWithRegex } from '../../regEx/field-validation'
 import { ok, badRequest, serverError } from '../../helpers/export-all'
 import { MissingParamError, InvalidParamError } from '../../errors/export-all'
 import { httpRequestBodyFields, httpRequestBodyAddressFields } from '../../../utils/fake-data/httpRequest'
 
-export class SignUpController {
+export class SignUpController implements Controller {
   private readonly addAccount
   private readonly fieldValidationWithRegex
 
@@ -13,7 +14,7 @@ export class SignUpController {
     this.fieldValidationWithRegex = fieldValidationWithRegex
   }
 
-  async handle (httpRequest: IHttpRequest): Promise<IHttpResponse | any> {
+  async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       var missingFields: string = ''
       var typeofIsString: boolean[] = []
@@ -38,7 +39,7 @@ export class SignUpController {
       }
 
       if (!typeofIsString.every(isString => Boolean(isString))) {
-        return serverError()
+        return badRequest({}, '', new InvalidParamError())
       }
 
       const { password, passwordConfirmation } = httpRequest.body
@@ -46,7 +47,7 @@ export class SignUpController {
         return badRequest({}, '', new InvalidParamError('passwordConfirmation'))
       }
 
-      let invalidFields: string[] = []
+      var invalidFields: string[] = []
       for (const field of httpRequestBodyFields) {
         invalidFields.push(await this.fieldValidationWithRegex.options(field, httpRequest.body[field]))
       }
@@ -59,19 +60,17 @@ export class SignUpController {
       }
 
       const { name, email, address } = httpRequest.body
-      if (name && email && password && passwordConfirmation && address) {
-        const newAccount = await this.addAccount.add({
-          name,
-          email,
-          password,
-          passwordConfirmation,
-          address
-        })
+      const newAccount = await this.addAccount.add({
+        name: name as string,
+        email: email as string,
+        password: password as string,
+        passwordConfirmation: passwordConfirmation as string,
+        address: address as any
+      })
 
-        return ok(newAccount)
-      }
+      return ok(newAccount)
     } catch (error) {
-      return serverError()
+      return serverError(error)
     }
   }
 }

@@ -3,7 +3,8 @@ import { ServerError } from '../errors/export-all'
 
 export const ok = (body: object, successMessage?: string): IHttpResponse => ({
   statusCode: 200,
-  body: body
+  body: body,
+  successMessage: successMessage
 })
 
 export const badRequest = (body: Object, successMessage?: string, errorMessage?: any, invalidFields?: string[]): IHttpResponse => ({
@@ -14,8 +15,8 @@ export const badRequest = (body: Object, successMessage?: string, errorMessage?:
   invalidFields: invalidFields
 })
 
-export const serverError = (): IHttpResponse => ({
+export const serverError = (error: Error): IHttpResponse => ({
   statusCode: 500,
   body: {},
-  errorMessage: new ServerError()
+  errorMessage: new ServerError(error.stack)
 })
