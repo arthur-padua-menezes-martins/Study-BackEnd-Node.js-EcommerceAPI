@@ -21,8 +21,8 @@ describe('AccountMongoRepository', () => {
     await mongoHelper.connect('mongodb://localhost:27017')
   })
   beforeEach(async () => {
-    const accountCollection = await mongoHelper.getCollection('accounts')
-    await accountCollection.deleteMany({})
+    const accountsCollection = await mongoHelper.getCollection('accounts')
+    await accountsCollection.deleteMany({})
   })
   afterAll(async () => {
     await mongoHelper.disconnect()

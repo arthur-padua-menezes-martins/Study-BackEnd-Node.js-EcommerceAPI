@@ -1,7 +1,8 @@
 import { SignUpController } from './sign-up'
 import { IHttpRequest, IAddAccount, IAddAccountModel, IAccountModel } from './sign-up-protocols'
-import { MissingParamError, InvalidParamError, ServerError } from '../../errors/export-all'
+import { badRequest, serverError } from '../../helpers/export-all'
 import { FieldValidationWithRegex } from '../../regEx/field-validation'
+import { MissingParamError, InvalidParamError, ServerError } from '../../errors/export-all'
 import {
   httpRequestBodyFields, httpRequestBodyAddressFields,
   httpRequestBodyNotMatch, httpRequestBodyMissingField, httpRequestBodyInvalidPasswordConfirmation,
@@ -64,8 +65,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.errorMessage).toEqual(new MissingParamError(missingFields))
+    expect(httpResponse).toEqual(badRequest({}, '', new MissingParamError(missingFields)))
   })
 
   test('returns from httpResponse "{status Code: 400}" if the password confirmation does not match the password <version 0.0.1>', async () => {
@@ -75,8 +75,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.errorMessage).toEqual(new InvalidParamError('passwordConfirmation'))
+    expect(httpResponse).toEqual(badRequest({}, '', new InvalidParamError('passwordConfirmation')))
   })
 
   test('returns from httpResponse "{status Code: 400}" if any fields do not match <version 0.0.1>', async () => {
@@ -87,10 +86,10 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.statusCode).toBe((badRequest({}, '', null)).statusCode)
   })
 
-  test('returns from httpResponse "{status Code: 500}" if validating any field throw an error <version 0.0.1>', async () => {
+  test('returns from httpResponse "{status Code: 400}" if validating any field throw an error <version 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
     const httpRequest: IHttpRequest = {
@@ -101,8 +100,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.errorMessage).toEqual(new ServerError())
+    expect(httpResponse).toEqual(badRequest({}, '', new InvalidParamError()))
   })
 
   test('must call AddAccount with the correct values <version 0.0.1>', async () => {
@@ -128,8 +126,7 @@ describe('presentation/controllers/sign-up.spec.ts', () => {
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.errorMessage).toEqual(new ServerError())
+    expect(httpResponse).toEqual(serverError(new ServerError(undefined)))
   })
 
   test('returns from httpResponse "{status Code: 200}" if valid information is sent to AddAccount <version 0.0.2>', async () => {
