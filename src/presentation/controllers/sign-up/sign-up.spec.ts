@@ -1,14 +1,10 @@
 import { SignUpController } from './sign-up'
 import { IHttpRequest, IAddAccount, IAddAccountModel, IAccountModel } from './sign-up-protocols'
-import { FieldValidationWithRegex } from '../../regEx/field-validation'
-import { MissingParamError, InvalidParamError, ServerError } from '../../errors/export-all'
+import { FieldValidationWithRegex, NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from './sign-up-components'
 import {
-  badRequest, serverError,
-  signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields,
-  signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation,
-} from '../../helpers/export-all'
-import { NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from '../../../utils/validation/export-all'
-import '../../../main/prototype'
+  MissingParamError, InvalidParamError, ServerError, badRequest, serverError,
+  signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields, signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation
+} from './sign-up-helpers'
 
 const makeAddAccount = async (): Promise<IAddAccount> => {
   class AddAccountStub {
@@ -72,7 +68,7 @@ describe('SignUpController', () => {
     expect(httpResponse).toEqual(badRequest({}, '', new InvalidParamError('passwordConfirmation')))
   })
 
-  test('returns from httpResponse "{status Code: 400}" if any fields do not match <version 0.0.1>', async () => {
+  test('returns from httpResponse "{status Code: 400}" if any fields do not match validation <version 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
     const httpRequest: IHttpRequest = {
@@ -120,7 +116,8 @@ describe('SignUpController', () => {
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(httpResponse).toEqual(serverError(new ServerError(undefined)))
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.errorMessage?.name).toBe('ServerError')
   })
 
   test('returns from httpResponse "{status Code: 200}" if valid information is sent to AddAccount <version 0.0.2>', async () => {

@@ -7,6 +7,8 @@ export class MissingParamError extends Error {
   /**
   * @param missingParameter
   * missing parameter(s)
+  * @this `this.name`
+  * references the class name
   */
   constructor (missingParameter?: string) {
     if (typeof missingParameter !== 'undefined' && missingParameter !== '') {

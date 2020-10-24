@@ -1,7 +1,9 @@
+import { IHttpRequestBody } from '../protocols/http'
 import { IFieldValidationFieldsWithRegex, IFieldValidationWithRegex } from '../protocols/regEx/field-validation'
 
 export class FieldValidationWithRegex implements IFieldValidationWithRegex {
   private readonly fieldValidationOptionsWithRegex: any = {}
+  public invalidFields: string[] = []
 
   constructor (fields: IFieldValidationFieldsWithRegex) {
     for (const key in fields) {
@@ -15,5 +17,17 @@ export class FieldValidationWithRegex implements IFieldValidationWithRegex {
     } else {
       return await Promise.resolve('')
     }
+  }
+
+  exec = async (fields: string[], body: IHttpRequestBody): Promise<string[]> => {
+    for (const field of fields) {
+      this.invalidFields.push(
+        await this.options(field, body[field])
+      )
+    }
+
+    const invalidFields = this.invalidFields
+    this.invalidFields = []
+    return (invalidFields.filter(field => field))
   }
 }

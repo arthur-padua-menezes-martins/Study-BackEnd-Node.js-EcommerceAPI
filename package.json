@@ -1,6 +1,6 @@
 {
   "name": "ecommerce_sertao_nerd",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "config": {
     "mongodbMemoryServer": {

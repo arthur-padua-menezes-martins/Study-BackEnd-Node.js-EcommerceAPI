@@ -1,14 +1,12 @@
 import { Controller, IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
-import { FieldValidationWithRegex } from '../../regEx/field-validation'
-import { MissingParamError, InvalidParamError } from '../../errors/export-all'
+import { FieldValidationWithRegex } from './sign-up-components'
 import {
-  ok, badRequest, serverError,
+  MissingParamError, InvalidParamError, ok, badRequest, serverError,
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields
-} from '../../helpers/export-all'
-import '../../../main/prototype'
+} from './sign-up-helpers'
 
 /**
-* @method handle 
+* @method handle
 * validates the insertion of a new account in the database
 */
 export class SignUpController implements Controller {
@@ -16,9 +14,9 @@ export class SignUpController implements Controller {
   private readonly fieldValidationWithRegex
 
   /**
-  * @param { IAddAccount } addAccount 
+  * @param { IAddAccount } addAccount
   * implementation of the user account record manager in the database contained
-  * @param { FieldValidationWithRegex } fieldValidationWithRegex 
+  * @param { FieldValidationWithRegex } fieldValidationWithRegex
   * implementation of the request field validator
   */
   constructor (addAccount: IAddAccount, fieldValidationWithRegex: FieldValidationWithRegex) {
@@ -26,6 +24,10 @@ export class SignUpController implements Controller {
     this.fieldValidationWithRegex = fieldValidationWithRegex
   }
 
+  /**
+  * @param { IHttpRequest } httpRequest
+  * information by the user
+  */
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       var missingFields: string = ''
@@ -33,14 +35,13 @@ export class SignUpController implements Controller {
 
       missingFields = missingFields.missingFields(signUpHttpRequestBodyFields, httpRequest.body)
       missingFields = missingFields.missingFields(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object)
-      typeOfIsNotString.push(typeOfIsNotString.typeOfIsNotString(signUpHttpRequestBodyAddressFields, httpRequest.body))
-      typeOfIsNotString.push(typeOfIsNotString.typeOfIsNotString(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object))
-
       if (missingFields) {
         return badRequest({}, '', new MissingParamError(missingFields))
       }
 
-      if (typeOfIsNotString.every(isNotString => Boolean(isNotString))) {
+      typeOfIsNotString.push(typeOfIsNotString.typeOfIsNotString(signUpHttpRequestBodyFields, httpRequest.body))
+      typeOfIsNotString.push(typeOfIsNotString.typeOfIsNotString(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object))
+      if (typeOfIsNotString.every(isNotString => isNotString)) {
         return badRequest({}, '', new InvalidParamError())
       }
 
@@ -49,16 +50,11 @@ export class SignUpController implements Controller {
         return badRequest({}, '', new InvalidParamError('passwordConfirmation'))
       }
 
-      var invalidFields: string[] = []
-      for (const field of signUpHttpRequestBodyFields) {
-        invalidFields.push(await this.fieldValidationWithRegex.options(field, httpRequest.body[field]))
-      }
-      for (const field of signUpHttpRequestBodyAddressFields) {
-        invalidFields.push(await this.fieldValidationWithRegex.options(field, httpRequest.body[field]))
-      }
-      invalidFields = (invalidFields.filter(field => field !== ''))
+      const invalidFieldsOne = await this.fieldValidationWithRegex.exec(signUpHttpRequestBodyFields, httpRequest.body)
+      const invalidFieldsTwo = await this.fieldValidationWithRegex.exec(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object)
+      const invalidFields = [...invalidFieldsOne, ...invalidFieldsTwo]
       if (invalidFields.length > 0) {
-        return badRequest({}, '', null, invalidFields)
+        return badRequest({}, '', new InvalidParamError(invalidFields.join(' ')), invalidFields)
       }
 
       const { name, email, address } = httpRequest.body
