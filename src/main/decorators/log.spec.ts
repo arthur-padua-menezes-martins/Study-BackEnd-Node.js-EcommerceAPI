@@ -1,6 +1,6 @@
 import { Controller, IHttpRequest, IHttpResponse } from '../../presentation/protocols/export-all'
 import { LogControllerDecorator } from './log'
-import { LogErrorRepository } from '../../data/protocols/log-error-repository'
+import { LogErrorRepository } from '../../data/protocols/repository/log-error-repository'
 import {
   serverError,
   signUpHttpRequestBodyMatchComplete
