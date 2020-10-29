@@ -1,14 +1,9 @@
-/**
-* one or more parameters do not comply with validation
-* @returns
-* ``this.name`` references the class name ``this.message`` references a specific error message
-*/
 export class InvalidParamError extends Error {
   /**
   * @param invalidParameter
   * invalid parameter(s)
   * @this `this.name`
-  * references the class name
+  * references the type of error
   */
   constructor (invalidParameter?: string) {
     if (typeof invalidParameter !== 'undefined' && invalidParameter !== '') {

@@ -1,5 +1,5 @@
 import { IHttpResponse } from '../protocols/export-all'
-import { ServerError } from '../errors/export-all'
+import { UnauthorizedError, ServerError } from '../errors/export-all'
 
 /**
 * the server took an expected action
@@ -34,9 +34,16 @@ export const badRequest = (body: Object, successMessage?: string, errorMessage?:
 })
 
 /**
+* the server cannot process the request due to the unauthorized error
+*/
+export const unauthorized = (): IHttpResponse => ({
+  statusCode: 401,
+  body: {},
+  errorMessage: new UnauthorizedError()
+})
+
+/**
 * the server cannot or will not process the request due to a server error
-* @param body
-* specific content for each implementation
 * @param error
 * error thrown
 */

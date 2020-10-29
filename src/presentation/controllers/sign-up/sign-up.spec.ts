@@ -2,7 +2,7 @@ import { SignUpController } from './sign-up'
 import { IHttpRequest, IAddAccount, IAddAccountModel, IAccountModel } from './sign-up-protocols'
 import { FieldValidationWithRegex, NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from './sign-up-components'
 import {
-  MissingParamError, InvalidParamError, ServerError, badRequest, serverError,
+  MissingParamError, InvalidParamError, badRequest,
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields, signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation
 } from './sign-up-helpers'
 
@@ -30,6 +30,7 @@ const makeFieldValidationWithRegex = async (): Promise<FieldValidationWithRegex>
 interface ISignUpControllerTypes {
   systemUnderTest: SignUpController
   addAccountStub: IAddAccount
+  fieldValidationWithRegex: FieldValidationWithRegex
 }
 const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
   const addAccountStub = await makeAddAccount()
@@ -38,7 +39,8 @@ const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
 
   return {
     systemUnderTest,
-    addAccountStub
+    addAccountStub,
+    fieldValidationWithRegex
   }
 }
 
@@ -79,18 +81,34 @@ describe('SignUpController', () => {
     expect(httpResponse.statusCode).toBe((badRequest({}, '', null)).statusCode)
   })
 
-  test('returns from httpResponse "{status Code: 500}" if validating any field throw an error <version 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
+  test('returns from httpResponse "{status Code: 500}" if sending data to validate any field generates an error <version 0.0.1>', async () => {
+    const { systemUnderTest, fieldValidationWithRegex } = await makeSystemUnderTest()
+    jest.spyOn(fieldValidationWithRegex, 'exec').mockImplementationOnce(() => {
+      throw new Error()
+    })
 
     const httpRequest: IHttpRequest = {
-      body: {
-        ...signUpHttpRequestBodyNotMatch,
-        name: undefined
-      }
+      body: signUpHttpRequestBodyNotMatch
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(httpResponse).toEqual(serverError(new ServerError(undefined)))
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.errorMessage?.name).toBe('ServerError')
+  })
+
+  test('returns from httpResponse "{status Code: 500}" if validating any field throw an error <version 0.0.1>', async () => {
+    const { systemUnderTest, fieldValidationWithRegex } = await makeSystemUnderTest()
+    jest.spyOn(fieldValidationWithRegex, 'options').mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const httpRequest: IHttpRequest = {
+      body: signUpHttpRequestBodyNotMatch
+    }
+
+    const httpResponse = await systemUnderTest.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.errorMessage?.name).toBe('ServerError')
   })
 
   test('must call AddAccount with the correct values <version 0.0.1>', async () => {

@@ -1,12 +1,9 @@
-/**
-* the server cannot or will not process the request due to a server error
-*/
 export class ServerError extends Error {
   /**
   * @param errorStack
   * error stack
   * @this `this.name`
-  * references the class name
+  * references the type of error
   * @this `this.message`
   * references a generic error message
   * @this `this.stack`

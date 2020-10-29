@@ -4,7 +4,7 @@ import { IAddAccountModel } from '../../../domain/usecases/add-account'
 /**
 * @interface
 * general interface for add account in database
-* @method ``add``
+* @method `add`
 * add new account record to the database
 */
 export interface IAddAccountRepository {

@@ -1,7 +1,7 @@
 /**
 * @interface
 * general interface for error log
-* @method ``logError``
+* @method `logError`
 * log the stack error
 */
 export interface LogErrorRepository {

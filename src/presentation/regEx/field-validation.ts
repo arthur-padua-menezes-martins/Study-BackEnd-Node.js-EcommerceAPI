@@ -3,7 +3,7 @@ import { IFieldValidationFieldsWithRegex, IFieldValidationWithRegex } from '../p
 
 export class FieldValidationWithRegex implements IFieldValidationWithRegex {
   private readonly fieldValidationOptionsWithRegex: any = {}
-  public invalidFields: string[] = []
+  private readonly invalidFields: string[] = []
 
   constructor (fields: IFieldValidationFieldsWithRegex) {
     for (const key in fields) {
@@ -26,8 +26,8 @@ export class FieldValidationWithRegex implements IFieldValidationWithRegex {
       )
     }
 
-    const invalidFields = this.invalidFields
-    this.invalidFields = []
-    return (invalidFields.filter(field => field))
+    return (
+      (this.invalidFields.filter(field => field)).slice(0, this.invalidFields.length)
+    )
   }
 }

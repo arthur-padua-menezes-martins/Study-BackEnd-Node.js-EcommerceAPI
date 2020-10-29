@@ -4,9 +4,9 @@ import { ISaveNewAccessesModel, IGetNewAccessesModel } from '../../../../domain/
 /**
 * @interface
 * specific interface to manage access-related data storage and retrieval
-* @method ``save``
+* @method `save`
 * register new access
-* @method ``get``
+* @method `get`
 * retrieve information about accesses
 */
 export interface INewAccessesRepository {

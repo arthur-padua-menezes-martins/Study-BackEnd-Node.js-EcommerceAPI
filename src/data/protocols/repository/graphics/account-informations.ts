@@ -4,13 +4,13 @@ import { ICreateAccountInformationsModel, ISignInAccountInformationsModel, ISave
 /**
 * @interface
 * specific interface to manage the storage and retrieval of data related to account
-* @method ``create``
+* @method `create`
 * store create account informations
-* @method ``signIn``
+* @method `signIn`
 * store sign in informations
-* @method ``save``
+* @method `save`
 * store the update account informations
-* @method ``get``
+* @method `get`
 * retrieve information about account
 */
 export interface IAccountInformationsRepository {

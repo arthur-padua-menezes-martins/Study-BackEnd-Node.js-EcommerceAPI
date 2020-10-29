@@ -50,9 +50,9 @@ export class SignUpController implements Controller {
         return badRequest({}, '', new InvalidParamError('passwordConfirmation'))
       }
 
-      const invalidFieldsOne = await this.fieldValidationWithRegex.exec(signUpHttpRequestBodyFields, httpRequest.body)
-      const invalidFieldsTwo = await this.fieldValidationWithRegex.exec(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object)
-      const invalidFields = [...invalidFieldsOne, ...invalidFieldsTwo]
+      const invalidFieldsInPersonalData = await this.fieldValidationWithRegex.exec(signUpHttpRequestBodyFields, httpRequest.body)
+      const invalidFieldsInAddressData = await this.fieldValidationWithRegex.exec(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object)
+      const invalidFields = [...invalidFieldsInPersonalData, ...invalidFieldsInAddressData]
       if (invalidFields.length > 0) {
         return badRequest({}, '', new InvalidParamError(invalidFields.join(' ')), invalidFields)
       }

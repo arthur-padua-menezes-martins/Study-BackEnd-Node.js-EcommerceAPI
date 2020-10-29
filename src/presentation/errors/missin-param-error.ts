@@ -1,14 +1,9 @@
-/**
-* one or more parameters do not obey the requirement
-* @returns
-* ``this.name`` references the class name ``this.message`` references a specific error message
-*/
 export class MissingParamError extends Error {
   /**
   * @param missingParameter
   * missing parameter(s)
   * @this `this.name`
-  * references the class name
+  * references the type of error
   */
   constructor (missingParameter?: string) {
     if (typeof missingParameter !== 'undefined' && missingParameter !== '') {
