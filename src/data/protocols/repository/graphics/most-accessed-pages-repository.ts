@@ -1,5 +1,7 @@
-import { IMostAccessedPagesModel } from '../../../../domain/models/graphics/most-accessed-pages'
-import { ISaveMostAccessedPagesModel, IGetMostAccessedPagesModel } from '../../../../domain/usecases/graphics/most-accessed-pages'
+import {
+  IMostAccessedPagesModel,
+  ISaveMostAccessedPagesModel, IGetMostAccessedPagesModel
+} from './import-all'
 
 /**
 * @interface

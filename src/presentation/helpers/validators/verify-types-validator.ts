@@ -1,4 +1,4 @@
-import { Validation } from './validation'
+import { Validation } from '../../protocols/validation/validation'
 
 interface IInputContent {
   checkThisType: string

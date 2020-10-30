@@ -1,9 +1,9 @@
 import { DatabaseAddAccountController } from './db-add-account'
 import {
   IAccountModel, IAddAccountModel,
-  IEncrypter, IAddAccountRepository,
-  signUpHttpRequestBodyMatchComplete
+  IEncrypter, IAddAccountRepository
 } from './db-add-account-protocols'
+import { signUpHttpRequestBodyMatchComplete, accountModelMatch } from './db-add-account-utils'
 
 const makeEncrypter = async (): Promise<IEncrypter> => {
   class EncrypterStub implements IEncrypter {
@@ -17,12 +17,8 @@ const makeEncrypter = async (): Promise<IEncrypter> => {
 const makeAddAccountRepository = async (): Promise<IAddAccountRepository> => {
   class AddAccountRepositoryStub implements IAddAccountRepository {
     async add (accountData: IAddAccountModel): Promise<IAccountModel> {
-      const fakeAccount = {
-        id: 'valid_id',
-        ...signUpHttpRequestBodyMatchComplete,
-        password: 'encrypted_password'
-      }
-      return await Promise.resolve(fakeAccount)
+      const acconunt: IAccountModel = accountModelMatch
+      return await Promise.resolve(acconunt)
     }
   }
   return new AddAccountRepositoryStub()

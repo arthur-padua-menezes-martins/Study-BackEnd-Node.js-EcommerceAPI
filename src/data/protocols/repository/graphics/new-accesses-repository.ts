@@ -1,5 +1,7 @@
-import { INewAccessesModel } from '../../../../domain/models/graphics/new-accesses'
-import { ISaveNewAccessesModel, IGetNewAccessesModel } from '../../../../domain/usecases/graphics/new-accesses'
+import {
+  INewAccessesModel,
+  ISaveNewAccessesModel, IGetNewAccessesModel
+} from './import-all'
 
 /**
 * @interface

@@ -1,6 +1,4 @@
-import { IAccountModel } from '../../../domain/models/account'
-import { IAddAccountModel } from '../../../domain/usecases/add-account'
-
+import { IAccountModel, IAddAccountModel } from './import-all'
 /**
 * @interface
 * general interface for add account in database

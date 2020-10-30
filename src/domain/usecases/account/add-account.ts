@@ -1,4 +1,4 @@
-import { IAccountModel } from '../models/account'
+import { IAccountModel } from '../../models/account/account'
 
 export interface IAddAccountModel {
   [field: string]: string | object

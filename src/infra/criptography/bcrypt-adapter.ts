@@ -11,7 +11,7 @@ export class BcryptAdapter implements IEncrypter {
   private readonly salt: number
 
   /**
-  * @this `this.salt`
+  * @param salt
   * number of randomizations
   */
   constructor (salt: number) {

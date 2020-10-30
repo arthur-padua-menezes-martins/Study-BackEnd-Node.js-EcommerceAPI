@@ -1,5 +1,5 @@
 import { NameValidatorAdapter } from './name-adapter'
-import { getSignUpHttpRequestBodyMatchField, getSignUpHttpRequestBodyNotMatchField } from '../../presentation/helpers/export-all'
+import { getSignUpHttpRequestBodyMatchField, getSignUpHttpRequestBodyNotMatchField } from './import-all'
 
 interface INameValidatorAdapterTypes {
   systemUnderTest: NameValidatorAdapter

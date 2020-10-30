@@ -1,5 +1,7 @@
-import { IAccountInformationsModel } from '../../../../domain/models/graphics/account-informations'
-import { ICreateAccountInformationsModel, ISignInAccountInformationsModel, ISaveAccountInformationsModel, IGetAccountInformationsModel } from '../../../../domain/usecases/graphics/account-informations'
+import {
+  IAccountInformationsModel,
+  ICreateAccountInformationsModel, ISignInAccountInformationsModel, ISaveAccountInformationsModel, IGetAccountInformationsModel
+} from './import-all'
 
 /**
 * @interface

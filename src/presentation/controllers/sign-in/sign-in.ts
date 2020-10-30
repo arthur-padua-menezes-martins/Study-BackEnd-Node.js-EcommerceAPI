@@ -19,7 +19,7 @@ export class SignInController implements Controller {
   * @param { FieldValidationWithRegex } fieldValidationWithRegex
   * implementation of the request field validator
   */
-  constructor (validation: ValidationComposite, authentication: Authentication) {
+  constructor (authentication: Authentication, validation: ValidationComposite) {
     this.validation = validation
     this.authentication = authentication
   }

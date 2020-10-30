@@ -1,4 +1,3 @@
-export * from '../../../domain/usecases/authentication'
-export * from '../../helpers/regEx/fields-validation'
+export * from '../../../domain/usecases/account/authentication'
+export * from '../../helpers/regEx/export-all'
 export * from '../../helpers/validators/export-all'
-export * from '../../../utils/validation/export-all'

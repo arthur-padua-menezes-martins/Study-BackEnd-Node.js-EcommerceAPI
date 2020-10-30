@@ -1,4 +1,4 @@
-export * from './validation'
+export * from '../../protocols/validation/validation'
 export * from './validation-composite'
 export * from './compare-fields-validator'
 export * from './required-fields-validator'

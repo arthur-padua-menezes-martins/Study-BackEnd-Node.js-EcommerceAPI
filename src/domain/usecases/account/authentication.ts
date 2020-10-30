@@ -1,4 +1,4 @@
-interface IAuthInformations {
+export interface IAuthenticationModel {
   email: string
   password: string
 }
@@ -10,5 +10,5 @@ interface IAuthInformations {
 * authentication informations for validate
 */
 export interface Authentication {
-  auth: (authInformations: IAuthInformations) => Promise<string>
+  auth: (authentication: IAuthenticationModel) => Promise<string>
 }

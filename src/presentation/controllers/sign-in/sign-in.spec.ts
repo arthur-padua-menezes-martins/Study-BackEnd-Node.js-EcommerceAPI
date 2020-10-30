@@ -1,10 +1,9 @@
 import { SignInController } from './sign-in'
-import { IHttpRequest } from './sign-in-protocols'
+import { IHttpRequest, Authentication, IAuthenticationModel } from './sign-in-protocols'
 import {
   ValidationComposite, RequiredFieldsValidator, VerifyTypesValidator, CompareFieldsValidator, ValidateFieldsValidator,
   FieldValidationWithRegex, EmailValidatorAdapter, PasswordValidatorAdapter
 } from './sign-in-components'
-import { Authentication } from '../../../domain/usecases/authentication'
 import {
   signInHttpRequestBodyFields, signInHttpRequestBodyMatch, signInHttpRequestBodyNotMatch, signInHttpRequestBodyMissingField
 } from './sign-in-helpers'
@@ -16,13 +15,9 @@ const makeFieldValidationWithRegex = async (): Promise<FieldValidationWithRegex>
   })
 }
 
-interface IAuthInformations {
-  email: string
-  password: string
-}
 const makeAuthenticationStub = async (): Promise<Authentication> => {
   class AuthenticationStub implements Authentication {
-    async auth (authInformations: IAuthInformations): Promise<string> {
+    async auth (authentication: IAuthenticationModel): Promise<string> {
       return 'any_token'
     }
   }
@@ -43,7 +38,7 @@ const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
     { content: new CompareFieldsValidator(), type: 'compare fields' }
   ])
   const authenticationStub = await makeAuthenticationStub()
-  const systemUnderTest = new SignInController(validation, authenticationStub)
+  const systemUnderTest = new SignInController(authenticationStub, validation)
 
   return {
     systemUnderTest,

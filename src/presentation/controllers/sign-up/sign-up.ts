@@ -10,17 +10,17 @@ import {
 * validates the insertion of a new account in the database
 */
 export class SignUpController implements Controller {
-  private readonly addAccountController
+  private readonly addAccount
   private readonly validation
 
   /**
   * @param { IAddAccount } addAccount
   * implementation of the user account record manager in the database contained
-  * @param { FieldValidationWithRegex } fieldValidationWithRegex
-  * implementation of the request field validator
+  * @param { ValidationComposite } validation
+  * implementation of the validation
   */
-  constructor (addAccountController: IAddAccount, validation: ValidationComposite) {
-    this.addAccountController = addAccountController
+  constructor (addAccount: IAddAccount, validation: ValidationComposite) {
+    this.addAccount = addAccount
     this.validation = validation
   }
 
@@ -69,7 +69,7 @@ export class SignUpController implements Controller {
       }
 
       const { name, email } = httpRequest.body
-      const newAccount = await this.addAccountController.add({
+      const newAccount = await this.addAccount.add({
         name: name as string,
         email: email as string,
         password: password as string,
