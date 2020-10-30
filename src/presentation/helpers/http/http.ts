@@ -1,5 +1,5 @@
-import { IHttpResponse } from '../protocols/export-all'
-import { UnauthorizedError, ServerError } from '../errors/export-all'
+import { IHttpResponse } from '../../protocols/export-all'
+import { UnauthorizedError, ServerError } from '../../errors/export-all'
 
 /**
 * the server took an expected action

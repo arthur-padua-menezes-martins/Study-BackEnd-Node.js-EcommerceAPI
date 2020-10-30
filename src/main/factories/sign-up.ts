@@ -1,12 +1,14 @@
 import { Controller } from '../../presentation/protocols/export-all'
 import { SignUpController } from '../../presentation/controllers/sign-up/sign-up'
-import { FieldValidationWithRegex } from '../../presentation/regEx/field-validation'
-import { DatabaseAddAccount } from '../../data/usecases/add-account/db-add-account'
+import {
+  ValidationComposite, RequiredFieldsValidator, VerifyTypesValidator, CompareFieldsValidator, ValidateFieldsValidator,
+  FieldValidationWithRegex, NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter
+} from '../../presentation/helpers/export-all'
+import { DatabaseAddAccountController } from '../../data/usecases/add-account/db-add-account'
 import { BcryptAdapter } from '../../infra/criptography/bcrypt-adapter'
 import { AccountMongoRepository } from '../../infra/db/mongodb/account-repository/account'
-import { LogControllerDecorator } from '../decorators/log'
 import { LogMongoRepository } from '../../infra/db/mongodb/log-repository/log'
-import { NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from '../../utils/validation/export-all'
+import { LogControllerDecorator } from '../decorators/log'
 
 const makeFieldValidationWithRegex = (): FieldValidationWithRegex => {
   return new FieldValidationWithRegex({
@@ -19,10 +21,15 @@ const makeFieldValidationWithRegex = (): FieldValidationWithRegex => {
 export const makeSignUpController = (): Controller => {
   const encrypter = new BcryptAdapter(12)
   const addAccountRepository = new AccountMongoRepository()
-  const databaseAddAccount = new DatabaseAddAccount(encrypter, addAccountRepository)
-  const fieldValidationWithRegex = makeFieldValidationWithRegex()
-  const signUpController = new SignUpController(databaseAddAccount, fieldValidationWithRegex)
-  const logErrorRepository = new LogMongoRepository()
+  const addAccountController = new DatabaseAddAccountController(encrypter, addAccountRepository)
 
+  const validation = new ValidationComposite([
+    { content: new ValidateFieldsValidator(makeFieldValidationWithRegex()), type: 'validate fields' },
+    { content: new RequiredFieldsValidator(), type: 'required fields' },
+    { content: new VerifyTypesValidator(), type: 'verify types' },
+    { content: new CompareFieldsValidator(), type: 'compare fields' }
+  ])
+  const signUpController = new SignUpController(addAccountController, validation)
+  const logErrorRepository = new LogMongoRepository()
   return new LogControllerDecorator(signUpController, logErrorRepository)
 }

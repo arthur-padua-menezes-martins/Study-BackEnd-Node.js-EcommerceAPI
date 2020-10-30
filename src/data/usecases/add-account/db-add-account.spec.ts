@@ -1,4 +1,4 @@
-import { DatabaseAddAccount } from './db-add-account'
+import { DatabaseAddAccountController } from './db-add-account'
 import {
   IAccountModel, IAddAccountModel,
   IEncrypter, IAddAccountRepository,
@@ -29,14 +29,14 @@ const makeAddAccountRepository = async (): Promise<IAddAccountRepository> => {
 }
 
 interface ISystemUnderTestTypes {
-  systemUnderTest: DatabaseAddAccount
+  systemUnderTest: DatabaseAddAccountController
   encrypterStub: IEncrypter
   addAccountRepositoryStub: IAddAccountRepository
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   const encrypterStub = await makeEncrypter()
   const addAccountRepositoryStub = await makeAddAccountRepository()
-  const systemUnderTest = new DatabaseAddAccount(encrypterStub, addAccountRepositoryStub)
+  const systemUnderTest = new DatabaseAddAccountController(encrypterStub, addAccountRepositoryStub)
 
   return {
     systemUnderTest,
@@ -45,7 +45,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   }
 }
 
-describe('DatabaseAddAccount Usecases', () => {
+describe('DatabaseAddAccountController Usecases', () => {
   test('Should call Encrypter with correct password <version: 0.0.1>', async () => {
     const { systemUnderTest, encrypterStub } = await makeSystemUnderTest()
     const spyOnEncrypterEncrypt = jest.spyOn(encrypterStub, 'encrypt')

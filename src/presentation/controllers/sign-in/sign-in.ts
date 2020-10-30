@@ -1,5 +1,5 @@
 import { Controller, IHttpRequest, IHttpResponse } from './sign-in-protocols'
-import { FieldValidationWithRegex, Authentication } from './sign-in-components'
+import { ValidationComposite, Authentication } from './sign-in-components'
 import {
   MissingParamError, InvalidParamError, ok, badRequest, unauthorized, serverError,
   signInHttpRequestBodyFields
@@ -12,15 +12,15 @@ import {
 * validates the user entries for apply the sign in
 */
 export class SignInController implements Controller {
-  private readonly fieldValidationWithRegex
+  private readonly validation
   private readonly authentication
 
   /**
   * @param { FieldValidationWithRegex } fieldValidationWithRegex
   * implementation of the request field validator
   */
-  constructor (fieldValidationWithRegex: FieldValidationWithRegex, authentication: Authentication) {
-    this.fieldValidationWithRegex = fieldValidationWithRegex
+  constructor (validation: ValidationComposite, authentication: Authentication) {
+    this.validation = validation
     this.authentication = authentication
   }
 
@@ -30,20 +30,29 @@ export class SignInController implements Controller {
   */
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      var missingFields: string = ''
-      var typeOfIsNotString: boolean[] = []
-
-      missingFields = missingFields.missingFields(signInHttpRequestBodyFields, httpRequest.body)
-      if (missingFields) {
-        return badRequest({}, '', new MissingParamError(missingFields))
+      const missingFields: string[] = await this.validation.validate({
+        type: 'required fields',
+        fields: signInHttpRequestBodyFields,
+        body: httpRequest.body
+      })
+      if (missingFields.length > 0) {
+        return badRequest({}, '', new MissingParamError(missingFields.join(' ')))
       }
 
-      typeOfIsNotString.push(typeOfIsNotString.typeOfIsNotString(signInHttpRequestBodyFields, httpRequest.body))
-      if (typeOfIsNotString.every(isNotString => isNotString)) {
+      const theTypeOfThisIsValid = await this.validation.validate({
+        type: 'verify types',
+        checkThisType: 'string',
+        checkTheTypeOfThis: httpRequest.body
+      })
+      if (!theTypeOfThisIsValid.every((verify: boolean) => verify)) {
         return badRequest({}, '', new InvalidParamError())
       }
 
-      const invalidFields = await this.fieldValidationWithRegex.exec(signInHttpRequestBodyFields, httpRequest.body)
+      const invalidFields = await this.validation.validate({
+        type: 'validate fields',
+        fields: signInHttpRequestBodyFields,
+        body: httpRequest.body
+      })
       if (invalidFields.length > 0) {
         return badRequest({}, '', new InvalidParamError(invalidFields.join(' ')), invalidFields)
       }

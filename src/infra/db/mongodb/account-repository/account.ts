@@ -4,7 +4,7 @@ import { IAccountModel } from '../../../../domain/models/account'
 import { mongoHelper } from '../helper/mongo-helper'
 
 /**
-* @implements {IEncrypter}
+* @implements {IAddAccountRepository}
 *
 * @method `add`
 * insert the body sign-up request into the collection

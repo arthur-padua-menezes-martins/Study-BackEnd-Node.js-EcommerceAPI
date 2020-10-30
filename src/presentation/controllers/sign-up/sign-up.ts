@@ -1,5 +1,5 @@
 import { Controller, IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
-import { FieldValidationWithRegex } from './sign-up-components'
+import { ValidationComposite } from './sign-up-components'
 import {
   MissingParamError, InvalidParamError, ok, badRequest, serverError,
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields
@@ -10,8 +10,8 @@ import {
 * validates the insertion of a new account in the database
 */
 export class SignUpController implements Controller {
-  private readonly addAccount
-  private readonly fieldValidationWithRegex
+  private readonly addAccountController
+  private readonly validation
 
   /**
   * @param { IAddAccount } addAccount
@@ -19,9 +19,9 @@ export class SignUpController implements Controller {
   * @param { FieldValidationWithRegex } fieldValidationWithRegex
   * implementation of the request field validator
   */
-  constructor (addAccount: IAddAccount, fieldValidationWithRegex: FieldValidationWithRegex) {
-    this.addAccount = addAccount
-    this.fieldValidationWithRegex = fieldValidationWithRegex
+  constructor (addAccountController: IAddAccount, validation: ValidationComposite) {
+    this.addAccountController = addAccountController
+    this.validation = validation
   }
 
   /**
@@ -30,35 +30,46 @@ export class SignUpController implements Controller {
   */
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      var missingFields: string = ''
-      var typeOfIsNotString: boolean[] = []
-
-      missingFields = missingFields.missingFields(signUpHttpRequestBodyFields, httpRequest.body)
-      missingFields = missingFields.missingFields(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object)
-      if (missingFields) {
-        return badRequest({}, '', new MissingParamError(missingFields))
+      const missingFields: string[] = await this.validation.validate({
+        type: 'required fields',
+        fields: [signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields],
+        body: [httpRequest.body, httpRequest.body.address]
+      })
+      if (missingFields.length > 0) {
+        return badRequest({}, '', new MissingParamError(missingFields.join(' ')))
       }
 
-      typeOfIsNotString.push(typeOfIsNotString.typeOfIsNotString(signUpHttpRequestBodyFields, httpRequest.body))
-      typeOfIsNotString.push(typeOfIsNotString.typeOfIsNotString(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object))
-      if (typeOfIsNotString.every(isNotString => isNotString)) {
+      const { address, ...checkTheTypeOfThis } = Object.assign({}, httpRequest.body, httpRequest.body.address)
+      const theTypeOfThisIsValid = await this.validation.validate({
+        type: 'verify types',
+        checkThisType: 'string',
+        checkTheTypeOfThis: checkTheTypeOfThis
+      })
+      if (!theTypeOfThisIsValid.every((verify: boolean) => verify)) {
         return badRequest({}, '', new InvalidParamError())
       }
 
       const { password, passwordConfirmation } = httpRequest.body
-      if (password !== passwordConfirmation) {
+      const isEqual = await this.validation.validate({
+        type: 'compare fields',
+        checkThis: password,
+        withThis: passwordConfirmation
+      })
+      if (!isEqual) {
         return badRequest({}, '', new InvalidParamError('passwordConfirmation'))
       }
 
-      const invalidFieldsInPersonalData = await this.fieldValidationWithRegex.exec(signUpHttpRequestBodyFields, httpRequest.body)
-      const invalidFieldsInAddressData = await this.fieldValidationWithRegex.exec(signUpHttpRequestBodyAddressFields, httpRequest.body.address as object)
-      const invalidFields = [...invalidFieldsInPersonalData, ...invalidFieldsInAddressData]
+      const invalidFields = await this.validation.validate({
+        type: 'validate fields',
+        fields: [signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields],
+        body: [httpRequest.body, httpRequest.body.address as object]
+      })
       if (invalidFields.length > 0) {
         return badRequest({}, '', new InvalidParamError(invalidFields.join(' ')), invalidFields)
       }
 
-      const { name, email, address } = httpRequest.body
-      const newAccount = await this.addAccount.add({
+      const { name, email } = httpRequest.body
+      const newAccount = await this.addAccountController.add({
         name: name as string,
         email: email as string,
         password: password as string,

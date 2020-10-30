@@ -3,7 +3,7 @@ import {
   IEncrypter, IAddAccountRepository
 } from './db-add-account-protocols'
 
-export class DatabaseAddAccount implements IAddAccount {
+export class DatabaseAddAccountController implements IAddAccount {
   private readonly encrypter: IEncrypter
   private readonly addAccountRepository: IAddAccountRepository
 

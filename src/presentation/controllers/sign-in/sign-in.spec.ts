@@ -1,9 +1,11 @@
 import { SignInController } from './sign-in'
 import { IHttpRequest } from './sign-in-protocols'
-import { FieldValidationWithRegex, EmailValidatorAdapter, PasswordValidatorAdapter } from './sign-in-components'
+import {
+  ValidationComposite, RequiredFieldsValidator, VerifyTypesValidator, CompareFieldsValidator, ValidateFieldsValidator,
+  FieldValidationWithRegex, EmailValidatorAdapter, PasswordValidatorAdapter
+} from './sign-in-components'
 import { Authentication } from '../../../domain/usecases/authentication'
 import {
-  MissingParamError, badRequest,
   signInHttpRequestBodyFields, signInHttpRequestBodyMatch, signInHttpRequestBodyNotMatch, signInHttpRequestBodyMissingField
 } from './sign-in-helpers'
 
@@ -30,68 +32,66 @@ const makeAuthenticationStub = async (): Promise<Authentication> => {
 
 interface ISignUpControllerTypes {
   systemUnderTest: SignInController
-  fieldValidationWithRegex: FieldValidationWithRegex
+  validation: ValidationComposite
   authenticationStub: Authentication
 }
 const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
-  const fieldValidationWithRegex = await makeFieldValidationWithRegex()
+  const validation = new ValidationComposite([
+    { content: new ValidateFieldsValidator(await makeFieldValidationWithRegex()), type: 'validate fields' },
+    { content: new RequiredFieldsValidator(), type: 'required fields' },
+    { content: new VerifyTypesValidator(), type: 'verify types' },
+    { content: new CompareFieldsValidator(), type: 'compare fields' }
+  ])
   const authenticationStub = await makeAuthenticationStub()
-  const systemUnderTest = new SignInController(fieldValidationWithRegex, authenticationStub)
+  const systemUnderTest = new SignInController(validation, authenticationStub)
 
   return {
     systemUnderTest,
-    fieldValidationWithRegex,
+    validation,
     authenticationStub
   }
 }
 
 describe('SignInController', () => {
   test('returns from httpResponse: "{statusCode: 400}" if any required fields belonging to httpRequest.body do not exist <version 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
-    var missingFields: string = ''
+    const { systemUnderTest, validation } = await makeSystemUnderTest()
+    const SpyOnValidate = jest.spyOn(validation, 'validate')
 
     const httpRequest: IHttpRequest = {
       body: signInHttpRequestBodyMissingField
     }
 
-    missingFields = missingFields.missingFields(signInHttpRequestBodyFields, httpRequest.body)
-
     const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest({}, '', new MissingParamError(missingFields)))
+    expect(SpyOnValidate).toHaveBeenCalledWith(({
+      type: 'required fields',
+      fields: signInHttpRequestBodyFields,
+      body: httpRequest.body
+    }))
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.errorMessage?.name).toBe('MissingParamError')
   })
 
   test('returns from httpResponse "{status Code: 400}" if any fields do not match validation <version 0.0.1>', async () => {
-    const { systemUnderTest, fieldValidationWithRegex } = await makeSystemUnderTest()
-    const SpyOnExec = jest.spyOn(fieldValidationWithRegex, 'exec')
+    const { systemUnderTest, validation } = await makeSystemUnderTest()
+    const SpyOnValidate = jest.spyOn(validation, 'validate')
 
     const httpRequest: IHttpRequest = {
       body: signInHttpRequestBodyNotMatch
     }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(SpyOnExec).toHaveBeenLastCalledWith(signInHttpRequestBodyFields, signInHttpRequestBodyNotMatch)
+    expect(SpyOnValidate).toHaveBeenLastCalledWith(({
+      type: 'validate fields',
+      fields: signInHttpRequestBodyFields,
+      body: httpRequest.body
+    }))
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.errorMessage?.name).toBe('InvalidParamError')
   })
 
   test('returns from httpResponse "{status Code: 500}" if sending data to validate any field generates an error <version 0.0.1>', async () => {
-    const { systemUnderTest, fieldValidationWithRegex } = await makeSystemUnderTest()
-    jest.spyOn(fieldValidationWithRegex, 'exec').mockImplementationOnce(() => {
-      throw new Error()
-    })
-
-    const httpRequest: IHttpRequest = {
-      body: signInHttpRequestBodyNotMatch
-    }
-
-    const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.errorMessage?.name).toBe('ServerError')
-  })
-
-  test('returns from httpResponse "{status Code: 500}" if validating any field throw an error <version 0.0.1>', async () => {
-    const { systemUnderTest, fieldValidationWithRegex } = await makeSystemUnderTest()
-    jest.spyOn(fieldValidationWithRegex, 'options').mockImplementationOnce(() => {
+    const { systemUnderTest, validation } = await makeSystemUnderTest()
+    jest.spyOn(validation, 'validate').mockImplementationOnce(() => {
       throw new Error()
     })
 
