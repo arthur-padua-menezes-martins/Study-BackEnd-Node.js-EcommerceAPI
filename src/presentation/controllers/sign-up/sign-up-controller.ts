@@ -1,9 +1,10 @@
-import { Controller, IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-protocols'
-import { ValidationComposite } from './sign-up-components'
+import { Controller, IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-controller-protocols'
+import { ValidationComposite } from './sign-up-controller-components'
 import {
-  MissingParamError, InvalidParamError, ok, badRequest, serverError,
+  MissingParamError, InvalidParamError,
+  ok, badRequest, serverError,
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields
-} from './sign-up-helpers'
+} from './sign-up-controller-helpers'
 
 /**
 * @method handle

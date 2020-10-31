@@ -1,5 +1,5 @@
-import { Controller, IHttpRequest, IHttpResponse } from '../../presentation/protocols/export-all'
-import { LogErrorRepository } from '../../data/protocols/repository/log/log-error-repository'
+import { Controller, IHttpRequest, IHttpResponse } from '../../../presentation/protocols/export-all'
+import { LogErrorRepository } from '../../../data/protocols/repository/log/log-error-repository'
 
 export class LogControllerDecorator implements Controller {
   private readonly controller: Controller

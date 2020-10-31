@@ -1,5 +1,5 @@
 import { RequiredFieldsValidator } from './required-fields-validator'
-import { IHttpRequestBody } from '../../protocols/http'
+import { IHttpRequestBody } from '../../protocols/http/http'
 
 interface IRequiredFieldsValidatorTypes {
   requiredFieldsValidator: RequiredFieldsValidator

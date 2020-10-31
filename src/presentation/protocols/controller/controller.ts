@@ -1,4 +1,4 @@
-import { IHttpRequest, IHttpResponse } from './export-all'
+import { IHttpRequest, IHttpResponse } from '../export-all'
 
 /**
 * @method `handle`

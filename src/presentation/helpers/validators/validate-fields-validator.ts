@@ -1,5 +1,5 @@
 import { Validation } from '../../protocols/validation/validation'
-import { IHttpRequestBody } from '../../protocols/http'
+import { IHttpRequestBody } from '../../protocols/http/http'
 
 interface IInputContent {
   fields: string[]

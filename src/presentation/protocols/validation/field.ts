@@ -1,4 +1,4 @@
-import { IHttpRequestBody } from '../http'
+import { IHttpRequestBody } from '../http/http'
 
 export interface IInputContent {
   fields: string[]

@@ -1,12 +1,12 @@
-import { SignUpController } from './sign-up'
-import { IHttpRequest, IAddAccount, IAddAccountModel, IAccountModel } from './sign-up-protocols'
+import { SignUpController } from './sign-up-controller'
+import { IHttpRequest, IAddAccount, IAddAccountModel, IAccountModel } from './sign-up-controller-protocols'
 import {
   ValidationComposite, RequiredFieldsValidator, VerifyTypesValidator, CompareFieldsValidator, ValidateFieldsValidator,
   FieldValidationWithRegex, NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter
-} from './sign-up-components'
+} from './sign-up-controller-components'
 import {
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields, signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation
-} from './sign-up-helpers'
+} from './sign-up-controller-helpers'
 
 const makeAddAccount = async (): Promise<IAddAccount> => {
   class AddAccountStub {

@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { AccountMongoRepository } from './account'
+import { AccountMongoRepository } from './account-mongo-repository'
 import { mongoHelper } from '../helper/mongo-helper'
 import {
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields,

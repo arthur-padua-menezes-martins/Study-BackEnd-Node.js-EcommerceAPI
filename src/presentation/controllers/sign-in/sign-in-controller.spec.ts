@@ -1,12 +1,12 @@
-import { SignInController } from './sign-in'
-import { IHttpRequest, Authentication, IAuthenticationModel } from './sign-in-protocols'
+import { SignInController } from './sign-in-controller'
+import { IHttpRequest, Authentication, IAuthenticationModel } from './sign-in-controller-protocols'
 import {
   ValidationComposite, RequiredFieldsValidator, VerifyTypesValidator, CompareFieldsValidator, ValidateFieldsValidator,
   FieldValidationWithRegex, EmailValidatorAdapter, PasswordValidatorAdapter
-} from './sign-in-components'
+} from './sign-in-controller-components'
 import {
   signInHttpRequestBodyFields, signInHttpRequestBodyMatch, signInHttpRequestBodyNotMatch, signInHttpRequestBodyMissingField
-} from './sign-in-helpers'
+} from './sign-in-controller-helpers'
 import { signInHttpRequestBodyMatchComplete } from '../../helpers/export-all'
 
 const makeFieldValidationWithRegex = async (): Promise<FieldValidationWithRegex> => {

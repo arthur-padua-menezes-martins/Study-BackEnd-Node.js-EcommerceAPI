@@ -1,9 +1,10 @@
-import { Controller, IHttpRequest, IHttpResponse } from './sign-in-protocols'
-import { ValidationComposite, Authentication } from './sign-in-components'
+import { Controller, IHttpRequest, IHttpResponse } from './sign-in-controller-protocols'
+import { ValidationComposite, Authentication } from './sign-in-controller-components'
 import {
-  MissingParamError, InvalidParamError, ok, badRequest, unauthorized, serverError,
+  MissingParamError, InvalidParamError,
+  ok, badRequest, unauthorized, serverError,
   signInHttpRequestBodyFields
-} from './sign-in-helpers'
+} from './sign-in-controller-helpers'
 
 /**
 * @implements {Controller}

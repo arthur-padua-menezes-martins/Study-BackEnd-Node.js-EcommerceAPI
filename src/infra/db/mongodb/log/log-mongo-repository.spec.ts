@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { LogMongoRepository } from './log'
+import { LogMongoRepository } from './log-mongo-repository'
 import { mongoHelper } from '../helper/mongo-helper'
 
 interface ISystemUnderTestTypes {

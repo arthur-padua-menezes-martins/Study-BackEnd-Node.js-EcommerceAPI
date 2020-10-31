@@ -1,10 +1,10 @@
-import { Controller, IHttpRequest, IHttpResponse } from '../../presentation/protocols/export-all'
-import { LogControllerDecorator } from './log'
-import { LogErrorRepository } from '../../data/protocols/repository/log/log-error-repository'
+import { Controller, IHttpRequest, IHttpResponse } from '../../../presentation/protocols/export-all'
+import { LogControllerDecorator } from './log-controller-decorator'
+import { LogErrorRepository } from '../../../data/protocols/repository/log/log-error-repository'
 import {
   serverError,
   signUpHttpRequestBodyMatchComplete
-} from '../../presentation/helpers/export-all'
+} from '../../../presentation/helpers/export-all'
 
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
