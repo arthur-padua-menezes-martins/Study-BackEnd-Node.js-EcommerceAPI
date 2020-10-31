@@ -1,5 +1,5 @@
 import { DatabaseAddAccountController } from '../../../data/usecases/add-account/db-add-account'
-import { BcryptAdapter } from '../../../infra/criptography/bcrypt-adapter'
+import { BcryptAdapter } from '../../../infra/criptography/adapter/bcrypt/bcrypt-adapter'
 import { AccountMongoRepository } from '../../../infra/db/mongodb/account-repository/account'
 
 const encrypter = new BcryptAdapter(12)

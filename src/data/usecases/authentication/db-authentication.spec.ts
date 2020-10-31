@@ -1,6 +1,6 @@
 import { DatabaseAuthenticationController } from './db-authentication'
 import {
-  LoadAccountByEmailRepository, IAuthenticationModel,
+  SearchAccountByEmailRepository, IAuthenticationModel,
   IHashComparer,
   IEncrypter,
   UpdateAccessTokenRepository,
@@ -8,15 +8,15 @@ import {
 } from './db-authentication-protocols'
 import { signInHttpRequestBodyMatchComplete, accountModelMatch } from './db-authentication-utils'
 
-const makeLoadAccountByEmailRepository = async (): Promise<LoadAccountByEmailRepository> => {
-  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async load (email: string): Promise<IAccountModel> {
+const makeSearchAccountByEmailRepository = async (): Promise<SearchAccountByEmailRepository> => {
+  class SearchAccountByEmailRepositoryStub implements SearchAccountByEmailRepository {
+    async searchByEmail (email: string): Promise<IAccountModel> {
       const account: IAccountModel = accountModelMatch
       return await Promise.resolve(account)
     }
   }
 
-  return new LoadAccountByEmailRepositoryStub()
+  return new SearchAccountByEmailRepositoryStub()
 }
 
 const makeHashComparer = async (): Promise<IHashComparer> => {
@@ -42,7 +42,7 @@ const makeEncrypterGenerator = async (): Promise<IEncrypter> => {
 
 const makeUpdateAccessTokenRepository = async (): Promise<UpdateAccessTokenRepository> => {
   class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async update (id: string, accessToken: string): Promise<void> {
+    async updateAccessToken (id: string, accessToken: string): Promise<void> {
 
     }
   }
@@ -52,23 +52,23 @@ const makeUpdateAccessTokenRepository = async (): Promise<UpdateAccessTokenRepos
 
 interface ISystemUnderTestTypes {
   systemUnderTest: DatabaseAuthenticationController
-  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
+  SearchAccountByEmailRepositoryStub: SearchAccountByEmailRepository
   hashComparerStub: IHashComparer
   encrypterStub: IEncrypter
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
-  const loadAccountByEmailRepositoryStub = await makeLoadAccountByEmailRepository()
+  const SearchAccountByEmailRepositoryStub = await makeSearchAccountByEmailRepository()
   const hashComparerStub = await makeHashComparer()
   const encrypterStub = await makeEncrypterGenerator()
   const updateAccessTokenRepositoryStub = await makeUpdateAccessTokenRepository()
   const systemUnderTest = new DatabaseAuthenticationController(
-    loadAccountByEmailRepositoryStub, hashComparerStub, encrypterStub, updateAccessTokenRepositoryStub
+    SearchAccountByEmailRepositoryStub, hashComparerStub, encrypterStub, updateAccessTokenRepositoryStub
   )
 
   return {
     systemUnderTest,
-    loadAccountByEmailRepositoryStub,
+    SearchAccountByEmailRepositoryStub,
     hashComparerStub,
     encrypterStub,
     updateAccessTokenRepositoryStub
@@ -78,25 +78,25 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
 const authentication: IAuthenticationModel = signInHttpRequestBodyMatchComplete
 
 describe('DatabaseAuthenticationController Usecases', () => {
-  test('should call LoadAccountByEmailRepository with correct email <version: 0.0.1>', async () => {
-    const { systemUnderTest, loadAccountByEmailRepositoryStub } = await makeSystemUnderTest()
-    const spyOnLoad = jest.spyOn(loadAccountByEmailRepositoryStub, 'load')
+  test('should call SearchAccountByEmailRepository with correct email <version: 0.0.1>', async () => {
+    const { systemUnderTest, SearchAccountByEmailRepositoryStub } = await makeSystemUnderTest()
+    const spyOnSearchByEmail = jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByEmail')
 
     await systemUnderTest.auth(authentication)
-    expect(spyOnLoad).toHaveBeenCalledWith(authentication.email)
+    expect(spyOnSearchByEmail).toHaveBeenCalledWith(authentication.email)
   })
 
-  test('should throw if LoadAccountByEmailRepository throws <version: 0.0.1>', async () => {
-    const { systemUnderTest, loadAccountByEmailRepositoryStub } = await makeSystemUnderTest()
-    jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+  test('should throw if SearchAccountByEmailRepository throws <version: 0.0.1>', async () => {
+    const { systemUnderTest, SearchAccountByEmailRepositoryStub } = await makeSystemUnderTest()
+    jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByEmail').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
     const authorization = systemUnderTest.auth(authentication)
     await expect(authorization).rejects.toThrow()
   })
 
-  test('should return an null if LoadAccountByEmailRepository returns null <version: 0.0.1>', async () => {
-    const { systemUnderTest, loadAccountByEmailRepositoryStub } = await makeSystemUnderTest()
-    jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockReturnValueOnce(Promise.resolve(null))
+  test('should return an null if SearchAccountByEmailRepository returns null <version: 0.0.1>', async () => {
+    const { systemUnderTest, SearchAccountByEmailRepositoryStub } = await makeSystemUnderTest()
+    jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByEmail').mockReturnValueOnce(Promise.resolve(null))
 
     const authorization = await systemUnderTest.auth(authentication)
     expect(authorization).toBe(null)
@@ -151,7 +151,7 @@ describe('DatabaseAuthenticationController Usecases', () => {
 
   test('should call UpdateAccessTokenRepository with correct values <version: 0.0.1>', async () => {
     const { systemUnderTest, updateAccessTokenRepositoryStub } = await makeSystemUnderTest()
-    const spyOnUpdate = jest.spyOn(updateAccessTokenRepositoryStub, 'update')
+    const spyOnUpdate = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
 
     await systemUnderTest.auth(authentication)
     expect(spyOnUpdate).toHaveBeenCalledWith(accountModelMatch.id, accessToken)
@@ -159,7 +159,7 @@ describe('DatabaseAuthenticationController Usecases', () => {
 
   test('should return an Error if UpdateAccessTokenRepository returns Error <version: 0.0.1>', async () => {
     const { systemUnderTest, updateAccessTokenRepositoryStub } = await makeSystemUnderTest()
-    jest.spyOn(updateAccessTokenRepositoryStub, 'update').mockReturnValueOnce(Promise.reject(new Error()))
+    jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockReturnValueOnce(Promise.reject(new Error()))
 
     const authorization = systemUnderTest.auth(authentication)
     await expect(authorization).rejects.toThrow()

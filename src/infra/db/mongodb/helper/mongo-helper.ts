@@ -10,7 +10,7 @@ import { IAccountModel } from '../../../../domain/models/account/account'
 * disconnect to the database
 * @method `getCollection`
 * get a specific collection
-* @method `mapper_id`
+* @method `map_id`
 * adapts from _id to id
 */
 export const mongoHelper = {
@@ -48,9 +48,9 @@ export const mongoHelper = {
     return await Promise.resolve(this.client.db().collection(name))
   },
 
-  mapper_id  (resultOf: any): IAccountModel {
-    const { _id, ...result } = resultOf
+  map_id  (resultOf: any): IAccountModel {
+    const { _id, ...result } = resultOf || { _id: null }
 
-    return Object.assign({}, result, { id: _id })
+    return _id && result && Object.assign({}, result, { id: _id })
   }
 }

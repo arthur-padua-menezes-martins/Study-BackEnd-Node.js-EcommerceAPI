@@ -1,3 +1,3 @@
-export class UpdateAccessTokenRepository {
-  update: (id: string, accessToken: string) => Promise<void>
+export interface UpdateAccessTokenRepository {
+  updateAccessToken: (id: string, accessToken: string) => Promise<void>
 }
