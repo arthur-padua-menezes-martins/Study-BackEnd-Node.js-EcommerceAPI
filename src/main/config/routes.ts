@@ -1,8 +1,8 @@
 import { Express, Router } from 'express'
-import signUpRoutes from '../routes/sign-up'
+import loginRoutes from '../routes/authentication/login'
 
 export default (app: Express): void => {
   const router = Router()
-  signUpRoutes(router)
+  loginRoutes(router)
   app.use('/api', router)
 }
