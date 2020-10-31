@@ -1,4 +1,2 @@
-export * from './missin-param-error'
-export * from './invalid-param-error'
-export * from './unauthorized-error'
-export * from './server-error'
+export * from './4xx/export-all'
+export * from './5xx/500/server-error'

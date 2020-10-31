@@ -1,5 +1,7 @@
 export { MissingParamError, InvalidParamError } from '../../errors/export-all'
 export {
-  ok, badRequest, serverError,
+  ok, badRequest, serverError
+} from '../../helpers/http/response/export-all'
+export {
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields, signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation
-} from '../../helpers/export-all'
+} from '../../../utils/fake/data/sign-up/fake-data-sign-up-http-request-body'

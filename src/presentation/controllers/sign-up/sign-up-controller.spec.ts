@@ -2,7 +2,7 @@ import { SignUpController } from './sign-up-controller'
 import { IHttpRequest, IAddAccount, IAddAccountModel, IAccountModel } from './sign-up-controller-protocols'
 import {
   ValidationComposite, RequiredFieldsValidator, VerifyTypesValidator, CompareFieldsValidator, ValidateFieldsValidator,
-  FieldValidationWithRegex, NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter
+  FieldValidationWithRegEx, NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter
 } from './sign-up-controller-components'
 import {
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields, signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation
@@ -21,8 +21,8 @@ const makeAddAccount = async (): Promise<IAddAccount> => {
   return await Promise.resolve(new AddAccountStub())
 }
 
-const makeFieldValidationWithRegex = async (): Promise<FieldValidationWithRegex> => {
-  return new FieldValidationWithRegex({
+const makeFieldValidationWithRegEx = async (): Promise<FieldValidationWithRegEx> => {
+  return new FieldValidationWithRegEx({
     name: (new NameValidatorAdapter()).isValid,
     email: (new EmailValidatorAdapter()).isValid,
     password: (new PasswordValidatorAdapter()).isValid
@@ -37,7 +37,7 @@ interface ISignUpControllerTypes {
 const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
   const addAccountStub = await makeAddAccount()
   const validation = new ValidationComposite([
-    { content: new ValidateFieldsValidator(await makeFieldValidationWithRegex()), type: 'validate fields' },
+    { content: new ValidateFieldsValidator(await makeFieldValidationWithRegEx()), type: 'validate fields' },
     { content: new RequiredFieldsValidator(), type: 'required fields' },
     { content: new VerifyTypesValidator(), type: 'verify types' },
     { content: new CompareFieldsValidator(), type: 'compare fields' }

@@ -2,15 +2,14 @@ import { SignInController } from './sign-in-controller'
 import { IHttpRequest, Authentication, IAuthenticationModel } from './sign-in-controller-protocols'
 import {
   ValidationComposite, RequiredFieldsValidator, VerifyTypesValidator, CompareFieldsValidator, ValidateFieldsValidator,
-  FieldValidationWithRegex, EmailValidatorAdapter, PasswordValidatorAdapter
+  FieldValidationWithRegEx, EmailValidatorAdapter, PasswordValidatorAdapter
 } from './sign-in-controller-components'
 import {
-  signInHttpRequestBodyFields, signInHttpRequestBodyMatch, signInHttpRequestBodyNotMatch, signInHttpRequestBodyMissingField
+  signInHttpRequestBodyFields, signInHttpRequestBodyMatchComplete, signInHttpRequestBodyMatch, signInHttpRequestBodyNotMatch, signInHttpRequestBodyMissingField
 } from './sign-in-controller-helpers'
-import { signInHttpRequestBodyMatchComplete } from '../../helpers/export-all'
 
-const makeFieldValidationWithRegex = async (): Promise<FieldValidationWithRegex> => {
-  return new FieldValidationWithRegex({
+const makeFieldValidationWithRegEx = async (): Promise<FieldValidationWithRegEx> => {
+  return new FieldValidationWithRegEx({
     email: (new EmailValidatorAdapter()).isValid,
     password: (new PasswordValidatorAdapter()).isValid
   })
@@ -33,7 +32,7 @@ interface ISignUpControllerTypes {
 }
 const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
   const validation = new ValidationComposite([
-    { content: new ValidateFieldsValidator(await makeFieldValidationWithRegex()), type: 'validate fields' },
+    { content: new ValidateFieldsValidator(await makeFieldValidationWithRegEx()), type: 'validate fields' },
     { content: new RequiredFieldsValidator(), type: 'required fields' },
     { content: new VerifyTypesValidator(), type: 'verify types' },
     { content: new CompareFieldsValidator(), type: 'compare fields' }

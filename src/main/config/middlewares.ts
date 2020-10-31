@@ -1,6 +1,6 @@
 import { Express } from 'express'
 import { corsAccessControl, bodyParser, defaultContentType } from '../middlewares/export-all'
-import cors from '../middlewares/cors'
+import cors from '../middlewares/cors/cors-middleware'
 
 export default (app: Express): void => {
   app.use(corsAccessControl)

@@ -4,7 +4,7 @@ import { mongoHelper } from '../helper/mongo-helper'
 import {
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields,
   signUpHttpRequestBodyMatchComplete, signInHttpRequestBodyMatchComplete
-} from '../../../../utils/fake-data/export-all'
+} from '../../../../utils/fake/data/export-all'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: AccountMongoRepository

@@ -14,8 +14,10 @@ import {
 */
 export class SignInController implements Controller {
   /**
-  * @param { FieldValidationWithRegex } fieldValidationWithRegex
-  * implementation of the request field validator
+  * @param { Authentication } authentication
+  * implementation of the Authenticator
+  * @param { ValidationComposite } validation
+  * implementation of the Validator
   */
   constructor (
     private readonly authentication: Authentication,

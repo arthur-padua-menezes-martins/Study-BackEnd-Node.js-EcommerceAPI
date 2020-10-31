@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { JwtAdapter } from './jwt-adapter'
-import { accountModelMatch } from '../../../../utils/fake-data/accountModel'
+import { accountModelMatch } from '../../../../utils/fake/data/account/fake-data-account-model'
 
 const secret = 'any_secret'
 const anyToken = 'any_token'

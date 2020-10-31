@@ -1,5 +1,5 @@
 import { Validation } from '../../protocols/validation/validation'
-import { IHttpRequestBody } from '../../protocols/http/http-request-body'
+import { IHttpRequestBody } from '../../protocols/http/request/http-request-body'
 
 interface IValidationComponents {
   content: any

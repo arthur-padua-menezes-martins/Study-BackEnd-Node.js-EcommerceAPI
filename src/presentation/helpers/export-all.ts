@@ -1,5 +1,2 @@
-export * from './http/http'
-export * from './regEx/fields-validation'
+export * from './http/export-all'
 export * from './validators/export-all'
-export * from '../../utils/fake-data/export-all'
-export * from '../../utils/validation/regEx/export-all'

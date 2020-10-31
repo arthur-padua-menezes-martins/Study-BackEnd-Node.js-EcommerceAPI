@@ -1,3 +1,3 @@
-export { IHttpRequestBody, IHttpRequestBodyComplete } from './http-request-body'
-export { IHttpRequest } from './http-request'
-export { IHttpResponse } from './http-response'
+export { IHttpRequestBody, IHttpRequestBodyComplete } from './request/http-request-body'
+export { IHttpRequest } from './request/http-request'
+export { IHttpResponse } from './response/http-response'
