@@ -7,6 +7,7 @@ import {
 import {
   signInHttpRequestBodyFields, signInHttpRequestBodyMatch, signInHttpRequestBodyNotMatch, signInHttpRequestBodyMissingField
 } from './sign-in-helpers'
+import { signInHttpRequestBodyMatchComplete } from '../../helpers/export-all'
 
 const makeFieldValidationWithRegex = async (): Promise<FieldValidationWithRegex> => {
   return new FieldValidationWithRegex({
@@ -18,7 +19,7 @@ const makeFieldValidationWithRegex = async (): Promise<FieldValidationWithRegex>
 const makeAuthenticationStub = async (): Promise<Authentication> => {
   class AuthenticationStub implements Authentication {
     async auth (authentication: IAuthenticationModel): Promise<string> {
-      return 'any_token'
+      return await Promise.resolve('any_token')
     }
   }
 
@@ -47,14 +48,16 @@ const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
   }
 }
 
+const httpRequest: IHttpRequest = {
+  body: signInHttpRequestBodyMatch
+}
+
 describe('SignInController', () => {
   test('returns from httpResponse: "{statusCode: 400}" if any required fields belonging to httpRequest.body do not exist <version 0.0.1>', async () => {
     const { systemUnderTest, validation } = await makeSystemUnderTest()
     const SpyOnValidate = jest.spyOn(validation, 'validate')
 
-    const httpRequest: IHttpRequest = {
-      body: signInHttpRequestBodyMissingField
-    }
+    httpRequest.body = signInHttpRequestBodyMissingField
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(SpyOnValidate).toHaveBeenCalledWith(({
@@ -70,9 +73,7 @@ describe('SignInController', () => {
     const { systemUnderTest, validation } = await makeSystemUnderTest()
     const SpyOnValidate = jest.spyOn(validation, 'validate')
 
-    const httpRequest: IHttpRequest = {
-      body: signInHttpRequestBodyNotMatch
-    }
+    httpRequest.body = signInHttpRequestBodyNotMatch
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(SpyOnValidate).toHaveBeenLastCalledWith(({
@@ -90,9 +91,7 @@ describe('SignInController', () => {
       throw new Error()
     })
 
-    const httpRequest: IHttpRequest = {
-      body: signInHttpRequestBodyNotMatch
-    }
+    httpRequest.body = signInHttpRequestBodyNotMatch
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
@@ -103,21 +102,15 @@ describe('SignInController', () => {
     const { systemUnderTest, authenticationStub } = await makeSystemUnderTest()
     const spyOnAuth = jest.spyOn(authenticationStub, 'auth')
 
-    const httpRequest: IHttpRequest = {
-      body: signInHttpRequestBodyMatch
-    }
+    httpRequest.body = signInHttpRequestBodyMatchComplete
 
     await systemUnderTest.handle(httpRequest)
-    expect(spyOnAuth).toHaveBeenLastCalledWith(signInHttpRequestBodyMatch)
+    expect(spyOnAuth).toHaveBeenLastCalledWith(httpRequest.body)
   })
 
   test('return from httpResponse "{status: 401}" if invalid credentials are provided <version 0.0.1>', async () => {
     const { systemUnderTest, authenticationStub } = await makeSystemUnderTest()
     jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.resolve(''))
-
-    const httpRequest: IHttpRequest = {
-      body: signInHttpRequestBodyMatch
-    }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(401)
@@ -128,10 +121,6 @@ describe('SignInController', () => {
     const { systemUnderTest, authenticationStub } = await makeSystemUnderTest()
     jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.reject(new Error()))
 
-    const httpRequest: IHttpRequest = {
-      body: signInHttpRequestBodyMatch
-    }
-
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.errorMessage?.name).toBe('ServerError')
@@ -139,10 +128,6 @@ describe('SignInController', () => {
 
   test('return from httpResponse "{status: 200}" if valid credentials are provided <version 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-
-    const httpRequest: IHttpRequest = {
-      body: signInHttpRequestBodyMatch
-    }
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(200)

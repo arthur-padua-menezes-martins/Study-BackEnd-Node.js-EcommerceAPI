@@ -18,7 +18,7 @@ const makeLoadAccountByEmailRepository = async (): Promise<LoadAccountByEmailRep
 
 interface ISystemUnderTestTypes {
   systemUnderTest: DatabaseAuthenticationController
-  loadAccountByEmailRepositoryStub: any
+  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   const loadAccountByEmailRepositoryStub = await makeLoadAccountByEmailRepository()
@@ -39,5 +39,13 @@ describe('DatabaseAuthenticationController Usecases', () => {
 
     await systemUnderTest.auth(authentication)
     expect(spyOnLoad).toHaveBeenCalledWith(authentication.email)
+  })
+
+  test('should throw if LoadAccountByEmailRepository throws <version: 0.0.1>', async () => {
+    const { systemUnderTest, loadAccountByEmailRepositoryStub } = await makeSystemUnderTest()
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+
+    const authorization = systemUnderTest.auth(authentication)
+    await expect(authorization).rejects.toThrow()
   })
 })

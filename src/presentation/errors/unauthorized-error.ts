@@ -4,7 +4,7 @@ export class UnauthorizedError extends Error {
   * references the type of error
   */
   constructor () {
-    super('não autorizado')
+    super('acesso não autorizado')
 
     this.name = 'UnauthorizedError'
   }
