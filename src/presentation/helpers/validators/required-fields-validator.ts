@@ -1,4 +1,4 @@
-import { IHttpRequestBody } from '../../protocols/http/http'
+import { IHttpRequestBody } from '../../protocols/http/http-request-body'
 import { Validation } from '../../protocols/validation/validation'
 
 interface IInputContent {

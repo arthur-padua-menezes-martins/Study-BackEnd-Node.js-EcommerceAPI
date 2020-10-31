@@ -8,15 +8,13 @@ import { IHasher, IHashComparer } from '../../../../data/protocols/cryptography/
 * encrypts specific content for each implementation
 */
 export class BcryptAdapter implements IHasher, IHashComparer {
-  private readonly salt: number
-
   /**
   * @param salt
   * number of randomizations
   */
-  constructor (salt: number) {
-    this.salt = salt
-  }
+  constructor (
+    private readonly salt: number
+  ) {}
 
   /**
   * @param value

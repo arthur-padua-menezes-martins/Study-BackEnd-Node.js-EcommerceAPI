@@ -4,13 +4,10 @@ import {
 } from './db-add-account-protocols'
 
 export class DatabaseAddAccountController implements IAddAccount {
-  private readonly hasher: IHasher
-  private readonly addAccountRepository: IAddAccountRepository
-
-  constructor (hasher: IHasher, addAccountRepository: IAddAccountRepository) {
-    this.hasher = hasher
-    this.addAccountRepository = addAccountRepository
-  }
+  constructor (
+    private readonly hasher: IHasher,
+    private readonly addAccountRepository: IAddAccountRepository
+  ) {}
 
   async add (accountData: IAddAccountModel): Promise<IAccountModel> {
     const encryptedPassword = await this.hasher.hash(accountData.password)
@@ -18,6 +15,7 @@ export class DatabaseAddAccountController implements IAddAccount {
       ...accountData,
       password: encryptedPassword
     })
+
     return await Promise.resolve(account)
   }
 }

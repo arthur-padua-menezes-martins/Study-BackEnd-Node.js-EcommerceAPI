@@ -7,22 +7,12 @@ import {
 } from './db-authentication-protocols'
 
 export class DatabaseAuthenticationController implements Authentication {
-  private readonly searchAccountByEmailRepository: SearchAccountByEmailRepository
-  private readonly hashComparer: IHashComparer
-  private readonly encrypter: IEncrypter
-  private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
-
   constructor (
-    searchAccountByEmailRepository: SearchAccountByEmailRepository,
-    hashComparer: IHashComparer,
-    encrypter: IEncrypter,
-    updateAccessTokenRepository: UpdateAccessTokenRepository
-  ) {
-    this.searchAccountByEmailRepository = searchAccountByEmailRepository
-    this.hashComparer = hashComparer
-    this.encrypter = encrypter
-    this.updateAccessTokenRepository = updateAccessTokenRepository
-  }
+    private readonly searchAccountByEmailRepository: SearchAccountByEmailRepository,
+    private readonly hashComparer: IHashComparer,
+    private readonly encrypter: IEncrypter,
+    private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
+  ) {}
 
   async auth (authentication: IAuthenticationModel): Promise<string | null> {
     const account = await this.searchAccountByEmailRepository.searchByEmail(authentication.email)

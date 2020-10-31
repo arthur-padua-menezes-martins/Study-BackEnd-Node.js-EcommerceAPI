@@ -1,5 +1,5 @@
 import { Validation } from '../../protocols/validation/validation'
-import { IHttpRequestBody } from '../../protocols/http/http'
+import { IHttpRequestBody } from '../../protocols/http/http-request-body'
 
 interface IValidationComponents {
   content: any
@@ -15,7 +15,7 @@ interface IInputContent {
   withThis?: any
 }
 export class ValidationComposite implements Validation {
-  public readonly validateFields: any
+  private readonly validateFields: any
   private readonly requiredFields: any
   private readonly compareFields: any
   private readonly verifyTypes: any

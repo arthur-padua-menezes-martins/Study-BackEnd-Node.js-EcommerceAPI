@@ -1,4 +1,4 @@
-import { IHttpRequestBody, IHttpRequestBodyComplete } from '../../presentation/protocols/http/http'
+import { IHttpRequestBody, IHttpRequestBodyComplete } from '../../presentation/protocols/http/http-request-body'
 
 export const signUpHttpRequestBodyFields: string[] = ['name', 'email', 'password', 'passwordConfirmation']
 

@@ -13,17 +13,14 @@ import {
 * validates the user entries for apply the sign in
 */
 export class SignInController implements Controller {
-  private readonly validation
-  private readonly authentication
-
   /**
   * @param { FieldValidationWithRegex } fieldValidationWithRegex
   * implementation of the request field validator
   */
-  constructor (authentication: Authentication, validation: ValidationComposite) {
-    this.validation = validation
-    this.authentication = authentication
-  }
+  constructor (
+    private readonly authentication: Authentication,
+    private readonly validation: ValidationComposite
+  ) {}
 
   /**
   * @param { IHttpRequest } httpRequest

@@ -11,19 +11,16 @@ import {
 * validates the insertion of a new account in the database
 */
 export class SignUpController implements Controller {
-  private readonly addAccount
-  private readonly validation
-
   /**
   * @param { IAddAccount } addAccount
   * implementation of the user account record manager in the database contained
   * @param { ValidationComposite } validation
   * implementation of the validation
   */
-  constructor (addAccount: IAddAccount, validation: ValidationComposite) {
-    this.addAccount = addAccount
-    this.validation = validation
-  }
+  constructor (
+    private readonly addAccount: IAddAccount,
+    private readonly validation: ValidationComposite
+  ) {}
 
   /**
   * @param { IHttpRequest } httpRequest
