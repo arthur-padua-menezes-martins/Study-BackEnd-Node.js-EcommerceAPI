@@ -1,3 +1,5 @@
 export { Authentication, IAuthenticationModel } from '../../../domain/usecases/account/authentication'
-export { LoadAccountByEmailRepository } from '../../protocols/repository/account/load-account-by-email-repository'
 export { IAccountModel } from '../../../domain/models/account/account'
+export { LoadAccountByEmailRepository } from '../../protocols/repository/account/load-account-by-email-repository'
+export { HashComparer, TokenGenerator } from '../../protocols/cryptography/export-all'
+export { UpdateAccessTokenRepository } from '../../protocols/repository/account/update-access-token-repository'

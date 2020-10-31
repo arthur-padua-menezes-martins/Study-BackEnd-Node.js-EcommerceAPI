@@ -1,13 +1,13 @@
 import bcrypt from 'bcrypt'
-import { IEncrypter } from '../../data/protocols/encrypter'
+import { IHasher } from '../../data/protocols/cryptography/hasher'
 
 /**
-* @implements {IEncrypter}
+* @implements {IHasher}
 *
-* @method ``encrypt``
+* @method ``hash``
 * encrypts specific content for each implementation
 */
-export class BcryptAdapter implements IEncrypter {
+export class BcryptAdapter implements IHasher {
   private readonly salt: number
 
   /**
@@ -24,7 +24,7 @@ export class BcryptAdapter implements IEncrypter {
   * @returns
   * encrypted value
   */
-  async encrypt (value: string): Promise<string> {
+  async hash (value: string): Promise<string> {
     return await Promise.resolve(
       await bcrypt.hash(value, this.salt)
     )

@@ -1,17 +1,17 @@
 import { DatabaseAddAccountController } from './db-add-account'
 import {
   IAccountModel, IAddAccountModel,
-  IEncrypter, IAddAccountRepository
+  IHasher, IAddAccountRepository
 } from './db-add-account-protocols'
 import { signUpHttpRequestBodyMatchComplete, accountModelMatch } from './db-add-account-utils'
 
-const makeEncrypter = async (): Promise<IEncrypter> => {
-  class EncrypterStub implements IEncrypter {
-    async encrypt (value: string): Promise<string> {
+const makeHasher = async (): Promise<IHasher> => {
+  class HasherStub implements IHasher {
+    async hash (value: string): Promise<string> {
       return await Promise.resolve('encrypted_password')
     }
   }
-  return new EncrypterStub()
+  return new HasherStub()
 }
 
 const makeAddAccountRepository = async (): Promise<IAddAccountRepository> => {
@@ -26,33 +26,33 @@ const makeAddAccountRepository = async (): Promise<IAddAccountRepository> => {
 
 interface ISystemUnderTestTypes {
   systemUnderTest: DatabaseAddAccountController
-  encrypterStub: IEncrypter
+  hasherStub: IHasher
   addAccountRepositoryStub: IAddAccountRepository
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
-  const encrypterStub = await makeEncrypter()
+  const hasherStub = await makeHasher()
   const addAccountRepositoryStub = await makeAddAccountRepository()
-  const systemUnderTest = new DatabaseAddAccountController(encrypterStub, addAccountRepositoryStub)
+  const systemUnderTest = new DatabaseAddAccountController(hasherStub, addAccountRepositoryStub)
 
   return {
     systemUnderTest,
-    encrypterStub,
+    hasherStub,
     addAccountRepositoryStub
   }
 }
 
 describe('DatabaseAddAccountController Usecases', () => {
   test('Should call Encrypter with correct password <version: 0.0.1>', async () => {
-    const { systemUnderTest, encrypterStub } = await makeSystemUnderTest()
-    const spyOnEncrypterEncrypt = jest.spyOn(encrypterStub, 'encrypt')
+    const { systemUnderTest, hasherStub } = await makeSystemUnderTest()
+    const spyOnEncrypterEncrypt = jest.spyOn(hasherStub, 'hash')
     await systemUnderTest.add(signUpHttpRequestBodyMatchComplete)
 
     expect(spyOnEncrypterEncrypt).toHaveBeenCalledWith(signUpHttpRequestBodyMatchComplete.password)
   })
 
   test('Should throw if Encrypter throws <version: 0.0.1>', async () => {
-    const { systemUnderTest, encrypterStub } = await makeSystemUnderTest()
-    jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()))
+    const { systemUnderTest, hasherStub } = await makeSystemUnderTest()
+    jest.spyOn(hasherStub, 'hash').mockReturnValueOnce(Promise.reject(new Error()))
     const promiseNewAccount = systemUnderTest.add(signUpHttpRequestBodyMatchComplete)
 
     await expect(promiseNewAccount).rejects.toThrow()

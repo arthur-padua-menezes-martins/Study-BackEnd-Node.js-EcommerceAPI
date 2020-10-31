@@ -10,5 +10,5 @@ export interface IAuthenticationModel {
 * authentication informations for validate
 */
 export interface Authentication {
-  auth: (authentication: IAuthenticationModel) => Promise<string>
+  auth: (authentication: IAuthenticationModel) => Promise<string | null>
 }
