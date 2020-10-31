@@ -1,3 +1,3 @@
-export interface HashComparer {
+export interface IHashComparer {
   compare: (password: string, passwordHash: string) => Promise<boolean>
 }

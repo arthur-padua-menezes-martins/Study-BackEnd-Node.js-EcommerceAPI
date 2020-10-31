@@ -1,3 +1,3 @@
 export { IHasher } from './hasher'
-export { HashComparer } from './hash-comparer'
-export { TokenGenerator } from './token-generator'
+export { IHashComparer } from './hash-comparer'
+export { IEncrypter } from './encrypter'

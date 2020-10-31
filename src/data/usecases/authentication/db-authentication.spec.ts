@@ -1,8 +1,8 @@
 import { DatabaseAuthenticationController } from './db-authentication'
 import {
   LoadAccountByEmailRepository, IAuthenticationModel,
-  HashComparer,
-  TokenGenerator,
+  IHashComparer,
+  IEncrypter,
   UpdateAccessTokenRepository,
   IAccountModel
 } from './db-authentication-protocols'
@@ -19,8 +19,8 @@ const makeLoadAccountByEmailRepository = async (): Promise<LoadAccountByEmailRep
   return new LoadAccountByEmailRepositoryStub()
 }
 
-const makeHashComparer = async (): Promise<HashComparer> => {
-  class HashComparerStub implements HashComparer {
+const makeHashComparer = async (): Promise<IHashComparer> => {
+  class HashComparerStub implements IHashComparer {
     async compare (password: string, passwordHash: string): Promise<boolean> {
       return await Promise.resolve(true)
     }
@@ -30,14 +30,14 @@ const makeHashComparer = async (): Promise<HashComparer> => {
 }
 
 const accessToken = 'any_token'
-const makeTokenGenerator = async (): Promise<TokenGenerator> => {
-  class TokenGeneratorStub implements TokenGenerator {
-    async generate (id: string): Promise<string> {
+const makeEncrypterGenerator = async (): Promise<IEncrypter> => {
+  class EncrypterStub implements IEncrypter {
+    async encrypt (value: string): Promise<string> {
       return await Promise.resolve(accessToken)
     }
   }
 
-  return new TokenGeneratorStub()
+  return new EncrypterStub()
 }
 
 const makeUpdateAccessTokenRepository = async (): Promise<UpdateAccessTokenRepository> => {
@@ -53,24 +53,24 @@ const makeUpdateAccessTokenRepository = async (): Promise<UpdateAccessTokenRepos
 interface ISystemUnderTestTypes {
   systemUnderTest: DatabaseAuthenticationController
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
-  hashComparerStub: HashComparer
-  tokenGeneratorStub: TokenGenerator
+  hashComparerStub: IHashComparer
+  encrypterStub: IEncrypter
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   const loadAccountByEmailRepositoryStub = await makeLoadAccountByEmailRepository()
   const hashComparerStub = await makeHashComparer()
-  const tokenGeneratorStub = await makeTokenGenerator()
+  const encrypterStub = await makeEncrypterGenerator()
   const updateAccessTokenRepositoryStub = await makeUpdateAccessTokenRepository()
   const systemUnderTest = new DatabaseAuthenticationController(
-    loadAccountByEmailRepositoryStub, hashComparerStub, tokenGeneratorStub, updateAccessTokenRepositoryStub
+    loadAccountByEmailRepositoryStub, hashComparerStub, encrypterStub, updateAccessTokenRepositoryStub
   )
 
   return {
     systemUnderTest,
     loadAccountByEmailRepositoryStub,
     hashComparerStub,
-    tokenGeneratorStub,
+    encrypterStub,
     updateAccessTokenRepositoryStub
   }
 }
@@ -126,23 +126,23 @@ describe('DatabaseAuthenticationController Usecases', () => {
     expect(authorization).toBe(null)
   })
 
-  test('should call TokenGenerator with correct id <version: 0.0.1>', async () => {
-    const { systemUnderTest, tokenGeneratorStub } = await makeSystemUnderTest()
-    const spyOnGenerate = jest.spyOn(tokenGeneratorStub, 'generate')
+  test('should call Encrypter with correct id <version: 0.0.1>', async () => {
+    const { systemUnderTest, encrypterStub } = await makeSystemUnderTest()
+    const spyOnEncrypt = jest.spyOn(encrypterStub, 'encrypt')
 
     await systemUnderTest.auth(authentication)
-    expect(spyOnGenerate).toHaveBeenCalledWith(accountModelMatch.id)
+    expect(spyOnEncrypt).toHaveBeenCalledWith(accountModelMatch.id)
   })
 
-  test('should return an null if TokenGenerator fails <version: 0.0.1>', async () => {
-    const { systemUnderTest, tokenGeneratorStub } = await makeSystemUnderTest()
-    jest.spyOn(tokenGeneratorStub, 'generate').mockReturnValueOnce(Promise.reject(new Error()))
+  test('should return an null if Encrypter fails <version: 0.0.1>', async () => {
+    const { systemUnderTest, encrypterStub } = await makeSystemUnderTest()
+    jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()))
 
     const authorization = systemUnderTest.auth(authentication)
     await expect(authorization).rejects.toThrow()
   })
 
-  test('must return the authentication token if TokenGenerator succeeds <version: 0.0.1>', async () => {
+  test('must return the authentication token if Encrypter succeeds <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
     const authorization = await systemUnderTest.auth(authentication)
