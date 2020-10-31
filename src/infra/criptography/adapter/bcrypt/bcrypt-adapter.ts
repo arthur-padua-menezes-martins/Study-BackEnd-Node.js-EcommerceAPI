@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { IHasher } from '../../data/protocols/cryptography/hasher'
+import { IHasher, IHashComparer } from '../../../../data/protocols/cryptography/export-all'
 
 /**
 * @implements {IHasher}
@@ -7,7 +7,7 @@ import { IHasher } from '../../data/protocols/cryptography/hasher'
 * @method ``hash``
 * encrypts specific content for each implementation
 */
-export class BcryptAdapter implements IHasher {
+export class BcryptAdapter implements IHasher, IHashComparer {
   private readonly salt: number
 
   /**
@@ -28,5 +28,11 @@ export class BcryptAdapter implements IHasher {
     return await Promise.resolve(
       await bcrypt.hash(value, this.salt)
     )
+  }
+
+  async compare (value: string, hash: string): Promise<boolean> {
+    const isEqual = await bcrypt.compare(value, hash)
+
+    return await Promise.resolve(isEqual)
   }
 }

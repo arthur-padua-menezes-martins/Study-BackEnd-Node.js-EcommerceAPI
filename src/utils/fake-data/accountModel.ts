@@ -1,7 +1,7 @@
 import { signUpHttpRequestBodyMatchComplete } from './signUpHttpRequest'
 
 export const accountModelMatch = {
-  id: 'valid_id',
+  id: 'valid_id' as string,
   ...signUpHttpRequestBodyMatchComplete,
-  password: 'encrypted_password'
+  password: 'encrypted_password' as string
 }
