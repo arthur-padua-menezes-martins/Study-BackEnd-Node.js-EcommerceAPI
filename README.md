@@ -2,7 +2,7 @@
 <br>
 </br>
 </br>
-<h2>Rotas<h2><br/><br/>
+<h2>Rotas<h2/><br/><br/>
 ✨ <h3>/signup<h3/> - POST</br>
 ✔️ receber informações de cadastro e realiza-lo</br>
 ✔️ verificar a validade das informações</br>
