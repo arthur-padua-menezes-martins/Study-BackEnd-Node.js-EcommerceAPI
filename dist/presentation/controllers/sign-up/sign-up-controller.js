@@ -11,7 +11,6 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SignUpController = void 0;
 const sign_up_controller_helpers_1 = require("./sign-up-controller-helpers");
 /**
 * @method handle

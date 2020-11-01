@@ -7,7 +7,8 @@
         "allowJs": true, // permite a utilização de arquivos .js para configuração de ambiente
         "strictNullChecks": true,
         "strict": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "rootDir": "src"
     },
     "include": ["src"],
     "exclude": [
