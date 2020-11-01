@@ -1,7 +1,8 @@
-# ecommerce_sertao_nerd
+# ***ecommerce_sertao_nerd***
 <br>
 </br>
-###### /signup
+</br>
+## **/signup**</br>
 ✔️ receber informações de cadastro e realiza-lo
 ✔️ verificar a validade das informações
 ❌ verificar se o e-mail já foi cadastrado
@@ -10,7 +11,8 @@
 ❌ retornar o token de acesso
 <br>
 </br>
-###### /signin
+</br>
+## **/signin**</br>
 ✔️ receber informações de login e autentica-las
 ✔️ verificar a validade das informações
 ✔️ autenticar informações
