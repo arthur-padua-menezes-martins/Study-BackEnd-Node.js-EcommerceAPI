@@ -3,7 +3,7 @@
 </br>
 </br>
 <h2>Rotas<h2/><br/><br/>
-✨ <h3>/signup<h3/> - POST</br>
+✨  - POST</br>
 ✔️ receber informações de cadastro e realiza-lo</br>
 ✔️ verificar a validade das informações</br>
 ❌ verificar se o e-mail já foi cadastrado</br>
@@ -16,7 +16,7 @@ retorna <strong>HTTP status code 500</strong> se ocorrer qualquer erro no servid
 <br>
 </br>
 </br>
-✨ <h3>/signin<h3/> - POST</br>
+✨  - POST</br>
 ✔️ receber informações de login e autentica-las</br>
 ✔️ verificar a validade das informações</br>
 ✔️ autenticar informações</br>
