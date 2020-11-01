@@ -1,10 +1,8 @@
 # ***ecommerce_sertao_nerd***
 
+# rotas
 
-
-### ***rotas***
-
-✨ */signup* **POST**
+>### ✨ */signup - POST*
 1. ✔️ receber informações de cadastro e realiza-lo
 1. ✔️ verificar a validade das informações
 1. ❌ verificar se o e-mail já foi cadastrado
@@ -18,8 +16,7 @@
 
 
 
-✨ */signin* **POST**
-
+>### ✨ */signin - POST*
 1. ✔️ receber informações de login e autentica-las
 1. ✔️ verificar a validade das informações
 1. ✔️ autenticar informações
