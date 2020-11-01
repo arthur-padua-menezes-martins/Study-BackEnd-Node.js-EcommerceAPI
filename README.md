@@ -9,6 +9,8 @@
 ❌ verificar se o e-mail é valido para os serviços de disparo de e-mail</br>
 ❌ confirmar a criação da conta utlizando de hash enviado por e-mail</br>
 ❌ retornar o token de acesso</br>
+</br>
+4️
 <br>
 </br>
 </br>
