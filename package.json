@@ -88,7 +88,7 @@
     "ts-jest": "^26.4.1",
     "typescript": "^4.0.3"
   },
-  "engines": {"node": "14.x"},
+  "engines": {"node": "12.x"},
   "author": "Arthur Padua de Menezes Martins @https://www.linkedin.com/in/arthur-padua-de-menezes-martins-35116219b/ @https://github.com/arthur-padua-menezes-martins",
   "license": "ISC"
 }

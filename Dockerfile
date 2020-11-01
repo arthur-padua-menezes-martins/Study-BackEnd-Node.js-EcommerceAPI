@@ -1,7 +1,4 @@
-FROM node:14
-WORKDIR /usr/src/ecommerce_sertao_nerd
+FROM node:12
+WORKDIR /usr/src/ecommerce-sertao-nerd
 COPY ./package.json .
 RUN npm install --only=prod
-COPY ./dist ./dist
-EXPOSE 5000
-CMD npm start 
