@@ -1,8 +1,8 @@
 # ***ecommerce_sertao_nerd***
-<br/>
 </br>
 </br>
-✨ <h3>/signup<h3/> - POST</br>
+</br>
+✨ /signup - POST</br>
 ✔️ receber informações de cadastro e realiza-lo</br>
 ✔️ verificar a validade das informações</br>
 ❌ verificar se o e-mail já foi cadastrado</br>
@@ -12,7 +12,7 @@
 </br>
 retorna <strong>HTTP status code 400</strong> se qualquer campo obrigarório for omitido ou inválido</br>
 retorna <strong>HTTP status code 500</strong> se ocorrer qualquer erro no servidor</br>
-<br>
+</br>
 </br>
 </br>
 ✨ <h3>/signin<h3/> - POST</br>
