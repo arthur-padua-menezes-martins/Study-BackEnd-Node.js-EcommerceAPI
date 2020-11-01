@@ -1,5 +1,5 @@
 # **[ E-COMMERCE API ]**
-> # tecnologias
+> # TECNOLOGIAS
 
 **TypeScript**
 * *velocidade no código*
@@ -18,9 +18,9 @@
 **jsonwebtoken**
 * *token de acesso*
 
+<br/></br></br>
 
-
-> # rotas
+> # ROTAS
 
 **/signup - POST**
 * 🏆 *cadastro de usuário*
@@ -35,9 +35,9 @@
 * ✔️ *verificar a procedência das informações*
 * ✔️ *retornar o token de acesso*
 
+<br/></br></br>
 
-
-> # Erros
+> # ERRORS
 
 **4xx**
 * 🐞 *status code 400 se campos obrigarórios forem omitidos ou inválidos*

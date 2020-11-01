@@ -1,8 +1,13 @@
 import { SignUpController } from './sign-up-controller'
-import { IHttpRequest, IAddAccount, IAddAccountModel, IAccountModel } from './sign-up-controller-protocols'
 import {
+  IHttpRequest,
+  IAddAccount, IAddAccountModel, IAccountModel,
+  IAuthentication, IAuthenticationModel
+} from './sign-up-controller-protocols'
+import {
+  FieldValidationWithRegEx,
   ValidationComposite, RequiredFieldsValidator, VerifyTypesValidator, CompareFieldsValidator, ValidateFieldsValidator,
-  FieldValidationWithRegEx, NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter
+  NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter
 } from './sign-up-controller-components'
 import {
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields, signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation
@@ -29,34 +34,50 @@ const makeFieldValidationWithRegEx = async (): Promise<FieldValidationWithRegEx>
   })
 }
 
+const makeAuthenticationStub = async (): Promise<IAuthentication> => {
+  class AuthenticationStub implements IAuthentication {
+    async auth (authentication: IAuthenticationModel): Promise<string> {
+      return await Promise.resolve('any_token')
+    }
+  }
+
+  return new AuthenticationStub()
+}
+
 interface ISignUpControllerTypes {
   systemUnderTest: SignUpController
   addAccountStub: IAddAccount
-  validation: ValidationComposite
+  validationStub: ValidationComposite
+  authenticationStub: IAuthentication
 }
 const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
   const addAccountStub = await makeAddAccount()
-  const validation = new ValidationComposite([
+  const validationStub = new ValidationComposite([
     { content: new ValidateFieldsValidator(await makeFieldValidationWithRegEx()), type: 'validate fields' },
     { content: new RequiredFieldsValidator(), type: 'required fields' },
     { content: new VerifyTypesValidator(), type: 'verify types' },
     { content: new CompareFieldsValidator(), type: 'compare fields' }
   ])
-  const systemUnderTest = new SignUpController(addAccountStub, validation)
+  const authenticationStub = await makeAuthenticationStub()
+  const systemUnderTest = new SignUpController(addAccountStub, validationStub, authenticationStub)
 
   return {
     systemUnderTest,
     addAccountStub,
-    validation
+    validationStub,
+    authenticationStub
   }
+}
+
+const httpRequest: IHttpRequest = {
+  body: signUpHttpRequestBodyMatchComplete
 }
 
 describe('SignUpController', () => {
   test('returns from httpResponse: "{statusCode: 400}" if any required fields belonging to httpRequestBody do not exist <version 0.0.3>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const httpRequest: IHttpRequest = {
-      body: signUpHttpRequestBodyMissingField
-    }
+
+    httpRequest.body = signUpHttpRequestBodyMissingField
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
@@ -65,9 +86,8 @@ describe('SignUpController', () => {
 
   test('returns from httpResponse "{status Code: 400}" if the password confirmation does not match the password <version 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const httpRequest: IHttpRequest = {
-      body: signUpHttpRequestBodyInvalidPasswordConfirmation
-    }
+
+    httpRequest.body = signUpHttpRequestBodyInvalidPasswordConfirmation
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
@@ -75,12 +95,11 @@ describe('SignUpController', () => {
   })
 
   test('returns from httpResponse "{status Code: 400}" if any fields do not match validation <version 0.0.1>', async () => {
-    const { systemUnderTest, validation } = await makeSystemUnderTest()
-    const httpRequest: IHttpRequest = {
-      body: signUpHttpRequestBodyNotMatch
-    }
+    const { systemUnderTest, validationStub } = await makeSystemUnderTest()
 
-    const spyOnValidate = jest.spyOn(validation, 'validate')
+    httpRequest.body = signUpHttpRequestBodyNotMatch
+
+    const spyOnValidate = jest.spyOn(validationStub, 'validate')
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
 
@@ -94,9 +113,7 @@ describe('SignUpController', () => {
 
   test('returns from httpResponse "{status Code: 500}" if AddAccount throw error <version 0.0.1>', async () => {
     const { systemUnderTest, addAccountStub } = await makeSystemUnderTest()
-    const httpRequest: IHttpRequest = {
-      body: signUpHttpRequestBodyMatchComplete
-    }
+    httpRequest.body = signUpHttpRequestBodyMatchComplete
 
     jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
       throw new Error()
@@ -110,19 +127,35 @@ describe('SignUpController', () => {
   test('must call AddAccount with the correct values <version 0.0.1>', async () => {
     const { systemUnderTest, addAccountStub } = await makeSystemUnderTest()
     const spyOnAddAccountStubAdd = await jest.spyOn(addAccountStub, 'add')
-    const httpRequest: IHttpRequest = {
-      body: signUpHttpRequestBodyMatchComplete
-    }
 
     await systemUnderTest.handle(httpRequest)
     expect(spyOnAddAccountStubAdd).toHaveBeenCalledWith(signUpHttpRequestBodyMatchComplete)
   })
 
+  test('should call Authentication with correct values <version 0.0.1>', async () => {
+    const { systemUnderTest, authenticationStub } = await makeSystemUnderTest()
+    const spyOnAuth = jest.spyOn(authenticationStub, 'auth')
+
+    await systemUnderTest.handle(httpRequest)
+    expect(spyOnAuth).toHaveBeenLastCalledWith({
+      email: httpRequest.body.email,
+      password: httpRequest.body.password
+    })
+  })
+
+  test('return from httpResponse "{status: 500}" if Authentication throws <version 0.0.1>', async () => {
+    const { systemUnderTest, authenticationStub } = await makeSystemUnderTest()
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.reject(new Error()))
+
+    const httpResponse = await systemUnderTest.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.errorMessage?.name).toBe('ServerError')
+  })
+
   test('returns from httpResponse "{status Code: 200}" if valid information is sent to AddAccount <version 0.0.2>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const httpRequest: IHttpRequest = {
-      body: signUpHttpRequestBodyMatchComplete
-    }
+
+    httpRequest.body = signUpHttpRequestBodyMatchComplete
 
     const httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(200)

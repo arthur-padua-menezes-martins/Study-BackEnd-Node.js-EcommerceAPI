@@ -1,5 +1,8 @@
-import { ValidationComposite, RequiredFieldsValidator, VerifyTypesValidator, CompareFieldsValidator, ValidateFieldsValidator } from '../../../../presentation/helpers/validators/export-all'
-import { FieldValidationWithRegEx } from '../../../../presentation/helpers/validators/regEx/field/field-validation-with-reg-ex'
+import {
+  ValidationComposite,
+  CompareFieldsValidator, RequiredFieldsValidator, ValidateFieldsValidator, VerifyTypesValidator,
+  FieldValidationWithRegEx
+} from '../../../../presentation/helpers/validators/export-all'
 import { NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from '../../../adapters/validation/regEx/field/export-all'
 
 export const makeFieldValidationWithRegex = (): FieldValidationWithRegEx => {

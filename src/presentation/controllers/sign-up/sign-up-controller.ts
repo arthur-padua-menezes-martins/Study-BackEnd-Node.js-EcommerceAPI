@@ -1,4 +1,8 @@
-import { Controller, IHttpRequest, IHttpResponse, IAddAccount } from './sign-up-controller-protocols'
+import {
+  IController, IHttpRequest, IHttpResponse,
+  IAddAccount,
+  IAuthentication
+} from './sign-up-controller-protocols'
 import { ValidationComposite } from './sign-up-controller-components'
 import {
   MissingParamError, InvalidParamError,
@@ -10,16 +14,19 @@ import {
 * @method handle
 * validates the insertion of a new account in the database
 */
-export class SignUpController implements Controller {
+export class SignUpController implements IController {
   /**
   * @param { IAddAccount } addAccount
   * implementation of the user account record manager in the database contained
   * @param { ValidationComposite } validation
   * implementation of the validation
+  * @param { IAuthentication } authentication
+  * implementation of the Authenticator
   */
   constructor (
     private readonly addAccount: IAddAccount,
-    private readonly validation: ValidationComposite
+    private readonly validation: ValidationComposite,
+    private readonly authentication: IAuthentication
   ) {}
 
   /**
@@ -67,7 +74,7 @@ export class SignUpController implements Controller {
       }
 
       const { name, email } = httpRequest.body
-      const newAccount = await this.addAccount.add({
+      await this.addAccount.add({
         name: name as string,
         email: email as string,
         password: password as string,
@@ -75,7 +82,14 @@ export class SignUpController implements Controller {
         address: address as any
       })
 
-      return ok(newAccount)
+      const authorization = await this.authentication.auth({
+        email: email as string,
+        password: password as string
+      })
+
+      return ok({
+        accessToken: authorization
+      })
     } catch (error) {
       return serverError(error)
     }

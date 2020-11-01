@@ -2,10 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validation = exports.makeFieldValidationWithRegex = void 0;
 const export_all_1 = require("../../../../presentation/helpers/validators/export-all");
-const field_validation_with_reg_ex_1 = require("../../../../presentation/helpers/validators/regEx/field/field-validation-with-reg-ex");
 const export_all_2 = require("../../../adapters/validation/regEx/field/export-all");
 exports.makeFieldValidationWithRegex = () => {
-    return new field_validation_with_reg_ex_1.FieldValidationWithRegEx({
+    return new export_all_1.FieldValidationWithRegEx({
         name: (new export_all_2.NameValidatorAdapter()).isValid,
         email: (new export_all_2.EmailValidatorAdapter()).isValid,
         password: (new export_all_2.PasswordValidatorAdapter()).isValid

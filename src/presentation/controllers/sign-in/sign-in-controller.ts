@@ -1,5 +1,8 @@
-import { Controller, IHttpRequest, IHttpResponse } from './sign-in-controller-protocols'
-import { ValidationComposite, Authentication } from './sign-in-controller-components'
+import {
+  IController, IHttpRequest, IHttpResponse,
+  IAuthentication
+} from './sign-in-controller-protocols'
+import { ValidationComposite } from './sign-in-controller-components'
 import {
   MissingParamError, InvalidParamError,
   ok, badRequest, unauthorized, serverError,
@@ -12,15 +15,15 @@ import {
 * @method `handle`
 * validates the user entries for apply the sign in
 */
-export class SignInController implements Controller {
+export class SignInController implements IController {
   /**
-  * @param { Authentication } authentication
+  * @param { IAuthentication } authentication
   * implementation of the Authenticator
   * @param { ValidationComposite } validation
-  * implementation of the Validator
+  * implementation of the validation
   */
   constructor (
-    private readonly authentication: Authentication,
+    private readonly authentication: IAuthentication,
     private readonly validation: ValidationComposite
   ) {}
 

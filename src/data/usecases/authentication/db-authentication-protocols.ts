@@ -1,4 +1,4 @@
-export { Authentication, IAuthenticationModel } from '../../../domain/usecases/account/authentication'
+export { IAuthentication, IAuthenticationModel } from '../../../domain/usecases/account/authentication'
 export { IAccountModel } from '../../../domain/models/account/account'
 export { SearchAccountByEmailRepository } from '../../protocols/repository/account/search-account-by-email-repository'
 export { IHashComparer, IEncrypter } from '../../protocols/cryptography/export-all'

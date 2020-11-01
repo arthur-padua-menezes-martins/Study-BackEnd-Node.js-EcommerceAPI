@@ -6,6 +6,6 @@ import { IHttpRequest, IHttpResponse } from '../export-all'
 * @param httpRequest
 * implemetation of IHttpRequest
 */
-export interface Controller {
+export interface IController {
   handle: (httpRequest: IHttpRequest) => Promise<IHttpResponse>
 }

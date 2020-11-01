@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { IHttpRequest, IHttpResponse, Controller } from '../../../presentation/protocols/export-all'
+import { IHttpRequest, IHttpResponse, IController } from '../../../presentation/protocols/export-all'
 
-export const expressRouteAdapter = (controller: Controller) => {
+export const expressRouteAdapter = (controller: IController) => {
   return async (req: Request, res: Response) => {
     const httpRequest: IHttpRequest = {
       body: req.body

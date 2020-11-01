@@ -1,12 +1,12 @@
 import {
-  Authentication, IAuthenticationModel,
+  IAuthentication, IAuthenticationModel,
   SearchAccountByEmailRepository,
   IHashComparer,
   IEncrypter,
   UpdateAccessTokenRepository
 } from './db-authentication-protocols'
 
-export class DatabaseAuthenticationController implements Authentication {
+export class DatabaseAuthenticationController implements IAuthentication {
   constructor (
     private readonly searchAccountByEmailRepository: SearchAccountByEmailRepository,
     private readonly hashComparer: IHashComparer,

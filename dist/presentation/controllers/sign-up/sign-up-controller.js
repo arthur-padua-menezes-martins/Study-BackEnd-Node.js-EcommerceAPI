@@ -11,6 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SignUpController = void 0;
 const sign_up_controller_helpers_1 = require("./sign-up-controller-helpers");
 /**
 * @method handle
@@ -22,10 +23,13 @@ class SignUpController {
     * implementation of the user account record manager in the database contained
     * @param { ValidationComposite } validation
     * implementation of the validation
+    * @param { IAuthentication } authentication
+    * implementation of the Authenticator
     */
-    constructor(addAccount, validation) {
+    constructor(addAccount, validation, authentication) {
         this.addAccount = addAccount;
         this.validation = validation;
+        this.authentication = authentication;
     }
     /**
     * @param { IHttpRequest } httpRequest
@@ -68,14 +72,20 @@ class SignUpController {
                 return sign_up_controller_helpers_1.badRequest({}, '', new sign_up_controller_helpers_1.InvalidParamError(invalidFields.join(' ')), invalidFields);
             }
             const { name, email } = httpRequest.body;
-            const newAccount = await this.addAccount.add({
+            await this.addAccount.add({
                 name: name,
                 email: email,
                 password: password,
                 passwordConfirmation: passwordConfirmation,
                 address: address
             });
-            return sign_up_controller_helpers_1.ok(newAccount);
+            const authorization = await this.authentication.auth({
+                email: email,
+                password: password
+            });
+            return sign_up_controller_helpers_1.ok({
+                accessToken: authorization
+            });
         }
         catch (error) {
             return sign_up_controller_helpers_1.serverError(error);
