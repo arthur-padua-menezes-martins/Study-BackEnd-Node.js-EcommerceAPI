@@ -2,7 +2,7 @@
 </br>
 </br>
 </br>
-✨ /signup - POST</br>
+✨ <strong><em>/signup<em/> - POST<strong/></br></br>
 ✔️ receber informações de cadastro e realiza-lo</br>
 ✔️ verificar a validade das informações</br>
 ❌ verificar se o e-mail já foi cadastrado</br>
@@ -15,7 +15,7 @@ retorna <strong>HTTP status code 500</strong> se ocorrer qualquer erro no servid
 </br>
 </br>
 </br>
-✨ <h3>/signin<h3/> - POST</br>
+✨ <strong><em>/signin<em/> - POST<strong/></br></br>
 ✔️ receber informações de login e autentica-las</br>
 ✔️ verificar a validade das informações</br>
 ✔️ autenticar informações</br>
