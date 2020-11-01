@@ -1,5 +1,5 @@
 # **[ E-COMMERCE API ]**
->> # Tecnologias
+>>> # tecnologias
 
 > #### TypeScript
 * *velocidade no código*
@@ -20,9 +20,7 @@
 
 
 
->> # Rotas
-1. **[Sign Up]**
-2. **[Sign iN]**
+>>> # rotas
 
 > #### /signup - POST
 * 🏆 *cadastro de usuário*
@@ -39,9 +37,7 @@
 
 
 
->> # Erros
-1. **[4xx]**
-2. **[5xx]**
+>>> # Erros
 
 > #### 4xx
 * 🐞 *status code 400 se campos obrigarórios forem omitidos ou inválidos*
