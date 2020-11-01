@@ -10,7 +10,7 @@
 ❌ confirmar a criação da conta utlizando de hash enviado por e-mail</br>
 ❌ retornar o token de acesso</br>
 </br>
-*400* se qalquer campo obrigarório for omitido</br>
+**400** se qalquer campo obrigarório for omitido</br>
 5️⃣0️⃣0️⃣ se ocorrer qualquer erro no servidor</br>
 <br>
 </br>
