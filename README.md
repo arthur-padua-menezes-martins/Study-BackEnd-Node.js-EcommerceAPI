@@ -2,7 +2,7 @@
 <br>
 </br>
 </br>
-## **/signup** - POST</br>
+✨ /signup - POST</br>
 ✔️ receber informações de cadastro e realiza-lo</br>
 ✔️ verificar a validade das informações</br>
 ❌ verificar se o e-mail já foi cadastrado</br>
@@ -12,7 +12,7 @@
 <br>
 </br>
 </br>
-## **/signin** - POST</br>
+✨ /signin - POST</br>
 ✔️ receber informações de login e autentica-las</br>
 ✔️ verificar a validade das informações</br>
 ✔️ autenticar informações</br>
