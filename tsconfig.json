@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "./dist", // local de armazenamento dos arquivos compilados para .js
+        "outDir": "dist", // local de armazenamento dos arquivos compilados para .js
         "module": "commonjs", // transformação de novas funcionalidades do .ts funcionalidades do .js 
         "target": "es2017", // compilação de .ts para determinada versão do .js 
         "esModuleInterop": true, // conversão entre módulos diferentes
@@ -8,5 +8,8 @@
         "strictNullChecks": true,
         "strict": true 
     },
-    "exclude": ["node_modules", "babel.config.js", "jest.config.js"]
+    "include": ["src"],
+    "exclude": [
+        "**/*.spec.ts", "**/*.test.ts"
+    ]
 }

@@ -40,7 +40,9 @@
     "xml2json": "^0.12.0"
   },
   "scripts": {
-    "start": "sucrase-node src/main/server.ts",
+    "start": "node dist/main/server.js",
+    "build": "tsc",
+    "dev": "sucrase-node src/main/server.ts",
     "test": "jest --passWithNoTests --watch --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "npm test -- --watch -c jest-unit-config.js --runInBand",

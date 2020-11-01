@@ -1,7 +1,7 @@
 {
     "extends": "standard-with-typescript", // extensão das funcionaldiades
     "parserOptions": {
-        "project": "./tsconfig.json" // utilização das configurações para typescript
+        "project": "./tsconfig.eslint.json" // utilização das configurações para typescript
     },
     "rules": {
         "@typescript-eslint/default-param-last": "off",
