@@ -1,27 +1,38 @@
-# ***ecommerce_sertao_nerd***
+# **[ E-COMMERCE API ]**
+> ## Tecnologias do Projeto
 
-# rotas
+> #### TypeScript
+* *velocidade no código*
+* *escalabilidade do projeto*
 
->### ✨ */signup - POST*
-1. ✔️ receber informações de cadastro e realiza-lo
-1. ✔️ verificar a validade das informações
-1. ❌ verificar se o e-mail já foi cadastrado
-1. ❌ verificar se o e-mail é valido para os serviços de disparo de e-mail
-1. ❌ confirmar a criação da conta utlizando de hash enviado por e-mail
-1. ❌ retornar o token de acesso
+> #### Jest 
+* *desenvolvimento guidado a testes*
+* *mitigação de bugs*
 
-2. retorna *HTTP status code 400* se qualquer campo obrigarório for omitido ou inválido
-2. retorna *HTTP status code 500* se ocorrer qualquer erro no servidor
-
+> #### express, bcrypt, jsonwebtoken
+* *funcionalidades modernas*
 
 
+> ## Rotas do Projeto
+1. **[Sign Up]**
+2. **[Sign iN]**
 
->### ✨ */signin - POST*
-1. ✔️ receber informações de login e autentica-las
-1. ✔️ verificar a validade das informações
-1. ✔️ autenticar informações
-1. ✔️ retornar o token de acesso
 
-2. retorna *HTTP status code 400* se qualquer campo obrigarório for omitido ou inválido
-2. retorna *HTTP status code 401* se as informações não forem autenticadas corretamente
-2. retorna *HTTP status code 500* se ocorrer qualquer erro no servidor
+> #### /signup - POST
+* 🏆 *cadastro de usuário*
+* ✔️ *verificar a procedência das informações*
+* ❌ *verificar a disponibilidade de cadastro para as informções*
+* ❌ *verificar a veracidade do e-mail perante os serviços de disporato*
+* ❌ *confirmação do cadastro por e-mail*
+* ❌ *disponibilizar acessos*
+* 🐞 *status code 400 se campos obrigarórios forem omitidos ou inválidos*
+* 🐞 *status code 500 e log de error se ocorrer quaisquer erros no servidor*
+
+
+> #### /signin - POST
+* 🏆 *autenticar informações e disponibilizar acessos*
+* ✔️ *verificar a procedência das informações*
+* ✔️ *retornar o token de acesso*
+* 🐞 *status code 400 se campos obrigarórios forem omitidos ou inválidos*
+* 🐞*HTTP status code 401 se as informações não forem autenticas*
+* 🐞 *status code 500 e log de error se ocorrer quaisquer erros no servidor*
