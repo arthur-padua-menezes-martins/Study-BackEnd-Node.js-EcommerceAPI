@@ -1,5 +1,5 @@
 # **[ E-COMMERCE API ]**
-> ## Tecnologias do Projeto
+>> # Tecnologias
 
 > #### TypeScript
 * *velocidade no código*
@@ -9,14 +9,20 @@
 * *desenvolvimento guidado a testes*
 * *mitigação de bugs*
 
-> #### express, bcrypt, jsonwebtoken
-* *funcionalidades modernas*
+> #### express
+* *controlar requisições*
+
+> #### bcrypt
+* *hash*
+
+> #### jsonwebtoken
+* *token de acesso*
 
 
-> ## Rotas do Projeto
+
+>> # Rotas
 1. **[Sign Up]**
 2. **[Sign iN]**
-
 
 > #### /signup - POST
 * 🏆 *cadastro de usuário*
@@ -25,14 +31,21 @@
 * ❌ *verificar a veracidade do e-mail perante os serviços de disporato*
 * ❌ *confirmação do cadastro por e-mail*
 * ❌ *disponibilizar acessos*
-* 🐞 *status code 400 se campos obrigarórios forem omitidos ou inválidos*
-* 🐞 *status code 500 e log de error se ocorrer quaisquer erros no servidor*
-
 
 > #### /signin - POST
 * 🏆 *autenticar informações e disponibilizar acessos*
 * ✔️ *verificar a procedência das informações*
 * ✔️ *retornar o token de acesso*
+
+
+
+>> # Erros
+1. **[4xx]**
+2. **[5xx]**
+
+> #### 4xx
 * 🐞 *status code 400 se campos obrigarórios forem omitidos ou inválidos*
-* 🐞*HTTP status code 401 se as informações não forem autenticas*
-* 🐞 *status code 500 e log de error se ocorrer quaisquer erros no servidor*
+* 🐞 *HTTP status code 401 se as informações não forem autenticas*
+
+> #### 5xx
+* 🐞 *status code 500 e log de error se ocorrer quaisquer erros do servidor*
