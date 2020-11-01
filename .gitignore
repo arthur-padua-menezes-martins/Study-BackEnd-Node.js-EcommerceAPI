@@ -12,6 +12,7 @@ coverage
 
 # production
 /build
+/docker
 
 # misc
 .DS_Store

@@ -60,3 +60,4 @@ exports.mongoHelper = {
         return _id && result && Object.assign({}, result, { id: _id });
     }
 };
+//# sourceMappingURL=mongo-helper.js.map

@@ -5,3 +5,4 @@ exports.defaultContentType = (req, res, next) => {
     res.type('application/json');
     next();
 };
+//# sourceMappingURL=content-type-middleware.js.map

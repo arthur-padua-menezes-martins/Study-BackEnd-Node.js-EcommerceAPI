@@ -1,0 +1,1 @@
+{"version":3,"file":"login.js","sourceRoot":"","sources":["../../../../src/main/routes/authentication/login.ts"],"names":[],"mappings":";;AACA,wFAAkF;AAClF,0GAAgG;AAChG,0GAAgG;AAEhG,kBAAe,CAAC,MAAc,EAAQ,EAAE;IACtC,MAAM,CAAC,IAAI,CAAC,SAAS,EAAE,2CAAmB,CAAC,iDAAoB,EAAE,CAAC,CAAC,CAAA;IACnE,MAAM,CAAC,IAAI,CAAC,SAAS,EAAE,2CAAmB,CAAC,iDAAoB,EAAE,CAAC,CAAC,CAAA;AACrE,CAAC,CAAA"}

@@ -30,3 +30,4 @@ mongo_helper_1.mongoHelper.connect(env_1.default.mongoUrl).then(async () => {
         console.log(`server available at localhost:${env_1.default.port}`);
     });
 }).catch(console.error);
+//# sourceMappingURL=server.js.map

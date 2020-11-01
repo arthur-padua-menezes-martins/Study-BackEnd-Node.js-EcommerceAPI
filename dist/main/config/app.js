@@ -10,3 +10,4 @@ const app = express_1.default();
 middlewares_1.default(app);
 routes_1.default(app);
 exports.default = app;
+//# sourceMappingURL=app.js.map

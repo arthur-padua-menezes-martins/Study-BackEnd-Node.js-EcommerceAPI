@@ -24,3 +24,4 @@ exports.expressRouteAdapter = (controller) => {
         }
     };
 };
+//# sourceMappingURL=express-route-adapter.js.map

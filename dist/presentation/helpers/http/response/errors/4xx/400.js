@@ -19,3 +19,4 @@ exports.badRequest = (body, successMessage, errorMessage, invalidFields) => ({
     errorMessage: errorMessage,
     invalidFields: invalidFields
 });
+//# sourceMappingURL=400.js.map

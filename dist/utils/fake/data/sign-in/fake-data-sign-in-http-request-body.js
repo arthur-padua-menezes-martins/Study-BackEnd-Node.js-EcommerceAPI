@@ -18,3 +18,4 @@ exports.signInHttpRequestBodyMissingField = {
 exports.getsignInHttpRequestBodyNotMatchField = (fieldName) => {
     return exports.signInHttpRequestBodyNotMatch[fieldName];
 };
+//# sourceMappingURL=fake-data-sign-in-http-request-body.js.map

@@ -11,3 +11,4 @@ exports.default = (app) => {
     app.use(export_all_1.bodyParser);
     app.use(export_all_1.defaultContentType);
 };
+//# sourceMappingURL=middlewares.js.map

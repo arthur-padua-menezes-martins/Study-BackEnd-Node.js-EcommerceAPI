@@ -11,3 +11,4 @@ exports.makeSignInController = () => {
     const logErrorRepository = new log_mongo_repository_1.LogMongoRepository();
     return new log_controller_decorator_1.LogControllerDecorator(signInController, logErrorRepository);
 };
+//# sourceMappingURL=sign-in-controller-factory.js.map

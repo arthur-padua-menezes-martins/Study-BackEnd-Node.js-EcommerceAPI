@@ -12,3 +12,4 @@ exports.serverError = (error) => ({
     body: {},
     errorMessage: new import_all_1.ServerError(error.stack)
 });
+//# sourceMappingURL=500.js.map

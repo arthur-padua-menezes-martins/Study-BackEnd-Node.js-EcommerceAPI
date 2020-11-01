@@ -14,3 +14,4 @@ exports.corsAccessControl = (req, res, next) => {
 exports.default = cors_1.default({
     credentials: true
 });
+//# sourceMappingURL=cors-middleware.js.map

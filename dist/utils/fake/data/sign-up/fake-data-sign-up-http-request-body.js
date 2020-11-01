@@ -66,3 +66,4 @@ exports.getSignUpHttpRequestBodyNotMatchField = (fieldName, addressFieldName) =>
 exports.getSignUpHttpRequestBodyMatchField = (fieldName, addressFieldName) => {
     return (fieldName && addressFieldName) ? exports.signUpHttpRequestBodyMatch[fieldName][addressFieldName] : exports.signUpHttpRequestBodyMatch[fieldName];
 };
+//# sourceMappingURL=fake-data-sign-up-http-request-body.js.map

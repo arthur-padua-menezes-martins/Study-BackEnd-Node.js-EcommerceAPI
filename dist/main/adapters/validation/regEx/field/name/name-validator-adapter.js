@@ -7,3 +7,4 @@ class NameValidatorAdapter {
     }
 }
 exports.NameValidatorAdapter = NameValidatorAdapter;
+//# sourceMappingURL=name-validator-adapter.js.map

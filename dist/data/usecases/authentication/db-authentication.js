@@ -22,3 +22,4 @@ class DatabaseAuthenticationController {
     }
 }
 exports.DatabaseAuthenticationController = DatabaseAuthenticationController;
+//# sourceMappingURL=db-authentication.js.map

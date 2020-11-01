@@ -10,3 +10,4 @@ exports.unauthorized = () => ({
     body: {},
     errorMessage: new import_all_1.UnauthorizedError()
 });
+//# sourceMappingURL=401.js.map

@@ -84,3 +84,4 @@ class SignUpController {
     }
 }
 exports.SignUpController = SignUpController;
+//# sourceMappingURL=sign-up-controller.js.map

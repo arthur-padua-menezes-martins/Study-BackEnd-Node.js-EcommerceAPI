@@ -13,3 +13,4 @@ class DatabaseAddAccountController {
     }
 }
 exports.DatabaseAddAccountController = DatabaseAddAccountController;
+//# sourceMappingURL=db-add-account.js.map

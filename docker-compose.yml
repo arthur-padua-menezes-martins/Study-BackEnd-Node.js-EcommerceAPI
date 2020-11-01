@@ -10,13 +10,15 @@ services:
       - "27017:27017"
   api: 
     container_name: api-container
-    build: build .
+    build: "."
     image: ecommerce-sertao-nerd
     restart: always
-    command: npm start
+    command: npm run debug
     volumes: 
-      - ./dist:/usr/src/ecommerce-sertao-nerd
+      - ./dist:/usr/src/dist
+      - ./package.json:/usr/src/package.json
     ports: 
       - "5050:5050"
+      - "9222:9222"
     links: 
       - mongo

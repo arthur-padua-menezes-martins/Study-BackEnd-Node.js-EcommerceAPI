@@ -7,3 +7,4 @@ exports.default = (router) => {
     router.post('/signup', express_route_adapter_1.expressRouteAdapter(sign_up_controller_factory_1.makeSignUpController()));
     router.post('/signin', express_route_adapter_1.expressRouteAdapter(sign_in_controller_factory_1.makeSignInController()));
 };
+//# sourceMappingURL=login.js.map

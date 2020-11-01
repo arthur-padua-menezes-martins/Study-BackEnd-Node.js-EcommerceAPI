@@ -14,3 +14,4 @@ class LogMongoRepository {
     }
 }
 exports.LogMongoRepository = LogMongoRepository;
+//# sourceMappingURL=log-mongo-repository.js.map

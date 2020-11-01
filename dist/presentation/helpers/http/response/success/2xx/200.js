@@ -13,3 +13,4 @@ exports.ok = (body, successMessage) => ({
     body: body,
     successMessage: successMessage
 });
+//# sourceMappingURL=200.js.map

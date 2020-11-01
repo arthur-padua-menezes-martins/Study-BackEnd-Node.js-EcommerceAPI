@@ -5,6 +5,9 @@ dist
 # testing
 coverage
 
+# production
+/docker
+
 # dashboard dependencies
 dashboard/node_modules
 

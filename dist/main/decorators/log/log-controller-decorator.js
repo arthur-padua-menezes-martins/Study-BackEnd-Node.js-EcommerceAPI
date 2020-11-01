@@ -16,3 +16,4 @@ class LogControllerDecorator {
     }
 }
 exports.LogControllerDecorator = LogControllerDecorator;
+//# sourceMappingURL=log-controller-decorator.js.map

@@ -12,3 +12,4 @@ class UnauthorizedError extends Error {
     }
 }
 exports.UnauthorizedError = UnauthorizedError;
+//# sourceMappingURL=unauthorized-error.js.map

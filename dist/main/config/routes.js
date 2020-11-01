@@ -10,3 +10,4 @@ exports.default = (app) => {
     login_1.default(router);
     app.use('/api', router);
 };
+//# sourceMappingURL=routes.js.map

@@ -15,3 +15,4 @@ exports.validation = new export_all_1.ValidationComposite([
     { content: new export_all_1.ValidateFieldsValidator(makeFieldValidationWithRegEx()), type: 'validate fields' },
     { content: new export_all_1.VerifyTypesValidator(), type: 'verify types' }
 ]);
+//# sourceMappingURL=sign-in-controller-factory-validation.js.map

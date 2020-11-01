@@ -6,7 +6,8 @@
         "esModuleInterop": true, // conversão entre módulos diferentes
         "allowJs": true, // permite a utilização de arquivos .js para configuração de ambiente
         "strictNullChecks": true,
-        "strict": true 
+        "strict": true,
+        "sourceMap": true
     },
     "include": ["src"],
     "exclude": [

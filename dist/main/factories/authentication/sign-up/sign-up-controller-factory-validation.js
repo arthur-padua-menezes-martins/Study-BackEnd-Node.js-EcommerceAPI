@@ -17,3 +17,4 @@ exports.validation = new export_all_1.ValidationComposite([
     { content: new export_all_1.VerifyTypesValidator(), type: 'verify types' },
     { content: new export_all_1.CompareFieldsValidator(), type: 'compare fields' }
 ]);
+//# sourceMappingURL=sign-up-controller-factory-validation.js.map
