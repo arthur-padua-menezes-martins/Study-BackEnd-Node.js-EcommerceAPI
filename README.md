@@ -25,7 +25,7 @@
 **/signup - POST**
 * 🏆 *cadastro de usuário*
 * ✔️ *verificar a procedência das informações*
-* ❌ *verificar a disponibilidade de cadastro para as informções*
+* ✔️ *verificar a disponibilidade de cadastro para as informções*
 * ❌ *verificar a veracidade do e-mail perante os serviços de disporato*
 * ❌ *confirmação do cadastro por e-mail*
 * ❌ *disponibilizar acessos*
