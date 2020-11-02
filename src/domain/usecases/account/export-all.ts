@@ -1,2 +1,2 @@
-export { IAddAccount, IAddAccountModel } from './add-account'
-export { IAuthentication, IAuthenticationModel } from './authentication'
+export { IAddAccount, IAddAccountModel } from './write/add-account'
+export { IAuthentication, IAuthenticationModel } from './auth/authentication'

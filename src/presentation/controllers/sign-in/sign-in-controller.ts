@@ -17,14 +17,14 @@ import {
 */
 export class SignInController implements IController {
   /**
+   *@param { ValidationComposite } validation
+  * implementation of the validation
   * @param { IAuthentication } authentication
   * implementation of the Authenticator
-  * @param { ValidationComposite } validation
-  * implementation of the validation
   */
   constructor (
-    private readonly authentication: IAuthentication,
-    private readonly validation: ValidationComposite
+    private readonly validation: ValidationComposite,
+    private readonly authentication: IAuthentication
   ) {}
 
   /**

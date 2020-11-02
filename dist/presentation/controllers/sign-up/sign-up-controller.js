@@ -19,16 +19,19 @@ const sign_up_controller_helpers_1 = require("./sign-up-controller-helpers");
 */
 class SignUpController {
     /**
-    * @param { IAddAccount } addAccount
-    * implementation of the user account record manager in the database contained
-    * @param { ValidationComposite } validation
+    * @param {ValidationComposite} validation
     * implementation of the validation
-    * @param { IAuthentication } authentication
+    * @param {ISearchAccountByField} readAccount
+    * implementation of the user account search manager
+    * @param {IAddAccount} writeAccount
+    * implementation of the user account registration manager
+    * @param {IAuthentication} authentication
     * implementation of the Authenticator
     */
-    constructor(addAccount, validation, authentication) {
-        this.addAccount = addAccount;
+    constructor(validation, readAccount, writeAccount, authentication) {
         this.validation = validation;
+        this.readAccount = readAccount;
+        this.writeAccount = writeAccount;
         this.authentication = authentication;
     }
     /**
@@ -71,8 +74,13 @@ class SignUpController {
             if (invalidFields.length > 0) {
                 return sign_up_controller_helpers_1.badRequest({}, '', new sign_up_controller_helpers_1.InvalidParamError(invalidFields.join(' ')), invalidFields);
             }
-            const { name, email } = httpRequest.body;
-            await this.addAccount.add({
+            const { email } = httpRequest.body;
+            const existis = await this.readAccount.searchByField({ email: email });
+            if (existis) {
+                return sign_up_controller_helpers_1.unprocessable();
+            }
+            const { name } = httpRequest.body;
+            await this.writeAccount.add({
                 name: name,
                 email: email,
                 password: password,

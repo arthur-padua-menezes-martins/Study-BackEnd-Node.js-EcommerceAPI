@@ -1,5 +1,6 @@
 export { IController } from '../../protocols/controller/controller'
 export { IHttpRequest, IHttpResponse } from '../../protocols/http/export-all'
-export { IAddAccount, IAddAccountModel } from '../../../domain/usecases/account/add-account'
+export { ISearchAccountByField, ISearchAccountByFieldModel } from '../../../domain/usecases/account/read/search-account-by-field'
+export { IAddAccount, IAddAccountModel } from '../../../domain/usecases/account/write/add-account'
 export { IAccountModel } from '../../../domain/models/account/account'
-export { IAuthentication, IAuthenticationModel } from '../../../domain/usecases/account/authentication'
+export { IAuthentication, IAuthenticationModel } from '../../../domain/usecases/account/auth/authentication'

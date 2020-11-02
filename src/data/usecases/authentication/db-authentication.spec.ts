@@ -1,6 +1,7 @@
 import { DatabaseAuthenticationController } from './db-authentication'
 import {
-  SearchAccountByEmailRepository, IAuthenticationModel,
+  ISearchAccountByFieldRepository, IFieldContent,
+  IAuthenticationModel,
   IHashComparer,
   IEncrypter,
   UpdateAccessTokenRepository,
@@ -8,15 +9,15 @@ import {
 } from './db-authentication-protocols'
 import { signInHttpRequestBodyMatchComplete, accountModelMatch } from './db-authentication-utils'
 
-const makeSearchAccountByEmailRepository = async (): Promise<SearchAccountByEmailRepository> => {
-  class SearchAccountByEmailRepositoryStub implements SearchAccountByEmailRepository {
-    async searchByEmail (email: string): Promise<IAccountModel> {
+const makeSearchAccountByEmailRepository = async (): Promise<ISearchAccountByFieldRepository> => {
+  class SearchAccountByFieldRepositoryStub implements ISearchAccountByFieldRepository {
+    async searchByField (field: IFieldContent): Promise<IAccountModel> {
       const account: IAccountModel = accountModelMatch
       return await Promise.resolve(account)
     }
   }
 
-  return new SearchAccountByEmailRepositoryStub()
+  return new SearchAccountByFieldRepositoryStub()
 }
 
 const makeHashComparer = async (): Promise<IHashComparer> => {
@@ -52,7 +53,7 @@ const makeUpdateAccessTokenRepository = async (): Promise<UpdateAccessTokenRepos
 
 interface ISystemUnderTestTypes {
   systemUnderTest: DatabaseAuthenticationController
-  SearchAccountByEmailRepositoryStub: SearchAccountByEmailRepository
+  SearchAccountByEmailRepositoryStub: ISearchAccountByFieldRepository
   hashComparerStub: IHashComparer
   encrypterStub: IEncrypter
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
@@ -80,15 +81,15 @@ const authentication: IAuthenticationModel = signInHttpRequestBodyMatchComplete
 describe('DatabaseAuthenticationController Usecases', () => {
   test('should call SearchAccountByEmailRepository with correct email <version: 0.0.1>', async () => {
     const { systemUnderTest, SearchAccountByEmailRepositoryStub } = await makeSystemUnderTest()
-    const spyOnSearchByEmail = jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByEmail')
+    const spyOnSearchByEmail = jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByField')
 
     await systemUnderTest.auth(authentication)
-    expect(spyOnSearchByEmail).toHaveBeenCalledWith(authentication.email)
+    expect(spyOnSearchByEmail).toHaveBeenCalledWith({ email: authentication.email })
   })
 
   test('should throw if SearchAccountByEmailRepository throws <version: 0.0.1>', async () => {
     const { systemUnderTest, SearchAccountByEmailRepositoryStub } = await makeSystemUnderTest()
-    jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByEmail').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByField').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
     const authorization = systemUnderTest.auth(authentication)
     await expect(authorization).rejects.toThrow()
@@ -96,7 +97,7 @@ describe('DatabaseAuthenticationController Usecases', () => {
 
   test('should return an null if SearchAccountByEmailRepository returns null <version: 0.0.1>', async () => {
     const { systemUnderTest, SearchAccountByEmailRepositoryStub } = await makeSystemUnderTest()
-    jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByEmail').mockReturnValueOnce(Promise.resolve(null))
+    jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByField').mockReturnValueOnce(Promise.resolve(null))
 
     const authorization = await systemUnderTest.auth(authentication)
     expect(authorization).toBe(null)

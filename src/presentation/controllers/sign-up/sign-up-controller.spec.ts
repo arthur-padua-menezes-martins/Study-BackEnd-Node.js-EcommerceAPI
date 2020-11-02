@@ -1,6 +1,7 @@
 import { SignUpController } from './sign-up-controller'
 import {
   IHttpRequest,
+  ISearchAccountByField, ISearchAccountByFieldModel,
   IAddAccount, IAddAccountModel, IAccountModel,
   IAuthentication, IAuthenticationModel
 } from './sign-up-controller-protocols'
@@ -10,21 +11,9 @@ import {
   NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter
 } from './sign-up-controller-components'
 import {
-  signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields, signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation
+  signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields, signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation,
+  accountModelMatch
 } from './sign-up-controller-helpers'
-
-const makeAddAccount = async (): Promise<IAddAccount> => {
-  class AddAccountStub {
-    async add (account: IAddAccountModel): Promise<IAccountModel> {
-      return await Promise.resolve({
-        id: '',
-        ...account
-      })
-    }
-  }
-
-  return await Promise.resolve(new AddAccountStub())
-}
 
 const makeFieldValidationWithRegEx = async (): Promise<FieldValidationWithRegEx> => {
   return new FieldValidationWithRegEx({
@@ -34,7 +23,30 @@ const makeFieldValidationWithRegEx = async (): Promise<FieldValidationWithRegEx>
   })
 }
 
-const makeAuthenticationStub = async (): Promise<IAuthentication> => {
+const makeReadAccount = async (): Promise<ISearchAccountByField> => {
+  class ReadAccountStub {
+    async searchByField (field: ISearchAccountByFieldModel): Promise<IAccountModel | null> {
+      return await Promise.resolve(accountModelMatch)
+    }
+  }
+
+  return await Promise.resolve(new ReadAccountStub())
+}
+
+const makeWriteAccount = async (): Promise<IAddAccount> => {
+  class WriteAccountStub {
+    async add (account: IAddAccountModel): Promise<IAccountModel> {
+      return await Promise.resolve({
+        id: '',
+        ...account
+      })
+    }
+  }
+
+  return await Promise.resolve(new WriteAccountStub())
+}
+
+const makeAuthentication = async (): Promise<IAuthentication> => {
   class AuthenticationStub implements IAuthentication {
     async auth (authentication: IAuthenticationModel): Promise<string> {
       return await Promise.resolve('any_token')
@@ -46,25 +58,26 @@ const makeAuthenticationStub = async (): Promise<IAuthentication> => {
 
 interface ISignUpControllerTypes {
   systemUnderTest: SignUpController
-  addAccountStub: IAddAccount
   validationStub: ValidationComposite
+  writeAccountStub: IAddAccount
   authenticationStub: IAuthentication
 }
 const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
-  const addAccountStub = await makeAddAccount()
   const validationStub = new ValidationComposite([
     { content: new ValidateFieldsValidator(await makeFieldValidationWithRegEx()), type: 'validate fields' },
     { content: new RequiredFieldsValidator(), type: 'required fields' },
     { content: new VerifyTypesValidator(), type: 'verify types' },
     { content: new CompareFieldsValidator(), type: 'compare fields' }
   ])
-  const authenticationStub = await makeAuthenticationStub()
-  const systemUnderTest = new SignUpController(addAccountStub, validationStub, authenticationStub)
+  const readAccountStub = await makeReadAccount()
+  const writeAccountStub = await makeWriteAccount()
+  const authenticationStub = await makeAuthentication()
+  const systemUnderTest = new SignUpController(validationStub, readAccountStub, writeAccountStub, authenticationStub)
 
   return {
     systemUnderTest,
-    addAccountStub,
     validationStub,
+    writeAccountStub,
     authenticationStub
   }
 }
@@ -112,10 +125,10 @@ describe('SignUpController', () => {
   })
 
   test('returns from httpResponse "{status Code: 500}" if AddAccount throw error <version 0.0.1>', async () => {
-    const { systemUnderTest, addAccountStub } = await makeSystemUnderTest()
+    const { systemUnderTest, writeAccountStub } = await makeSystemUnderTest()
     httpRequest.body = signUpHttpRequestBodyMatchComplete
 
-    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
+    jest.spyOn(writeAccountStub, 'add').mockImplementationOnce(() => {
       throw new Error()
     })
 
@@ -125,8 +138,8 @@ describe('SignUpController', () => {
   })
 
   test('must call AddAccount with the correct values <version 0.0.1>', async () => {
-    const { systemUnderTest, addAccountStub } = await makeSystemUnderTest()
-    const spyOnAddAccountStubAdd = await jest.spyOn(addAccountStub, 'add')
+    const { systemUnderTest, writeAccountStub } = await makeSystemUnderTest()
+    const spyOnAddAccountStubAdd = await jest.spyOn(writeAccountStub, 'add')
 
     await systemUnderTest.handle(httpRequest)
     expect(spyOnAddAccountStubAdd).toHaveBeenCalledWith(signUpHttpRequestBodyMatchComplete)

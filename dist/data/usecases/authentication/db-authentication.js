@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DatabaseAuthenticationController = void 0;
 class DatabaseAuthenticationController {
-    constructor(searchAccountByEmailRepository, hashComparer, encrypter, updateAccessTokenRepository) {
-        this.searchAccountByEmailRepository = searchAccountByEmailRepository;
+    constructor(searchAccountByFieldRepository, hashComparer, encrypter, updateAccessTokenRepository) {
+        this.searchAccountByFieldRepository = searchAccountByFieldRepository;
         this.hashComparer = hashComparer;
         this.encrypter = encrypter;
         this.updateAccessTokenRepository = updateAccessTokenRepository;
     }
     async auth(authentication) {
-        const account = await this.searchAccountByEmailRepository.searchByEmail(authentication.email);
+        const account = await this.searchAccountByFieldRepository.searchByField({ email: authentication.email });
         if (account) {
             const isEqual = await this.hashComparer.compare(authentication.password, account.password);
             if (isEqual) {

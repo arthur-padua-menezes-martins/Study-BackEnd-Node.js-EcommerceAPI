@@ -45,10 +45,10 @@ describe('AccountMongoRepository', () => {
     }
   })
 
-  test('Should return an account on searchByEmail success <version: 0.0.1>', async () => {
+  test('Should return an account on searchByField success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     await accountsCollection.insertOne(signUpHttpRequestBodyMatchComplete)
-    const account = await systemUnderTest.searchByEmail(signInHttpRequestBodyMatchComplete.email)
+    const account = await systemUnderTest.searchByField({ email: signInHttpRequestBodyMatchComplete.email })
 
     expect(account).toBeTruthy()
     if (account) {
@@ -61,9 +61,9 @@ describe('AccountMongoRepository', () => {
     }
   })
 
-  test('Should return null on searchByEmail fails <version: 0.0.1>', async () => {
+  test('Should return null on searchByField fails <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const account = await systemUnderTest.searchByEmail(signInHttpRequestBodyMatchComplete.email)
+    const account = await systemUnderTest.searchByField({ email: signInHttpRequestBodyMatchComplete.email })
 
     expect(account).toBeFalsy()
   })

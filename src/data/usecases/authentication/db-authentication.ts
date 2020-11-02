@@ -1,6 +1,6 @@
 import {
   IAuthentication, IAuthenticationModel,
-  SearchAccountByEmailRepository,
+  ISearchAccountByFieldRepository,
   IHashComparer,
   IEncrypter,
   UpdateAccessTokenRepository
@@ -8,14 +8,14 @@ import {
 
 export class DatabaseAuthenticationController implements IAuthentication {
   constructor (
-    private readonly searchAccountByEmailRepository: SearchAccountByEmailRepository,
+    private readonly searchAccountByFieldRepository: ISearchAccountByFieldRepository,
     private readonly hashComparer: IHashComparer,
     private readonly encrypter: IEncrypter,
     private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
   ) {}
 
   async auth (authentication: IAuthenticationModel): Promise<string | null> {
-    const account = await this.searchAccountByEmailRepository.searchByEmail(authentication.email)
+    const account = await this.searchAccountByFieldRepository.searchByField({ email: authentication.email })
 
     if (account) {
       const isEqual = await this.hashComparer.compare(authentication.password, account.password)

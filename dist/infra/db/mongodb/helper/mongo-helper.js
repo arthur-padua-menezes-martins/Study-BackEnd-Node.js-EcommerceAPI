@@ -24,6 +24,10 @@ const mongodb_1 = require("mongodb");
 * get a specific collection
 * @method `map_id`
 * adapts from _id to id
+* @this `this.url`
+* references database connection url
+* @this `this.client`
+* references a MongoClient connect
 */
 exports.mongoHelper = {
     client: null,
@@ -31,10 +35,6 @@ exports.mongoHelper = {
     /**
     * @param url
     * database connection url
-    * @this `this.url`
-    * references database connection url
-    * @this `this.client`
-    * references a MongoClient connect
     */
     async connect(url) {
         this.url = url;
@@ -43,18 +43,34 @@ exports.mongoHelper = {
             useUnifiedTopology: true
         });
     },
+    /**
+    * checks whether the database connection has been established
+    */
     async isConnected() {
         return this.client !== null;
     },
+    /**
+    * checks whether the database connection has not established
+    */
     async disconnect() {
         await this.client.close();
     },
+    /**
+    * returns a instance of an determited Collection
+    * @param name
+    * the name of the collection that will be returned
+    */
     async getCollection(name) {
         if (!(await this.isConnected())) {
             await this.connect(this.url);
         }
         return await Promise.resolve(this.client.db().collection(name));
     },
+    /**
+    * returns a mapping of an object containing a _id property returning that with an id property
+    * @param resultOf
+    * object that will be mapped
+    */
     map_id(resultOf) {
         const _a = resultOf || { _id: null }, { _id } = _a, result = __rest(_a, ["_id"]);
         return _id && result && Object.assign({}, result, { id: _id });

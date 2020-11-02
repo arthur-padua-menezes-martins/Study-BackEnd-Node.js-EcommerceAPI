@@ -1,5 +1,5 @@
-export { IAuthentication, IAuthenticationModel } from '../../../domain/usecases/account/authentication'
+export { IAuthentication, IAuthenticationModel } from '../../../domain/usecases/account/auth/authentication'
 export { IAccountModel } from '../../../domain/models/account/account'
-export { SearchAccountByEmailRepository } from '../../protocols/repository/account/search-account-by-email-repository'
+export { ISearchAccountByFieldRepository } from '../../protocols/repository/account/read/search-account-by-field-repository'
 export { IHashComparer, IEncrypter } from '../../protocols/cryptography/export-all'
-export { UpdateAccessTokenRepository } from '../../protocols/repository/account/update-access-token-repository'
+export { UpdateAccessTokenRepository } from '../../protocols/repository/account/update/update-access-token-repository'

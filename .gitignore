@@ -7,12 +7,13 @@ node_modules
 .pnp.js
 
 # testing
-/coverage
 coverage
 
 # production
-/build
-/docker
+build
+docker
+dist
+/dist
 
 # misc
 .DS_Store
@@ -26,8 +27,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # dashboard dependencies
-dashboard/node_modules
+dashboard
+/dashboard
 
 # virtualStore dependencies
-virtualStore/node_modules
-virtualStore/.next
+virtualStore
+/virtualStore

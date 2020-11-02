@@ -1,7 +1,7 @@
 import {
   IAddAccount, IAddAccountModel, IAccountModel,
   IHasher, IAddAccountRepository
-} from './db-add-account-protocols'
+} from './db-write-add-account-protocols'
 
 export class DatabaseAddAccountController implements IAddAccount {
   constructor (

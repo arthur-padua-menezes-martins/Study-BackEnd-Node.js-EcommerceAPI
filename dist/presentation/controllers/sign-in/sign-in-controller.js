@@ -10,14 +10,14 @@ const sign_in_controller_helpers_1 = require("./sign-in-controller-helpers");
 */
 class SignInController {
     /**
+     *@param { ValidationComposite } validation
+    * implementation of the validation
     * @param { IAuthentication } authentication
     * implementation of the Authenticator
-    * @param { ValidationComposite } validation
-    * implementation of the validation
     */
-    constructor(authentication, validation) {
-        this.authentication = authentication;
+    constructor(validation, authentication) {
         this.validation = validation;
+        this.authentication = authentication;
     }
     /**
     * @param { IHttpRequest } httpRequest

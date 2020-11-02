@@ -1,9 +1,9 @@
-import { DatabaseAddAccountController } from './db-add-account'
+import { DatabaseAddAccountController } from './db-write-add-account'
 import {
   IAccountModel, IAddAccountModel,
   IHasher, IAddAccountRepository
-} from './db-add-account-protocols'
-import { signUpHttpRequestBodyMatchComplete, accountModelMatch } from './db-add-account-utils'
+} from './db-write-add-account-protocols'
+import { signUpHttpRequestBodyMatchComplete, accountModelMatch } from './db-write-add-account-utils'
 
 const makeHasher = async (): Promise<IHasher> => {
   class HasherStub implements IHasher {

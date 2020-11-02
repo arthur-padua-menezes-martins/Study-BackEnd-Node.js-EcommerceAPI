@@ -1,4 +1,4 @@
-import { IAccountModel } from '../../models/account/account'
+import { IAccountModel } from '../import-all'
 
 export interface IAddAccountModel {
   [field: string]: string | object
@@ -18,5 +18,5 @@ export interface IAddAccountModel {
 }
 
 export interface IAddAccount {
-  add: (account: IAddAccountModel) => Promise<IAccountModel>
+  add: (accountData: IAddAccountModel) => Promise<IAccountModel>
 }

@@ -42,7 +42,7 @@ const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
     { content: new CompareFieldsValidator(), type: 'compare fields' }
   ])
   const authenticationStub = await makeAuthenticationStub()
-  const systemUnderTest = new SignInController(authenticationStub, validationStub)
+  const systemUnderTest = new SignInController(validationStub, authenticationStub)
 
   return {
     systemUnderTest,

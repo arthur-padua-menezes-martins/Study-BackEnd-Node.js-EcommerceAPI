@@ -5,7 +5,7 @@
 * *velocidade no código*
 * *escalabilidade do projeto*
 
-**Jest**
+**jest**
 * *desenvolvimento guidado a testes*
 * *mitigação de bugs*
 

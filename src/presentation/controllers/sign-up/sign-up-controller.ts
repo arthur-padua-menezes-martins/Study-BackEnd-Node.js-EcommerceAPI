@@ -1,12 +1,12 @@
 import {
   IController, IHttpRequest, IHttpResponse,
-  IAddAccount,
+  ISearchAccountByField, IAddAccount,
   IAuthentication
 } from './sign-up-controller-protocols'
 import { ValidationComposite } from './sign-up-controller-components'
 import {
   MissingParamError, InvalidParamError,
-  ok, badRequest, serverError,
+  ok, badRequest, unprocessable, serverError,
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields
 } from './sign-up-controller-helpers'
 
@@ -16,16 +16,19 @@ import {
 */
 export class SignUpController implements IController {
   /**
-  * @param { IAddAccount } addAccount
-  * implementation of the user account record manager in the database contained
-  * @param { ValidationComposite } validation
+  * @param {ValidationComposite} validation
   * implementation of the validation
-  * @param { IAuthentication } authentication
+  * @param {ISearchAccountByField} readAccount
+  * implementation of the user account search manager
+  * @param {IAddAccount} writeAccount
+  * implementation of the user account registration manager
+  * @param {IAuthentication} authentication
   * implementation of the Authenticator
   */
   constructor (
-    private readonly addAccount: IAddAccount,
     private readonly validation: ValidationComposite,
+    private readonly readAccount: ISearchAccountByField,
+    private readonly writeAccount: IAddAccount,
     private readonly authentication: IAuthentication
   ) {}
 
@@ -73,8 +76,14 @@ export class SignUpController implements IController {
         return badRequest({}, '', new InvalidParamError(invalidFields.join(' ')), invalidFields)
       }
 
-      const { name, email } = httpRequest.body
-      await this.addAccount.add({
+      const { email } = httpRequest.body
+      const existis = await this.readAccount.searchByField({ email: email as string })
+      if (existis) {
+        return unprocessable()
+      }
+
+      const { name } = httpRequest.body
+      await this.writeAccount.add({
         name: name as string,
         email: email as string,
         password: password as string,

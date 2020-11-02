@@ -12,6 +12,10 @@ import { IAccountModel } from '../../../../domain/models/account/account'
 * get a specific collection
 * @method `map_id`
 * adapts from _id to id
+* @this `this.url`
+* references database connection url
+* @this `this.client`
+* references a MongoClient connect
 */
 export const mongoHelper = {
   client: null as unknown as MongoClient,
@@ -20,10 +24,6 @@ export const mongoHelper = {
   /**
   * @param url
   * database connection url
-  * @this `this.url`
-  * references database connection url
-  * @this `this.client`
-  * references a MongoClient connect
   */
   async connect (url: string): Promise<void> {
     this.url = url
@@ -33,14 +33,25 @@ export const mongoHelper = {
     })
   },
 
+  /**
+  * checks whether the database connection has been established
+  */
   async isConnected (): Promise<boolean> {
     return this.client !== null
   },
 
+  /**
+  * checks whether the database connection has not established
+  */
   async disconnect (): Promise<void> {
     await this.client.close()
   },
 
+  /**
+  * returns a instance of an determited Collection
+  * @param name
+  * the name of the collection that will be returned
+  */
   async getCollection (name: string): Promise<Collection> {
     if (!(await this.isConnected())) {
       await this.connect(this.url)
@@ -48,6 +59,11 @@ export const mongoHelper = {
     return await Promise.resolve(this.client.db().collection(name))
   },
 
+  /**
+  * returns a mapping of an object containing a _id property returning that with an id property
+  * @param resultOf
+  * object that will be mapped
+  */
   map_id  (resultOf: any): IAccountModel {
     const { _id, ...result } = resultOf || { _id: null }
 
