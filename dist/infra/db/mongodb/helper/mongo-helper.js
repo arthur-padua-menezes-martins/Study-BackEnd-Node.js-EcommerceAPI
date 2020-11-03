@@ -66,6 +66,9 @@ exports.mongoHelper = {
         }
         return await Promise.resolve(this.client.db().collection(name));
     },
+    async createObjectId(id) {
+        return new mongodb_1.ObjectID(id);
+    },
     /**
     * returns a mapping of an object containing a _id property returning that with an id property
     * @param resultOf

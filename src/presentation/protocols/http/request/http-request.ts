@@ -8,5 +8,7 @@ import { IHttpRequestBody, IHttpRequestBodyComplete } from './http-request-body'
 * @type { IHttpRequestBody | IHttpRequestBodyComplete }
 */
 export interface IHttpRequest {
+  params?: any
+  query?: any
   body: IHttpRequestBody | IHttpRequestBodyComplete
 }

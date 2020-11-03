@@ -1,4 +1,4 @@
-import { MongoClient, Collection } from 'mongodb'
+import { MongoClient, ObjectID, Collection } from 'mongodb'
 import { IAccountModel } from '../../../../domain/models/account/account'
 
 /**
@@ -57,6 +57,10 @@ export const mongoHelper = {
       await this.connect(this.url)
     }
     return await Promise.resolve(this.client.db().collection(name))
+  },
+
+  async createObjectId (id: string) {
+    return new ObjectID(id)
   },
 
   /**

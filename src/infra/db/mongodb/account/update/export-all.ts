@@ -1,1 +1,1 @@
-export { AccountMongoRepositoryUpdate } from './account-mongo-repository-update'
+export { AccountMongoRepositoryUpdate } from './update-account-mongo-repository'

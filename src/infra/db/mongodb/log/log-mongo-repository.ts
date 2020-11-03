@@ -1,14 +1,11 @@
-import { LogErrorRepository } from '../../../../data/protocols/repository/log/log-error-repository'
-import { mongoHelper } from '../helper/mongo-helper'
+import { LogErrorMongoRepository } from './error/log-error-mongo-repository'
+import {
+  applyMixins
+} from './import-all'
 
-export class LogMongoRepository implements LogErrorRepository {
-  async logError (stack?: string): Promise<void> {
-    if (stack) {
-      const errorsCollection = await mongoHelper.getCollection('errors')
-      await errorsCollection.insertOne({
-        stack,
-        date: new Date()
-      })
-    }
-  }
-}
+export interface LogMongoRepository extends LogErrorMongoRepository {}
+export class LogMongoRepository implements LogMongoRepository {}
+
+applyMixins(LogMongoRepository, [
+  LogErrorMongoRepository
+])

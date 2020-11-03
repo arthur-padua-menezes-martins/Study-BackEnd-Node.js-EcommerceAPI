@@ -7,7 +7,7 @@ import { IHttpResponse } from '../../import-all'
 * @param successMessage
 * success message
 */
-export const ok = (body: object, successMessage?: string): IHttpResponse => ({
+export const ok = (body: object = {}, successMessage?: string): IHttpResponse => ({
   statusCode: 200,
   body: body,
   successMessage: successMessage

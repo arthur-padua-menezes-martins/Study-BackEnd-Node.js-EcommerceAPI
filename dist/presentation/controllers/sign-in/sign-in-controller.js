@@ -19,10 +19,6 @@ class SignInController {
         this.validation = validation;
         this.authentication = authentication;
     }
-    /**
-    * @param { IHttpRequest } httpRequest
-    * information by the user
-    */
     async handle(httpRequest) {
         try {
             const missingFields = await this.validation.validate({

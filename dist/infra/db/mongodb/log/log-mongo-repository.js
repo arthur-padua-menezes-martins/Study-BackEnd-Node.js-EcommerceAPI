@@ -1,17 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LogMongoRepository = void 0;
-const mongo_helper_1 = require("../helper/mongo-helper");
+const log_error_mongo_repository_1 = require("./error/log-error-mongo-repository");
+const import_all_1 = require("./import-all");
 class LogMongoRepository {
-    async logError(stack) {
-        if (stack) {
-            const errorsCollection = await mongo_helper_1.mongoHelper.getCollection('errors');
-            await errorsCollection.insertOne({
-                stack,
-                date: new Date()
-            });
-        }
-    }
 }
 exports.LogMongoRepository = LogMongoRepository;
+import_all_1.applyMixins(LogMongoRepository, [
+    log_error_mongo_repository_1.LogErrorMongoRepository
+]);
 //# sourceMappingURL=log-mongo-repository.js.map

@@ -27,10 +27,6 @@ export class SignInController implements IController {
     private readonly authentication: IAuthentication
   ) {}
 
-  /**
-  * @param { IHttpRequest } httpRequest
-  * information by the user
-  */
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       const missingFields: string[] = await this.validation.validate({

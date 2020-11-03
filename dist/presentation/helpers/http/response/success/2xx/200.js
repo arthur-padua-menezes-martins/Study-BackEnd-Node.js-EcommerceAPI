@@ -8,7 +8,7 @@ exports.ok = void 0;
 * @param successMessage
 * success message
 */
-exports.ok = (body, successMessage) => ({
+exports.ok = (body = {}, successMessage) => ({
     statusCode: 200,
     body: body,
     successMessage: successMessage

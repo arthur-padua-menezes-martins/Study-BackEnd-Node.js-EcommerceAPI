@@ -10,7 +10,12 @@ module.exports = async ( User, recovery, callback ) =>
     await fs.readFile( await path.resolve( `controllers`, `sendingEmail`, `000_recovery_2.txt` ), async ( error, footer ) => 
     {  
 
-        let mail = await { from : `arthur.software.developer@gmail.com`, to : User.email, subject : `Sertão Nerd | Redefinição de Senha`, html : header + `${recovery}` + footer } 
+        let mail = await { 
+            from : `arthur.software.developer@gmail.com`, 
+            to : User.email, 
+            subject : `Sertão Nerd | Redefinição de Senha`, 
+            html : header + `${recovery}` + footer
+         } 
 
         await transporter.sendMail( mail, ( error, info ) =>
         {

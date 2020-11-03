@@ -1,5 +1,5 @@
 export interface IAccountModel {
-  [field: string]: string | object
+  [field: string]: string | boolean | object
   id: string
   name: string
   email: string
@@ -14,4 +14,5 @@ export interface IAccountModel {
     city: string
     state: string
   }
+  enabled: boolean
 }

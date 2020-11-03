@@ -1,6 +1,10 @@
 export { IController } from '../../protocols/controller/controller'
 export { IHttpRequest, IHttpResponse } from '../../protocols/http/export-all'
-export { ISearchAccountByField, ISearchAccountByFieldModel } from '../../../domain/usecases/account/read/search-account-by-field'
-export { IAddAccount, IAddAccountModel } from '../../../domain/usecases/account/write/add-account'
+export {
+  ISearchAccountByField, ISearchAccountByFieldModel,
+  IAddAccount, IAddAccountModel,
+  IUpdateEnabledAccount,
+  ISendEmailSignUp
+} from '../../../domain/usecases/account/export-all'
+import { ISendEmailSignUp } from '../../../infra/send/email/sign-up/send-email-sign-up'
 export { IAccountModel } from '../../../domain/models/account/account'
-export { IAuthentication, IAuthenticationModel } from '../../../domain/usecases/account/auth/authentication'

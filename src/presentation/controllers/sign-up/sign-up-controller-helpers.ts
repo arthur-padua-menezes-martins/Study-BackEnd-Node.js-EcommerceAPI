@@ -1,6 +1,6 @@
 export { MissingParamError, InvalidParamError } from '../../errors/export-all'
 export {
-  ok, badRequest, unprocessable, serverError
+  created, accepted, badRequest, unauthorized, unprocessable, serverError
 } from '../../helpers/http/response/export-all'
 export {
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields, signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyMatch, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation

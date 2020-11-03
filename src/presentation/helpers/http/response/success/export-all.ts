@@ -1,1 +1,1 @@
-export { ok } from './2xx/200'
+export * from './2xx/export-all'

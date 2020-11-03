@@ -12,7 +12,7 @@ exports.badRequest = void 0;
 * @param invalidFields
 * invalid fields which caused the function to be invoked
 */
-exports.badRequest = (body, successMessage, errorMessage, invalidFields) => ({
+exports.badRequest = (body = {}, successMessage, errorMessage, invalidFields) => ({
     statusCode: 400,
     body: body,
     successMessage: successMessage,

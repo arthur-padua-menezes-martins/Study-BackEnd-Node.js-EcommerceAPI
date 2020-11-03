@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUpHttpRequestBodyMatchComplete = exports.serverError = exports.LogControllerDecorator = void 0;
 var log_controller_decorator_1 = require("./log-controller-decorator");
-Object.defineProperty(exports, "LogControllerDecorator", { enumerable: true, get: function () { return log_controller_decorator_1.LogControllerDecorator; } });
+exports.LogControllerDecorator = log_controller_decorator_1.LogControllerDecorator;
 var export_all_1 = require("../../../presentation/helpers/http/response/export-all");
-Object.defineProperty(exports, "serverError", { enumerable: true, get: function () { return export_all_1.serverError; } });
+exports.serverError = export_all_1.serverError;
 var fake_data_sign_up_http_request_body_1 = require("../../../utils/fake/data/sign-up/fake-data-sign-up-http-request-body");
-Object.defineProperty(exports, "signUpHttpRequestBodyMatchComplete", { enumerable: true, get: function () { return fake_data_sign_up_http_request_body_1.signUpHttpRequestBodyMatchComplete; } });
+exports.signUpHttpRequestBodyMatchComplete = fake_data_sign_up_http_request_body_1.signUpHttpRequestBodyMatchComplete;
 //# sourceMappingURL=import-all.js.map

@@ -2,13 +2,13 @@ import { SignUpController } from './sign-up-controller'
 import {
   IHttpRequest,
   ISearchAccountByField, ISearchAccountByFieldModel,
-  IAddAccount, IAddAccountModel, IAccountModel,
-  IAuthentication, IAuthenticationModel
+  IAddAccount, IAddAccountModel, IAccountModel
 } from './sign-up-controller-protocols'
 import {
   FieldValidationWithRegEx,
   ValidationComposite, RequiredFieldsValidator, VerifyTypesValidator, CompareFieldsValidator, ValidateFieldsValidator,
-  NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter
+  NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter,
+  SendEmailSignUpController
 } from './sign-up-controller-components'
 import {
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields, signUpHttpRequestBodyMatchComplete, signUpHttpRequestBodyNotMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation,
@@ -33,6 +33,10 @@ const makeReadAccount = async (): Promise<ISearchAccountByField> => {
   return await Promise.resolve(new ReadAccountStub())
 }
 
+const makeEmailSender = async (): Promise<SendEmailSignUpController> => {
+  return new SendEmailSignUpController()
+}
+
 const makeWriteAccount = async (): Promise<IAddAccount> => {
   class WriteAccountStub {
     async add (account: IAddAccountModel): Promise<IAccountModel> {
@@ -46,21 +50,20 @@ const makeWriteAccount = async (): Promise<IAddAccount> => {
   return await Promise.resolve(new WriteAccountStub())
 }
 
-const makeAuthentication = async (): Promise<IAuthentication> => {
-  class AuthenticationStub implements IAuthentication {
-    async auth (authentication: IAuthenticationModel): Promise<string> {
-      return await Promise.resolve('any_token')
+const makeUpdateAccount = async (): Promise<any> => {
+  class UpdateAccountStub {
+    async updateEnabled (id: string, status: boolean): Promise<any> {
+      return ''
     }
   }
 
-  return new AuthenticationStub()
+  return new UpdateAccountStub()
 }
 
 interface ISignUpControllerTypes {
   systemUnderTest: SignUpController
   validationStub: ValidationComposite
   writeAccountStub: IAddAccount
-  authenticationStub: IAuthentication
 }
 const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
   const validationStub = new ValidationComposite([
@@ -71,14 +74,14 @@ const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
   ])
   const readAccountStub = await makeReadAccount()
   const writeAccountStub = await makeWriteAccount()
-  const authenticationStub = await makeAuthentication()
-  const systemUnderTest = new SignUpController(validationStub, readAccountStub, writeAccountStub, authenticationStub)
+  const updateAccountStub = await makeUpdateAccount()
+  const emailSender = await makeEmailSender()
+  const systemUnderTest = new SignUpController(validationStub, readAccountStub, writeAccountStub, updateAccountStub, emailSender)
 
   return {
     systemUnderTest,
     validationStub,
-    writeAccountStub,
-    authenticationStub
+    writeAccountStub
   }
 }
 
@@ -143,26 +146,6 @@ describe('SignUpController', () => {
 
     await systemUnderTest.handle(httpRequest)
     expect(spyOnAddAccountStubAdd).toHaveBeenCalledWith(signUpHttpRequestBodyMatchComplete)
-  })
-
-  test('should call Authentication with correct values <version 0.0.1>', async () => {
-    const { systemUnderTest, authenticationStub } = await makeSystemUnderTest()
-    const spyOnAuth = jest.spyOn(authenticationStub, 'auth')
-
-    await systemUnderTest.handle(httpRequest)
-    expect(spyOnAuth).toHaveBeenLastCalledWith({
-      email: httpRequest.body.email,
-      password: httpRequest.body.password
-    })
-  })
-
-  test('return from httpResponse "{status: 500}" if Authentication throws <version 0.0.1>', async () => {
-    const { systemUnderTest, authenticationStub } = await makeSystemUnderTest()
-    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.reject(new Error()))
-
-    const httpResponse = await systemUnderTest.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.errorMessage?.name).toBe('ServerError')
   })
 
   test('returns from httpResponse "{status Code: 200}" if valid information is sent to AddAccount <version 0.0.2>', async () => {

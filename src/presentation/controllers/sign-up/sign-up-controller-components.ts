@@ -4,3 +4,4 @@ export {
   FieldValidationWithRegEx,
   CompareFieldsValidator, RequiredFieldsValidator, ValidateFieldsValidator, VerifyTypesValidator
 } from '../../helpers/validators/export-all'
+export { SendEmailSignUpController } from '../../../infra/send/email/sign-up/send-email-sign-up'

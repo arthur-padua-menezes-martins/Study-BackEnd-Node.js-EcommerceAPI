@@ -1,12 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.accountModelMatch = exports.signUpHttpRequestBodyInvalidPasswordConfirmation = exports.signUpHttpRequestBodyMissingField = exports.signUpHttpRequestBodyNotMatch = exports.signUpHttpRequestBodyMatch = exports.signUpHttpRequestBodyMatchComplete = exports.signUpHttpRequestBodyAddressFields = exports.signUpHttpRequestBodyFields = exports.serverError = exports.unprocessable = exports.badRequest = exports.ok = exports.InvalidParamError = exports.MissingParamError = void 0;
+exports.accountModelMatch = exports.signUpHttpRequestBodyInvalidPasswordConfirmation = exports.signUpHttpRequestBodyMissingField = exports.signUpHttpRequestBodyNotMatch = exports.signUpHttpRequestBodyMatch = exports.signUpHttpRequestBodyMatchComplete = exports.signUpHttpRequestBodyAddressFields = exports.signUpHttpRequestBodyFields = exports.serverError = exports.unprocessable = exports.unauthorized = exports.badRequest = exports.accepted = exports.created = exports.InvalidParamError = exports.MissingParamError = void 0;
 var export_all_1 = require("../../errors/export-all");
 Object.defineProperty(exports, "MissingParamError", { enumerable: true, get: function () { return export_all_1.MissingParamError; } });
 Object.defineProperty(exports, "InvalidParamError", { enumerable: true, get: function () { return export_all_1.InvalidParamError; } });
 var export_all_2 = require("../../helpers/http/response/export-all");
-Object.defineProperty(exports, "ok", { enumerable: true, get: function () { return export_all_2.ok; } });
+Object.defineProperty(exports, "created", { enumerable: true, get: function () { return export_all_2.created; } });
+Object.defineProperty(exports, "accepted", { enumerable: true, get: function () { return export_all_2.accepted; } });
 Object.defineProperty(exports, "badRequest", { enumerable: true, get: function () { return export_all_2.badRequest; } });
+Object.defineProperty(exports, "unauthorized", { enumerable: true, get: function () { return export_all_2.unauthorized; } });
 Object.defineProperty(exports, "unprocessable", { enumerable: true, get: function () { return export_all_2.unprocessable; } });
 Object.defineProperty(exports, "serverError", { enumerable: true, get: function () { return export_all_2.serverError; } });
 var fake_data_sign_up_http_request_body_1 = require("../../../utils/fake/data/sign-up/fake-data-sign-up-http-request-body");

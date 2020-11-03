@@ -3,5 +3,6 @@ import { signUpHttpRequestBodyMatchComplete } from '../sign-up/fake-data-sign-up
 export const accountModelMatch = {
   id: 'valid_id' as string,
   ...signUpHttpRequestBodyMatchComplete,
-  password: 'encrypted_password' as string
+  password: 'encrypted_password' as string,
+  enabled: true
 }

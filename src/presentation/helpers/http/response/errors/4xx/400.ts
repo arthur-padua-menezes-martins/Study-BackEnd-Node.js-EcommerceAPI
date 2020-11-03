@@ -11,7 +11,7 @@ import { IHttpResponse } from '../../import-all'
 * @param invalidFields
 * invalid fields which caused the function to be invoked
 */
-export const badRequest = (body: Object, successMessage?: string, errorMessage?: any, invalidFields?: string[]): IHttpResponse => ({
+export const badRequest = (body: Object = {}, successMessage?: string, errorMessage?: any, invalidFields?: string[]): IHttpResponse => ({
   statusCode: 400,
   body: body,
   successMessage: successMessage,

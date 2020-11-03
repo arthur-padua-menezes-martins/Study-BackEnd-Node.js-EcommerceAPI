@@ -1,6 +1,7 @@
 import { IAccountModel } from '../import-all'
 
 export interface ISearchAccountByFieldModel {
+  id?: string
   email?: string
   cpf?: string
 }

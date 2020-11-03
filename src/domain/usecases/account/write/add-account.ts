@@ -1,7 +1,7 @@
 import { IAccountModel } from '../import-all'
 
 export interface IAddAccountModel {
-  [field: string]: string | object
+  [field: string]: string | boolean | object
   name: string
   email: string
   password: string
@@ -15,6 +15,7 @@ export interface IAddAccountModel {
     city: string
     state: string
   }
+  enabled: boolean
 }
 
 export interface IAddAccount {

@@ -6,12 +6,12 @@ import {
 export class DatabaseAddAccountController implements IAddAccount {
   constructor (
     private readonly hasher: IHasher,
-    private readonly addAccountRepository: IAddAccountRepository
+    private readonly writeAccountRepository: IAddAccountRepository
   ) {}
 
   async add (accountData: IAddAccountModel): Promise<IAccountModel> {
     const encryptedPassword = await this.hasher.hash(accountData.password)
-    const account = await this.addAccountRepository.add({
+    const account = await this.writeAccountRepository.add({
       ...accountData,
       password: encryptedPassword
     })

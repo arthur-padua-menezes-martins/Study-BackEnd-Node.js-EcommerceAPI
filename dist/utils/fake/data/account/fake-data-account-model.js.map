@@ -1,1 +1,1 @@
-{"version":3,"file":"fake-data-account-model.js","sourceRoot":"","sources":["../../../../../src/utils/fake/data/account/fake-data-account-model.ts"],"names":[],"mappings":";;;AAAA,wGAAmG;AAEtF,QAAA,iBAAiB,iCAC5B,EAAE,EAAE,UAAoB,IACrB,wEAAkC,KACrC,QAAQ,EAAE,oBAA8B,IACzC"}
+{"version":3,"file":"fake-data-account-model.js","sourceRoot":"","sources":["../../../../../src/utils/fake/data/account/fake-data-account-model.ts"],"names":[],"mappings":";;;AAAA,wGAAmG;AAEtF,QAAA,iBAAiB,iCAC5B,EAAE,EAAE,UAAoB,IACrB,wEAAkC,KACrC,QAAQ,EAAE,oBAA8B,EACxC,OAAO,EAAE,IAAI,IACd"}

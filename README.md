@@ -24,14 +24,15 @@
 
 **/signup - POST**
 * 🏆 *cadastro de usuário*
+* ✔️ *log de erros*
 * ✔️ *verificar a procedência das informações*
 * ✔️ *verificar a disponibilidade de cadastro para as informções*
-* ❌ *verificar a veracidade do e-mail perante os serviços de disporato*
-* ❌ *confirmação do cadastro por e-mail*
-* ❌ *disponibilizar acessos*
+* ✔️ *verificar a veracidade do e-mail perante os serviços de disporato*
+* ✔️ *confirmação do cadastro por e-mail*
 
 **/signin - POST**
 * 🏆 *autenticar informações e disponibilizar acessos*
+* ✔️ *log de erros*
 * ✔️ *verificar a procedência das informações*
 * ✔️ *retornar o token de acesso*
 
@@ -40,8 +41,9 @@
 > # ERRORS
 
 **4xx**
-* 🐞 *status code 400 se campos obrigarórios forem omitidos ou inválidos*
-* 🐞 *HTTP status code 401 se as informações não forem autenticas*
+* 🐞 *400 bad request, se campos obrigarórios forem omitidos ou inválidos*
+* 🐞 *401 unauthorized, se as informações não forem autênticas*
+* 🐞 *422 unprocessable, se a requisição não pode ser processada*
 
 **5xx**
-* 🐞 *status code 500 e log de error se ocorrer quaisquer erros do servidor*
+* 🐞 *500 server error, se ocorrer quaisquer erros do servidor*

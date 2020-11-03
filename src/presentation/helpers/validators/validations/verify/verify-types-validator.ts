@@ -5,7 +5,7 @@ interface IInputContent {
   checkTheTypeOfThis: any
 }
 export class VerifyTypesValidator implements Validation {
-  async validate (input: IInputContent): Promise<any> {
+  async validate (input: IInputContent): Promise<boolean[]> {
     const { checkThisType, checkTheTypeOfThis } = input
 
     return Object.keys(checkTheTypeOfThis).map((key) => {

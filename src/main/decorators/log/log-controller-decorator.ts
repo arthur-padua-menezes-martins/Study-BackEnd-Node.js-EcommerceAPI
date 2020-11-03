@@ -1,5 +1,5 @@
 import { IController, IHttpRequest, IHttpResponse } from '../../../presentation/protocols/export-all'
-import { LogErrorRepository } from '../../../data/protocols/repository/log/log-error-repository'
+import { LogErrorRepository } from '../../../data/protocols/repository/log/error/log-error-repository'
 
 export class LogControllerDecorator implements IController {
   constructor (
@@ -11,7 +11,7 @@ export class LogControllerDecorator implements IController {
     const httpResponse = await this.controller.handle(httpRequest)
 
     if (httpResponse.statusCode === 500) {
-      await this.logErrorRepository.logError(httpResponse.errorMessage?.stack)
+      await this.logErrorRepository.logErrorStack(httpResponse.errorMessage?.stack)
     }
 
     return httpResponse

@@ -1,1 +1,1 @@
-export { AccountMongoRepositoryRead } from './account-mongo-repository-read'
+export { AccountMongoRepositoryRead } from './read-account-mongo-repository'
