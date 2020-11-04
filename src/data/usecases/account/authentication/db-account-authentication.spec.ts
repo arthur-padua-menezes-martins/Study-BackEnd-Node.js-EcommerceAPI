@@ -7,12 +7,12 @@ import {
   IUpdateAccessTokenRepository,
   IAccountModel
 } from './db-account-authentication-protocols'
-import { signInHttpRequestBodyMatchComplete, accountModelMatch } from './db-account-authentication-utils'
+import { signInHttpRequestBodyMatchComplete, accountModelDisabled, accountModelEnabled } from './db-account-authentication-utils'
 
 const makeSearchAccountByEmailRepository = async (): Promise<ISearchAccountByFieldRepository> => {
   class SearchAccountByFieldRepositoryStub implements ISearchAccountByFieldRepository {
     async searchByField (field: ISearchAccountByFieldModel): Promise<IAccountModel> {
-      const account: IAccountModel = accountModelMatch
+      const account: IAccountModel = accountModelEnabled
       return await Promise.resolve(account)
     }
   }
@@ -108,7 +108,7 @@ describe('DatabaseAuthenticationController Usecases', () => {
     const spyOnCompare = jest.spyOn(hashComparerStub, 'compare')
 
     await systemUnderTest.auth(authentication)
-    expect(spyOnCompare).toHaveBeenCalledWith(authentication.password, accountModelMatch.password)
+    expect(spyOnCompare).toHaveBeenCalledWith(authentication.password, accountModelEnabled.password)
   })
 
   test('should throw if HashComparer throws <version: 0.0.1>', async () => {
@@ -132,7 +132,7 @@ describe('DatabaseAuthenticationController Usecases', () => {
     const spyOnEncrypt = jest.spyOn(encrypterStub, 'encrypt')
 
     await systemUnderTest.auth(authentication)
-    expect(spyOnEncrypt).toHaveBeenCalledWith(accountModelMatch.id)
+    expect(spyOnEncrypt).toHaveBeenCalledWith(accountModelEnabled.id)
   })
 
   test('should return an null if Encrypter fails <version: 0.0.1>', async () => {
@@ -155,7 +155,7 @@ describe('DatabaseAuthenticationController Usecases', () => {
     const spyOnUpdate = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
 
     await systemUnderTest.auth(authentication)
-    expect(spyOnUpdate).toHaveBeenCalledWith(accountModelMatch.id, accessToken)
+    expect(spyOnUpdate).toHaveBeenCalledWith(accountModelEnabled.id, accessToken)
   })
 
   test('should return an Error if UpdateAccessTokenRepository returns Error <version: 0.0.1>', async () => {

@@ -1,3 +1,3 @@
-export interface IEmailValidator {
+export interface IFieldsValidation {
   isValid: (value: string) => Promise<boolean>
 }

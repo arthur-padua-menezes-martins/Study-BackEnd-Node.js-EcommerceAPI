@@ -2,7 +2,8 @@ import {
   IController, IHttpRequest,
   ISearchAccountByField,
   IAddAccount, IAddAccountModel,
-  IUpdateEnabledAccount
+  IUpdateEnabledAccount,
+  ISendEmailSignUp
 } from './sign-up-controller-protocols'
 import { ValidationComposite } from './sign-up-controller-components'
 import {
@@ -10,7 +11,6 @@ import {
   created, accepted, badRequest, unprocessable, serverError,
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields
 } from './sign-up-controller-helpers'
-import { ISendEmailSignUp } from '../../../infra/send/email/sign-up/send-email-sign-up'
 
 /**
 * @method handle
@@ -20,7 +20,7 @@ export class SignUpController implements IController {
   private account: IAddAccountModel | null = null
 
   /**
-  * @param {ValidationComposite} validation
+  * @param {ValidationComposite} validationComposite
   * implementation of the validation
   * @param {ISearchAccountByField} readAccount
   * implementation of the user account search manager
@@ -32,7 +32,7 @@ export class SignUpController implements IController {
   * implementation of the email sender
   */
   constructor (
-    private readonly validation: ValidationComposite,
+    private readonly validationComposite: ValidationComposite,
     private readonly readAccount: ISearchAccountByField,
     private readonly writeAccount: IAddAccount,
     private readonly updateAccount: IUpdateEnabledAccount,
@@ -43,7 +43,7 @@ export class SignUpController implements IController {
 
   async handle (httpRequest: IHttpRequest): Promise<any> {
     try {
-      if (httpRequest.query.id) {
+      if (httpRequest.query?.id) {
         await this.updateAccount.updateEnabled(httpRequest.query.id, true)
         this.account = await this.readAccount.searchByField({ id: httpRequest.query.id })
 
@@ -53,17 +53,17 @@ export class SignUpController implements IController {
 
         return unprocessable()
       } else {
-        const missingFields: string[] = await this.validation.validate({
+        const missingFields: string[] = await this.validationComposite.validate({
           type: 'required fields',
           fields: [signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields],
           body: [httpRequest.body, httpRequest.body.address]
         })
         if (missingFields.length > 0) {
-          return badRequest({}, '', new MissingParamError(missingFields.join(' ')))
+          return badRequest({}, '', new MissingParamError(missingFields.join(' ')), missingFields)
         }
 
         const { address, ...checkTheTypeOfThis } = Object.assign({}, httpRequest.body, httpRequest.body.address)
-        const theTypeOfThisIsValid: boolean[] = await this.validation.validate({
+        const theTypeOfThisIsValid: boolean[] = await this.validationComposite.validate({
           type: 'verify types',
           checkThisType: 'string',
           checkTheTypeOfThis: checkTheTypeOfThis
@@ -73,7 +73,7 @@ export class SignUpController implements IController {
         }
 
         const { password, passwordConfirmation } = httpRequest.body
-        const isEqual: boolean = await this.validation.validate({
+        const isEqual: boolean = await this.validationComposite.validate({
           type: 'compare fields',
           checkThis: password,
           withThis: passwordConfirmation
@@ -82,10 +82,10 @@ export class SignUpController implements IController {
           return badRequest({}, '', new InvalidParamError('passwordConfirmation'))
         }
 
-        const invalidFields: string[] = await this.validation.validate({
+        const invalidFields: string[] = await this.validationComposite.validate({
           type: 'validate fields',
           fields: [signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields],
-          body: [httpRequest.body, httpRequest.body.address as object]
+          body: [httpRequest.body, httpRequest.body.address]
         })
         if (invalidFields.length > 0) {
           return badRequest({}, '', new InvalidParamError(invalidFields.join(' ')), invalidFields)

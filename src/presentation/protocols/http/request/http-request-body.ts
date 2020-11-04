@@ -16,7 +16,7 @@ export interface IHttpRequestBody {
 }
 
 export interface IHttpRequestBodyComplete {
-  [field: string]: string | object
+  [field: string]: string | boolean | object
   name: string
   email: string
   password: string
@@ -30,4 +30,5 @@ export interface IHttpRequestBodyComplete {
     city: string
     state: string
   }
+  enabled: boolean
 }

@@ -1,6 +1,9 @@
 import { Collection } from 'mongodb'
 import { LogMongoRepository } from './log-mongo-repository'
-import { mongoHelper } from '../helper/mongo-helper'
+import {
+  mongoHelper
+} from './import-all'
+import env from '../../../../main/config/env'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: LogMongoRepository
@@ -14,14 +17,14 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
 }
 
 describe('LogMongoRepository', () => {
-  let errorsCollection: Collection
+  let logErrorCollection: Collection
 
   beforeAll(async () => {
     await mongoHelper.connect('mongodb://localhost:27017')
   })
   beforeEach(async () => {
-    errorsCollection = await mongoHelper.getCollection('errors')
-    await errorsCollection.deleteMany({})
+    logErrorCollection = await mongoHelper.getCollection(env.collections.log.error)
+    await logErrorCollection.deleteMany({})
   })
   afterAll(async () => {
     await mongoHelper.disconnect()
@@ -29,8 +32,9 @@ describe('LogMongoRepository', () => {
 
   test('Shoud create an error log on succcess', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    await systemUnderTest.logError('Error.prototype.stack')
-    const countOfErrorRecordsInTheCollection = await errorsCollection.countDocuments()
+
+    await systemUnderTest.logErrorStack('Error.prototype.stack')
+    const countOfErrorRecordsInTheCollection = await logErrorCollection.countDocuments()
 
     expect(countOfErrorRecordsInTheCollection).toBe(1)
   })

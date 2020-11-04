@@ -1,9 +1,7 @@
-import { SendEmailController } from '../send-email-controller'
+import { SendEmailController } from '../export-all'
+import { ISendEmailSignUp } from '../import-all'
 import env from '../../../../main/config/env'
 
-export interface ISendEmailSignUp {
-  signUpConfirmation: (signUpConfirmationId: string, name: string, to: string) => Promise<void>
-}
 export class SendEmailSignUpController extends SendEmailController implements ISendEmailSignUp {
   private readonly subject: string = 'verificação de autenticidade'
 

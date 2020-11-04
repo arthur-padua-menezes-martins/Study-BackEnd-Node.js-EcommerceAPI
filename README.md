@@ -2,7 +2,6 @@
 > # TECNOLOGIAS
 
 **TypeScript**
-* *velocidade no código*
 * *escalabilidade do projeto*
 
 **jest**
@@ -13,7 +12,7 @@
 * *controlar requisições*
 
 **bcrypt**
-* *hash*
+* *geração de hash*
 
 **jsonwebtoken**
 * *token de acesso*

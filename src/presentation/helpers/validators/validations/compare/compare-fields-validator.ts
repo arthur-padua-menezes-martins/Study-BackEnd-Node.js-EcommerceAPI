@@ -1,11 +1,11 @@
 import { Validation } from '../../../../protocols/validation/validation'
 
-interface IInputContent {
-  checkThis: any
-  withThis: any
+interface IInputContentCompareFieldsValidator {
+  checkThis: string
+  withThis: string
 }
 export class CompareFieldsValidator implements Validation {
-  async validate (input: IInputContent): Promise<any> {
+  async validate (input: IInputContentCompareFieldsValidator): Promise<any> {
     const { checkThis, withThis } = input
     return checkThis === withThis ?? true
   }

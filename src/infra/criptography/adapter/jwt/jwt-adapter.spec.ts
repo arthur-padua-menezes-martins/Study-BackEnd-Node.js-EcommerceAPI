@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { JwtAdapter } from './jwt-adapter'
-import { accountModelMatch } from '../../../../utils/fake/data/account/fake-data-account-model'
+import { accountModelEnabled } from '../../../../utils/fake/data/account/fake-data-account-model'
 
 const secret = 'any_secret'
 const anyToken = 'any_token'
@@ -20,14 +20,14 @@ describe('JwtAdapter', () => {
     const systemUnderTest = await makeSystemUnderTest()
     const sypOnSign = jest.spyOn(jwt, 'sign')
 
-    await systemUnderTest.encrypt(accountModelMatch.id)
-    expect(sypOnSign).toHaveBeenCalledWith({ id: accountModelMatch.id }, secret)
+    await systemUnderTest.encrypt(accountModelEnabled.id)
+    expect(sypOnSign).toHaveBeenCalledWith({ id: accountModelEnabled.id }, secret)
   })
 
   test('Should call sign with correct values <version: 0.0.1>', async () => {
     const systemUnderTest = await makeSystemUnderTest()
 
-    const accessToken = await systemUnderTest.encrypt(accountModelMatch.id)
+    const accessToken = await systemUnderTest.encrypt(accountModelEnabled.id)
     expect(accessToken).toBe(anyToken)
   })
 
@@ -37,7 +37,7 @@ describe('JwtAdapter', () => {
       throw new Error()
     })
 
-    const promise = systemUnderTest.encrypt(accountModelMatch.id)
+    const promise = systemUnderTest.encrypt(accountModelEnabled.id)
     await expect(promise).rejects.toThrow()
   })
 })

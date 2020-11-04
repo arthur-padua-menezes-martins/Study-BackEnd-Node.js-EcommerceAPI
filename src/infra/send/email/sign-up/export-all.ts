@@ -1,1 +1,1 @@
-export { SendEmailSignUpController, ISendEmailSignUp } from './send-email-sign-up'
+export { SendEmailSignUpController } from './send-email-sign-up'

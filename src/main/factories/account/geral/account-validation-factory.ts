@@ -3,7 +3,7 @@ import {
   CompareFieldsValidator, RequiredFieldsValidator, ValidateFieldsValidator, VerifyTypesValidator,
   FieldValidationWithRegEx
 } from '../../../../presentation/helpers/validators/export-all'
-import { NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from '../../../adapters/validation/regEx/field/export-all'
+import { NameValidatorAdapter, EmailValidatorAdapter, PasswordValidatorAdapter } from '../../../../infra/validators/regEx/field/export-all'
 
 export const makeFieldValidationWithRegex = (): FieldValidationWithRegEx => {
   return new FieldValidationWithRegEx({

@@ -1,7 +1,7 @@
 import { Validation } from '../../protocols/validation/validation'
 import { IHttpRequestBody } from '../../protocols/http/request/http-request-body'
 
-interface IValidationComponents {
+interface IValidationCompositeComponents {
   content: any
   type: string
 }
@@ -11,25 +11,26 @@ interface IInputContent {
   body?: IHttpRequestBody
   checkThisType?: string
   checkTheTypeOfThis?: object
-  checkThis?: any
-  withThis?: any
+  checkThis?: string
+  withThis?: string
 }
 export class ValidationComposite implements Validation {
+  private readonly types: string[] = ['validate fields', 'required fields', 'compare fields', 'verify types']
   private readonly validateFields: any
   private readonly requiredFields: any
   private readonly compareFields: any
   private readonly verifyTypes: any
 
-  constructor (validationComponents: IValidationComponents[]) {
-    for (const validationComponent of validationComponents) {
-      if (validationComponent.type === 'validate fields') {
-        this.validateFields = validationComponent.content
-      } else if (validationComponent.type === 'required fields') {
-        this.requiredFields = validationComponent.content
-      } else if (validationComponent.type === 'compare fields') {
-        this.compareFields = validationComponent.content
-      } else if (validationComponent.type === 'verify types') {
-        this.verifyTypes = validationComponent.content
+  constructor (components: IValidationCompositeComponents[]) {
+    for (const component of components) {
+      if (component.type === 'validate fields') {
+        this.validateFields = component.content
+      } else if (component.type === 'required fields') {
+        this.requiredFields = component.content
+      } else if (component.type === 'compare fields') {
+        this.compareFields = component.content
+      } else if (component.type === 'verify types') {
+        this.verifyTypes = component.content
       }
     }
   }

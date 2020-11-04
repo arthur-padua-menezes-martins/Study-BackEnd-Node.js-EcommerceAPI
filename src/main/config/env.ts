@@ -12,5 +12,10 @@ export default {
       user: process.env.SEND_EMAIL_AUTH_USER ?? 'arthur.software.developer@gmail.com',
       password: process.env.SEND_EMAIL_AUTH_PASS ?? 'software123456789'
     }
+  },
+  collections: {
+    log: {
+      error: 'log-error'
+    }
   }
 }

@@ -1,5 +1,4 @@
-import { ISearchAccountByFieldRepository } from '../../../../../data/protocols/repository/account/read/search-account-by-field-repository'
-import { ISearchAccountByFieldModel } from '../../../../../domain/usecases/account/read/search-account-by-field'
+import { ISearchAccountByFieldRepository, ISearchAccountByFieldModel } from '../../../../../data/protocols/repository/account/read/search-account-by-field-repository'
 import {
   IAccountModel,
   mongoHelper
