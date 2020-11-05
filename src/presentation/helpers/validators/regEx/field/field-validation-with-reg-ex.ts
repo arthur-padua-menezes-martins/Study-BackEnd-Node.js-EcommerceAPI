@@ -1,8 +1,8 @@
-import { IFieldValidation, IFieldValidationOptions, IInputContent } from '../../../../protocols/validation/field/export-all'
+import { IFieldValidation, IFieldValidationOptions, IFieldValidationInputContent } from '../../../../protocols/validation/field/export-all'
 
 export class FieldValidationWithRegEx implements IFieldValidation {
-  private readonly fieldValidationOptions: any = {}
-  private readonly invalidFields: string[] = []
+  public readonly fieldValidationOptions: any = {}
+  public readonly invalidFields: string[] = []
 
   constructor (options: IFieldValidationOptions) {
     for (const key in options) {
@@ -28,7 +28,7 @@ export class FieldValidationWithRegEx implements IFieldValidation {
   * @param input
   * the fields and the body to pass an validation
   */
-  async exec (input: IInputContent): Promise<string[]> {
+  async exec (input: IFieldValidationInputContent): Promise<string[]> {
     const { fields, body } = input
 
     if (Array.isArray(body)) {

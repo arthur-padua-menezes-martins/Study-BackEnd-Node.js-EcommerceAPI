@@ -31,4 +31,6 @@ export interface IHttpRequestBodyComplete {
     state: string
   }
   enabled: boolean
+  question: string
+  answers: any
 }

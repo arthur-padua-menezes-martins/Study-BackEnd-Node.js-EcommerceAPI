@@ -1,19 +1,16 @@
-import { IHttpRequestBody } from '../../../../protocols/http/request/http-request-body'
-import { Validation } from '../../../../protocols/validation/validation'
+import { IHttpRequestBody, IHttpRequestBodyComplete } from '../../../../protocols/http/request/http-request-body'
+import { IValidation } from '../../../../protocols/validation/validation'
 
-interface IInputContent {
+interface IRequiredFieldsValidatorParams {
   fields: string[]
-  body: IHttpRequestBody
+  body: IHttpRequestBody | IHttpRequestBodyComplete
 }
-export class RequiredFieldsValidator implements Validation {
-  async validate (input: IInputContent): Promise<string[]> {
+export class RequiredFieldsValidator implements IValidation {
+  async validate (input: IRequiredFieldsValidatorParams): Promise<string[]> {
     const { fields, body } = input
     const missingFields: string[] = []
 
-    if (
-      typeof fields !== 'undefined' && fields.length > 0 &&
-      typeof body !== 'undefined' && Object.keys(body).length > 0
-    ) {
+    if (fields.length > 0 && Object.keys(body).length > 0) {
       if (Array.isArray(body)) {
         for (const [index, field] of fields.entries()) {
           for (const item of field) {
@@ -25,7 +22,7 @@ export class RequiredFieldsValidator implements Validation {
           !(item in body) && missingFields.push(item)
         }
       }
-    } else if (typeof fields !== 'undefined' && fields.length > 0) {
+    } else if (fields.length > 0) {
       for (const item of fields) {
         missingFields.push(item)
       }

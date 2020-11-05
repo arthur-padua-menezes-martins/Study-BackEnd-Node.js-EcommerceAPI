@@ -1,6 +1,6 @@
 import { IAccountModel } from '../import-all'
 
-interface IParams {
+export interface ISearchAccountByFieldRepositoryParams {
   id?: string
   email?: string
   cpf?: string
@@ -16,5 +16,5 @@ export interface ISearchAccountByFieldRepository {
   * @param field
   * key and value to search an account
   */
-  searchByField: (field: IParams) => Promise<IAccountModel | null>
+  searchByField: (field: ISearchAccountByFieldRepositoryParams) => Promise<IAccountModel | null>
 }

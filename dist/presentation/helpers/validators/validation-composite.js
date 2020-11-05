@@ -1,20 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ValidationComposite = void 0;
 class ValidationComposite {
-    constructor(validationComponents) {
-        for (const validationComponent of validationComponents) {
-            if (validationComponent.type === 'validate fields') {
-                this.validateFields = validationComponent.content;
+    constructor(components) {
+        this.types = ['validate fields', 'required fields', 'compare fields', 'verify types'];
+        for (const component of components) {
+            if (component.type === 'validate fields') {
+                this.validateFields = component.content;
             }
-            else if (validationComponent.type === 'required fields') {
-                this.requiredFields = validationComponent.content;
+            else if (component.type === 'required fields') {
+                this.requiredFields = component.content;
             }
-            else if (validationComponent.type === 'compare fields') {
-                this.compareFields = validationComponent.content;
+            else if (component.type === 'compare fields') {
+                this.compareFields = component.content;
             }
-            else if (validationComponent.type === 'verify types') {
-                this.verifyTypes = validationComponent.content;
+            else if (component.type === 'verify types') {
+                this.verifyTypes = component.content;
             }
         }
     }

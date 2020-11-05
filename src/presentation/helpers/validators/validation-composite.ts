@@ -1,20 +1,20 @@
-import { Validation } from '../../protocols/validation/validation'
-import { IHttpRequestBody } from '../../protocols/http/request/http-request-body'
+import { IValidation } from '../../protocols/validation/validation'
+import { IHttpRequestBody, IHttpRequestBodyComplete } from '../../protocols/http/request/http-request-body'
 
 interface IValidationCompositeComponents {
   content: any
   type: string
 }
-interface IInputContent {
+interface IValidationCompositeParams {
   type: string
   fields?: string[] | [string[], string[]]
-  body?: IHttpRequestBody
+  body?: IHttpRequestBody | IHttpRequestBodyComplete
   checkThisType?: string
   checkTheTypeOfThis?: object
   checkThis?: string
   withThis?: string
 }
-export class ValidationComposite implements Validation {
+export class ValidationComposite implements IValidation {
   private readonly types: string[] = ['validate fields', 'required fields', 'compare fields', 'verify types']
   private readonly validateFields: any
   private readonly requiredFields: any
@@ -35,7 +35,7 @@ export class ValidationComposite implements Validation {
     }
   }
 
-  async validate (input: IInputContent): Promise<any> {
+  async validate (input: IValidationCompositeParams): Promise<any> {
     const { type } = input
 
     if (type === 'validate fields') {

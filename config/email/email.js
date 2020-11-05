@@ -5,7 +5,7 @@ module.exports =
     secure : true,
     auth:
     {
-        user: 'arthur.software.developer@gmail.com',
-        pass: 'software123456789'
+        user: 'seu e-mail',
+        pass: 'sua senha'
     }
 }

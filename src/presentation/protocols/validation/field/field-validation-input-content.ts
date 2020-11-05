@@ -1,6 +1,6 @@
 import { IHttpRequestBody } from '../../http/request/http-request-body'
 
-export interface IInputContent {
+export interface IFieldValidationInputContent {
   fields: string[]
   body: IHttpRequestBody
 }

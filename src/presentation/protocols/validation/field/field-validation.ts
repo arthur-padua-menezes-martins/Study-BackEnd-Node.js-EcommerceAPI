@@ -1,7 +1,7 @@
-import { IInputContent } from './field-validation-input-content'
+import { IFieldValidationInputContent } from './field-validation-input-content'
 
 export interface IFieldValidation {
   options: (field: string, value: string) => Promise<string>
 
-  exec: (input: IInputContent) => Promise<string[]>
+  exec: (input: IFieldValidationInputContent) => Promise<string[]>
 }

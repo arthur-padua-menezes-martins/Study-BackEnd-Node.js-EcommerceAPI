@@ -1,11 +1,11 @@
-import { Validation } from '../../../../protocols/validation/validation'
+import { IValidation } from '../../../../protocols/validation/validation'
 
-interface IInputContent {
+interface IVerifyTypesValidatorParams {
   checkThisType: string
   checkTheTypeOfThis: any
 }
-export class VerifyTypesValidator implements Validation {
-  async validate (input: IInputContent): Promise<boolean[]> {
+export class VerifyTypesValidator implements IValidation {
+  async validate (input: IVerifyTypesValidatorParams): Promise<boolean[]> {
     const { checkThisType, checkTheTypeOfThis } = input
 
     return Object.keys(checkTheTypeOfThis).map((key) => {

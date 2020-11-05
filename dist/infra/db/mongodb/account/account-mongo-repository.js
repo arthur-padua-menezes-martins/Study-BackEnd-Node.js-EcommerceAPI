@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AccountMongoRepository = void 0;
 const export_all_1 = require("./export-all");
 const import_all_1 = require("./import-all");
 class AccountMongoRepository {

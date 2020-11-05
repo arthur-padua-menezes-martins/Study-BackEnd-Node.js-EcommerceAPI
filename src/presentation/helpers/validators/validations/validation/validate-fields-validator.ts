@@ -1,16 +1,16 @@
-import { Validation } from '../../../../protocols/validation/validation'
+import { IValidation } from '../../../../protocols/validation/validation'
 import { IHttpRequestBody } from '../../../../protocols/http/request/http-request-body'
 
-interface IInputContent {
+interface IValidateFieldsValidatorParams {
   fields: string[]
   body: IHttpRequestBody
 }
-export class ValidateFieldsValidator implements Validation {
+export class ValidateFieldsValidator implements IValidation {
   constructor (
     private readonly validator: any
   ) {}
 
-  async validate (input: IInputContent): Promise<string> {
+  async validate (input: IValidateFieldsValidatorParams): Promise<string> {
     return this.validator.exec(input)
   }
 }

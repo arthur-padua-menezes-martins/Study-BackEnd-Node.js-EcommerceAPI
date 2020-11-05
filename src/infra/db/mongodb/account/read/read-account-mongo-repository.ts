@@ -1,4 +1,4 @@
-import { ISearchAccountByFieldRepository, ISearchAccountByFieldModel } from '../../../../../data/protocols/repository/account/read/search-account-by-field-repository'
+import { ISearchAccountByFieldRepository, ISearchAccountByFieldRepositoryParams } from '../../../../../data/protocols/repository/account/read/search-account-by-field-repository'
 import {
   IAccountModel,
   mongoHelper
@@ -11,7 +11,7 @@ export class AccountMongoRepositoryRead implements ISearchAccountByFieldReposito
   * @param {string} field
   * field to search for an account
   */
-  async searchByField (field: ISearchAccountByFieldModel): Promise<IAccountModel | null> {
+  async searchByField (field: ISearchAccountByFieldRepositoryParams): Promise<IAccountModel | null> {
     const accountsCollection = await mongoHelper.getCollection('accounts')
 
     if (field.id) {

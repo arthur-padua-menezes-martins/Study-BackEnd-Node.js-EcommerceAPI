@@ -1,4 +1,4 @@
-import { signUpHttpRequestBodyMatchComplete } from '../sign-up/fake-data-sign-up-http-request-body'
+import { signUpHttpRequestBodyMatchComplete } from '../user/sign-up/fake-data-sign-up-http-request-body'
 
 export const accountModelEnabled = {
   id: 'valid_id' as string,

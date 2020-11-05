@@ -15,6 +15,11 @@ exports.default = {
             user: (_h = process.env.SEND_EMAIL_AUTH_USER) !== null && _h !== void 0 ? _h : 'arthur.software.developer@gmail.com',
             password: (_j = process.env.SEND_EMAIL_AUTH_PASS) !== null && _j !== void 0 ? _j : 'software123456789'
         }
+    },
+    collections: {
+        log: {
+            error: 'log-error'
+        }
     }
 };
 //# sourceMappingURL=env.js.map
