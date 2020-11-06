@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ok = void 0;
 /**
 * the server took an expected action
 * @param body

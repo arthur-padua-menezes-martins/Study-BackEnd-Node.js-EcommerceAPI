@@ -1,4 +1,4 @@
-import { IHttpRequestBody, IHttpRequestBodyComplete } from './http-request-body'
+import { IHttpRequestBody } from './http-request-body'
 
 /**
 * @interface
@@ -7,5 +7,5 @@ import { IHttpRequestBody, IHttpRequestBodyComplete } from './http-request-body'
 export interface IHttpRequest {
   params?: any
   query?: any
-  body: IHttpRequestBodyComplete | IHttpRequestBody
+  body: IHttpRequestBody
 }

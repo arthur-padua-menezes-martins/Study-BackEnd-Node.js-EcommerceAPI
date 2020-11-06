@@ -3,7 +3,7 @@ import { AccountMongoRepository } from './account-mongo-repository'
 import { mongoHelper } from '../helper/mongo-helper'
 import {
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields,
-  signUpHttpRequestBodyMatchComplete, signInHttpRequestBodyMatchComplete
+  signUpHttpRequestBodyMatch, signInHttpRequestBodyMatch
 } from '../../../../utils/fake/data/export-all'
 
 interface ISystemUnderTestTypes {
@@ -34,43 +34,43 @@ describe('AccountMongoRepository', () => {
 
   test('Should return an account on add success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const account = await systemUnderTest.add(signUpHttpRequestBodyMatchComplete)
+    const account = await systemUnderTest.add(signUpHttpRequestBodyMatch)
 
     expect(account).toBeTruthy()
     for (const key of signUpHttpRequestBodyFields.slice(0, 2)) {
-      expect(signUpHttpRequestBodyMatchComplete[key]).toEqual(account[key])
+      expect(signUpHttpRequestBodyMatch[key]).toEqual(account[key])
     }
     for (const key of signUpHttpRequestBodyAddressFields) {
-      expect(signUpHttpRequestBodyMatchComplete[key]).toEqual(account[key])
+      expect(signUpHttpRequestBodyMatch[key]).toEqual(account[key])
     }
   })
 
   test('Should return an account on searchByField success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    await accountsCollection.insertOne(signUpHttpRequestBodyMatchComplete)
-    const account = await systemUnderTest.searchByField({ email: signInHttpRequestBodyMatchComplete.email })
+    await accountsCollection.insertOne(signUpHttpRequestBodyMatch)
+    const account = await systemUnderTest.searchByField({ email: signInHttpRequestBodyMatch.email })
 
     expect(account).toBeTruthy()
     if (account) {
       for (const key of signUpHttpRequestBodyFields.slice(0, 2)) {
-        expect(signUpHttpRequestBodyMatchComplete[key]).toEqual(account[key])
+        expect(signUpHttpRequestBodyMatch[key]).toEqual(account[key])
       }
       for (const key of signUpHttpRequestBodyAddressFields) {
-        expect(signUpHttpRequestBodyMatchComplete[key]).toEqual(account[key])
+        expect(signUpHttpRequestBodyMatch[key]).toEqual(account[key])
       }
     }
   })
 
   test('Should return null on searchByField fails <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const account = await systemUnderTest.searchByField({ email: signInHttpRequestBodyMatchComplete.email })
+    const account = await systemUnderTest.searchByField({ email: signInHttpRequestBodyMatch.email })
 
     expect(account).toBeFalsy()
   })
 
   test('Should update the account accessToken on updateAccessToken success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const accountOptions = await accountsCollection.insertOne(signUpHttpRequestBodyMatchComplete)
+    const accountOptions = await accountsCollection.insertOne(signUpHttpRequestBodyMatch)
     await systemUnderTest.updateAccessToken((accountOptions.ops[0])._id, anyToken)
     const account = await accountsCollection.findOne({ _id: (accountOptions.ops[0])._id })
 

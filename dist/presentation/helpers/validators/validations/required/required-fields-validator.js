@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RequiredFieldsValidator = void 0;
 class RequiredFieldsValidator {
     async validate(input) {
         const { fields, body } = input;

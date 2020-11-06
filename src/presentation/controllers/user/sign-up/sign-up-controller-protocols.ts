@@ -12,3 +12,6 @@ export {
 export {
   ISendEmailSignUp
 } from '../../../../domain/usecases/send/email/sign-up/send-email-sign-up'
+export {
+  IAccountModel
+} from '../../../../domain/models/account/account'

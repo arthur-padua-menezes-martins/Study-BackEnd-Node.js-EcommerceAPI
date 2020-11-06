@@ -3,12 +3,12 @@ import {
   IAccountModel, IAddAccountModel,
   IHasher, IAddAccountRepository
 } from './db-write-add-account-protocols'
-import { signUpHttpRequestBodyMatchComplete, accountModelDisabled } from './db-write-add-account-utils'
+import { signUpHttpRequestBodyMatch, accountModelDisabled } from './db-write-add-account-utils'
 
 const makeHasher = async (): Promise<IHasher> => {
   class HasherStub implements IHasher {
     async hash (value: string): Promise<string> {
-      return await Promise.resolve('encrypted_password')
+      return await Promise.resolve(accountModelDisabled.personal.password)
     }
   }
 
@@ -48,16 +48,16 @@ describe('DatabaseAddAccountController Usecases', () => {
     const { systemUnderTest, hasherStub } = await makeSystemUnderTest()
 
     const spyOnHash = jest.spyOn(hasherStub, 'hash')
-    await systemUnderTest.add(signUpHttpRequestBodyMatchComplete)
+    await systemUnderTest.add(signUpHttpRequestBodyMatch)
 
-    expect(spyOnHash).toHaveBeenCalledWith(signUpHttpRequestBodyMatchComplete.password)
+    expect(spyOnHash).toHaveBeenCalledWith(signUpHttpRequestBodyMatch.personal.password)
   })
 
   test('Should throw if Encrypter throws <version: 0.0.1>', async () => {
     const { systemUnderTest, hasherStub } = await makeSystemUnderTest()
 
     jest.spyOn(hasherStub, 'hash').mockReturnValueOnce(Promise.reject(new Error()))
-    const promiseAccount = systemUnderTest.add(signUpHttpRequestBodyMatchComplete)
+    const promiseAccount = systemUnderTest.add(signUpHttpRequestBodyMatch)
 
     await expect(promiseAccount).rejects.toThrow()
   })
@@ -66,23 +66,28 @@ describe('DatabaseAddAccountController Usecases', () => {
     const { systemUnderTest, addAccountRepositoryStub } = await makeSystemUnderTest()
 
     const spyOnAdd = jest.spyOn(addAccountRepositoryStub, 'add')
-    await systemUnderTest.add(signUpHttpRequestBodyMatchComplete)
+    await systemUnderTest.add(signUpHttpRequestBodyMatch)
 
     expect(spyOnAdd).toHaveBeenCalledWith({
-      ...signUpHttpRequestBodyMatchComplete,
-      password: 'encrypted_password'
+      personal: {
+        ...signUpHttpRequestBodyMatch.personal,
+        password: accountModelDisabled.personal.password
+      },
+      address: signUpHttpRequestBodyMatch.address,
+      enabled: false
     })
   })
 
   test('Should return an account on success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
-    const account = await systemUnderTest.add(signUpHttpRequestBodyMatchComplete)
+    const account = await systemUnderTest.add(signUpHttpRequestBodyMatch)
 
     expect(account).toEqual({
-      id: 'valid_id',
-      ...signUpHttpRequestBodyMatchComplete,
-      password: 'encrypted_password',
+      personal: {
+        ...accountModelDisabled.personal
+      },
+      address: accountModelDisabled.address,
       enabled: false
     })
   })

@@ -1,9 +1,9 @@
 import { IAccountModel } from '../import-all'
 
 export interface ISearchAccountByFieldRepositoryParams {
-  id?: string
-  email?: string
-  cpf?: string
+  [field: string]: string
+  id: string
+  email: string
 }
 /**
 * @interface

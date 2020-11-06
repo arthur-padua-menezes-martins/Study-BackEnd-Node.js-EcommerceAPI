@@ -1,5 +1,5 @@
 import { IValidation } from '../../protocols/validation/validation'
-import { IHttpRequestBody, IHttpRequestBodyComplete } from '../../protocols/http/request/http-request-body'
+import { IHttpRequestBody } from '../../protocols/http/request/http-request-body'
 
 interface IValidationCompositeComponents {
   content: any
@@ -8,7 +8,7 @@ interface IValidationCompositeComponents {
 interface IValidationCompositeParams {
   type: string
   fields?: string[] | [string[], string[]]
-  body?: IHttpRequestBody | IHttpRequestBodyComplete
+  body?: IHttpRequestBody
   checkThisType?: string
   checkTheTypeOfThis?: object
   checkThis?: string

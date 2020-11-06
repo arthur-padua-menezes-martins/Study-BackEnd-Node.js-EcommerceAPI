@@ -1,14 +1,16 @@
-import { IHttpRequestBody, IHttpRequestBodyComplete } from '../../../../../presentation/protocols/http/request/http-request-body'
+import { IHttpRequestBody } from '../../../../../presentation/protocols/http/request/http-request-body'
 
 export const signUpHttpRequestBodyFields: string[] = ['name', 'email', 'password', 'passwordConfirmation']
 
 export const signUpHttpRequestBodyAddressFields: string[] = ['cep', 'street', 'number', 'neighborhood', 'city', 'state']
 
 const signUpHttpRequestBodyMatchData: any = {
-  name: 'name lastName' as string,
-  email: 'arthur.software.developer@gmail.com' as string,
-  password: 'password123' as string,
-  passwordConfirmation: 'password123' as string,
+  personal: {
+    name: 'name lastName' as string,
+    email: 'arthur.software.developer@gmail.com' as string,
+    password: 'password123' as string,
+    passwordConfirmation: 'password123' as string
+  },
   address: {
     cep: '60741-025' as string,
     street: 'Rua Dr. Justa Araújo' as string,
@@ -18,18 +20,17 @@ const signUpHttpRequestBodyMatchData: any = {
     state: 'CE' as string
   }
 }
-export const signUpHttpRequestBodyMatch: IHttpRequestBody = {
-  ...signUpHttpRequestBodyMatchData
-}
-export const signUpHttpRequestBodyMatchComplete: IHttpRequestBodyComplete = {
+export const signUpHttpRequestBodyMatch: IHttpRequestBody['user']['informations'] = {
   ...signUpHttpRequestBodyMatchData
 }
 
-export const signUpHttpRequestBodyNotMatch: IHttpRequestBody = {
-  name: 'name' as string,
-  email: '$#@!%¨&*()_+[]{}`^?:;/~@' as string,
-  password: 'password' as string,
-  passwordConfirmation: 'password' as string,
+export const signUpHttpRequestBodyNotMatch: IHttpRequestBody['user']['informations'] = {
+  personal: {
+    name: 'name' as string,
+    email: '$#@!%¨&*()_+[]{}`^?:;/~@' as string,
+    password: 'password' as string,
+    passwordConfirmation: 'password' as string
+  },
   address: {
     cep: '00000-000' as string,
     street: 'Rua Dr. Justa Araújo' as string,
@@ -40,10 +41,12 @@ export const signUpHttpRequestBodyNotMatch: IHttpRequestBody = {
   }
 }
 
-export const signUpHttpRequestBodyMissingField: IHttpRequestBody = {
-  email: 'arthur.software.developer@gmail.com' as string,
-  password: 'password' as string,
-  passwordConfirmation: 'password' as string,
+export const signUpHttpRequestBodyMissingField: any = {
+  personal: {
+    email: 'arthur.software.developer@gmail.com' as string,
+    password: 'password' as string,
+    passwordConfirmation: 'password' as string
+  },
   address: {
     cep: '60741-025' as string,
     street: 'Rua Dr. Justa Araújo' as string,
@@ -54,11 +57,13 @@ export const signUpHttpRequestBodyMissingField: IHttpRequestBody = {
   }
 }
 
-export const signUpHttpRequestBodyInvalidPasswordConfirmation: IHttpRequestBody = {
-  name: 'name lastName' as string,
-  email: 'arthur.software.developer@gmail.com' as string,
-  password: 'password' as string,
-  passwordConfirmation: 'pass' as string,
+export const signUpHttpRequestBodyInvalidPasswordConfirmation: any = {
+  personal: {
+    name: 'name lastName' as string,
+    email: 'arthur.software.developer@gmail.com' as string,
+    password: 'password' as string,
+    passwordConfirmation: 'pass' as string
+  },
   address: {
     cep: '60741-025' as string,
     street: 'Rua Dr. Justa Araújo' as string,
@@ -69,10 +74,14 @@ export const signUpHttpRequestBodyInvalidPasswordConfirmation: IHttpRequestBody 
   }
 }
 
-export const getSignUpHttpRequestBodyNotMatchField = (fieldName: string, addressFieldName?: string): string => {
-  return (fieldName && addressFieldName) ? signUpHttpRequestBodyNotMatch[fieldName][addressFieldName] : signUpHttpRequestBodyNotMatch[fieldName]
+export const getSignUpHttpRequestBodyNotMatchField = (personalField: string, addressField?: string): string => {
+  return addressField
+    ? signUpHttpRequestBodyNotMatch.address[addressField]
+    : signUpHttpRequestBodyNotMatch.personal[personalField]
 }
 
-export const getSignUpHttpRequestBodyMatchField = (fieldName: string, addressFieldName?: string): string => {
-  return (fieldName && addressFieldName) ? signUpHttpRequestBodyMatch[fieldName][addressFieldName] : signUpHttpRequestBodyMatch[fieldName]
+export const getSignUpHttpRequestBodyMatchField = (personalField: string, addressField?: string): string => {
+  return addressField
+    ? signUpHttpRequestBodyMatch.address[addressField]
+    : signUpHttpRequestBodyMatch.personal[personalField]
 }

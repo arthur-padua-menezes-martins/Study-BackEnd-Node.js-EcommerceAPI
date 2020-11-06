@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.accepted = exports.created = exports.ok = void 0;
 var _200_1 = require("./200");
-exports.ok = _200_1.ok;
+Object.defineProperty(exports, "ok", { enumerable: true, get: function () { return _200_1.ok; } });
 var _201_1 = require("./201");
-exports.created = _201_1.created;
+Object.defineProperty(exports, "created", { enumerable: true, get: function () { return _201_1.created; } });
 var _202_1 = require("./202");
-exports.accepted = _202_1.accepted;
+Object.defineProperty(exports, "accepted", { enumerable: true, get: function () { return _202_1.accepted; } });
 //# sourceMappingURL=export-all.js.map

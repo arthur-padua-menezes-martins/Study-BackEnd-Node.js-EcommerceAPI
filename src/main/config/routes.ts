@@ -1,5 +1,5 @@
 import { Express, Router } from 'express'
-import authenticationLoginRoutes from '../routes/authentication/login'
+import authenticationLoginRoutes from '../routes/authentication/sign-up-and-sign-in'
 
 export default (app: Express): void => {
   const router = Router()

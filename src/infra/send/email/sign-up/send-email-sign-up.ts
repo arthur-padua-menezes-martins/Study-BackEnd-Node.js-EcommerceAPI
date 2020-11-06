@@ -9,7 +9,11 @@ export class SendEmailSignUpController extends SendEmailController implements IS
     await this.prepare(
       to,
       this.subject,
-      await this.getTemplate('signUpConfirmation', { api: env.api, signUpConfirmationId, name })
+      await this.getTemplate('signUpConfirmation', {
+        api: env.api,
+        signUpConfirmationId,
+        name
+      })
     )
   }
 }

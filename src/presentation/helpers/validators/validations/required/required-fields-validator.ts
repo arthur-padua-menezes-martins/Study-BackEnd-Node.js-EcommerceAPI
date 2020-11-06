@@ -1,9 +1,9 @@
-import { IHttpRequestBody, IHttpRequestBodyComplete } from '../../../../protocols/http/request/http-request-body'
+import { IHttpRequestBody } from '../../../../protocols/http/request/http-request-body'
 import { IValidation } from '../../../../protocols/validation/validation'
 
 interface IRequiredFieldsValidatorParams {
   fields: string[]
-  body: IHttpRequestBody | IHttpRequestBodyComplete
+  body: IHttpRequestBody
 }
 export class RequiredFieldsValidator implements IValidation {
   async validate (input: IRequiredFieldsValidatorParams): Promise<string[]> {

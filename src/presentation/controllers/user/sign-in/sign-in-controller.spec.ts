@@ -1,6 +1,6 @@
 import { SignInController } from './sign-in-controller'
 import {
-  IHttpRequest, IHttpResponse,
+  IHttpResponse,
   IAuthentication, IValidation
 } from './sign-in-controller-protocols'
 import {
@@ -8,7 +8,7 @@ import {
   makeAuthenticationAccount
 } from './sign-in-controller-make'
 import {
-  signInHttpRequestBodyFields, signInHttpRequestBodyMatchComplete, signInHttpRequestBodyNotMatch, signInHttpRequestBodyMissingField
+  signInHttpRequestBodyFields, signInHttpRequestBodyMatch, signInHttpRequestBodyNotMatch, signInHttpRequestBodyMissingField
 } from './sign-in-controller-helpers'
 
 interface ISignUpControllerTypes {
@@ -27,8 +27,14 @@ const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
   }
 }
 
-const httpRequest: IHttpRequest = {
-  body: signInHttpRequestBodyMatchComplete
+const httpRequest: any = {
+  body: {
+    user: {
+      informations: {
+        personal: signInHttpRequestBodyMatch
+      }
+    }
+  }
 }
 let httpResponse: IHttpResponse = {
   statusCode: Number(),
@@ -40,7 +46,7 @@ describe('SignInController', () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
     const SpyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
 
-    httpRequest.body = await signInHttpRequestBodyMissingField
+    httpRequest.body.user.informations = await signInHttpRequestBodyMissingField
 
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(SpyOnValidate).toHaveBeenCalledWith(({
@@ -58,7 +64,7 @@ describe('SignInController', () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
     const SpyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
 
-    httpRequest.body = await signInHttpRequestBodyNotMatch
+    httpRequest.body.user.informations = await signInHttpRequestBodyNotMatch
 
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(SpyOnValidate).toHaveBeenCalledWith(({
@@ -77,8 +83,6 @@ describe('SignInController', () => {
     jest.spyOn(validationCompositeStub, 'validate').mockImplementationOnce(() => {
       throw new Error()
     })
-
-    httpRequest.body = signInHttpRequestBodyNotMatch
 
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)

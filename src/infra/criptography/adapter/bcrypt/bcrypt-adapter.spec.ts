@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { BcryptAdapter } from './bcrypt-adapter'
-import { signUpHttpRequestBodyMatchComplete, signInHttpRequestBodyMatchComplete } from '../../../../utils/fake/data/export-all'
+import { signUpHttpRequestBodyMatch, signInHttpRequestBodyMatch } from '../../../../utils/fake/data/export-all'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: BcryptAdapter
@@ -30,14 +30,14 @@ describe('BcryptAdapter', () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     const spyOnHash = jest.spyOn(bcrypt, 'hash')
 
-    await systemUnderTest.hash(signUpHttpRequestBodyMatchComplete.password)
-    expect(spyOnHash).toHaveBeenLastCalledWith(signUpHttpRequestBodyMatchComplete.password, salt)
+    await systemUnderTest.hash(signUpHttpRequestBodyMatch.personal.password)
+    expect(spyOnHash).toHaveBeenLastCalledWith(signUpHttpRequestBodyMatch.personal.password, salt)
   })
 
   test('Should return a hashedPassword on success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
-    const hash = await systemUnderTest.hash(signUpHttpRequestBodyMatchComplete.password)
+    const hash = await systemUnderTest.hash(signUpHttpRequestBodyMatch.personal.password)
     expect(hash).toBe('hashed_value')
   })
 
@@ -45,7 +45,7 @@ describe('BcryptAdapter', () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     jest.spyOn(bcrypt, 'hash').mockReturnValue(Promise.reject(await new Error()))
 
-    const hash = systemUnderTest.hash(signUpHttpRequestBodyMatchComplete.password)
+    const hash = systemUnderTest.hash(signUpHttpRequestBodyMatch.personal.password)
     await expect(hash).rejects.toThrow()
   })
 
@@ -53,14 +53,14 @@ describe('BcryptAdapter', () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     const spyOnCompare = jest.spyOn(bcrypt, 'compare')
 
-    await systemUnderTest.compare(signInHttpRequestBodyMatchComplete.password, anyHash)
-    expect(spyOnCompare).toHaveBeenLastCalledWith(signInHttpRequestBodyMatchComplete.password, anyHash)
+    await systemUnderTest.compare(signInHttpRequestBodyMatch.password, anyHash)
+    expect(spyOnCompare).toHaveBeenLastCalledWith(signInHttpRequestBodyMatch.password, anyHash)
   })
 
   test('Should return true if compare success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
-    const isEqual = await systemUnderTest.compare(signInHttpRequestBodyMatchComplete.password, anyHash)
+    const isEqual = await systemUnderTest.compare(signInHttpRequestBodyMatch.password, anyHash)
     expect(isEqual).toBe(true)
   })
 
@@ -68,7 +68,7 @@ describe('BcryptAdapter', () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     jest.spyOn(bcrypt, 'compare').mockReturnValueOnce(Promise.resolve(false))
 
-    const isEqual = await systemUnderTest.compare(signInHttpRequestBodyMatchComplete.password, anyHash)
+    const isEqual = await systemUnderTest.compare(signInHttpRequestBodyMatch.password, anyHash)
     expect(isEqual).toBe(false)
   })
 
@@ -76,7 +76,7 @@ describe('BcryptAdapter', () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     jest.spyOn(bcrypt, 'compare').mockReturnValue(Promise.reject(await new Error()))
 
-    const isEqual = systemUnderTest.compare(signUpHttpRequestBodyMatchComplete.password, anyHash)
+    const isEqual = systemUnderTest.compare(signUpHttpRequestBodyMatch.personal.password, anyHash)
     await expect(isEqual).rejects.toThrow()
   })
 })

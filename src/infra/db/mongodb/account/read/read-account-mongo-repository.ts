@@ -15,11 +15,17 @@ export class AccountMongoRepositoryRead implements ISearchAccountByFieldReposito
     const accountsCollection = await mongoHelper.getCollection('accounts')
 
     if (field.id) {
-      this.account = await accountsCollection.findOne({ _id: await mongoHelper.createObjectId(field.id) })
+      this.account = await accountsCollection.findOne({
+        _id: await mongoHelper.createObjectId(field.id)
+      })
     } else {
-      this.account = await accountsCollection.findOne(field)
+      for (const key in field) {
+        if (field[key]) {
+          this.account = await accountsCollection.findOne({ [`personal.${key}`]: field[key] })
+        }
+      }
     }
 
-    return await Promise.resolve(mongoHelper.map_id(this.account))
+    return this.account
   }
 }

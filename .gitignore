@@ -13,6 +13,7 @@ coverage
 build
 docker
 dist
+/dist
 
 # misc
 .DS_Store

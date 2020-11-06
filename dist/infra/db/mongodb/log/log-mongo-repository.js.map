@@ -1,1 +1,1 @@
-{"version":3,"file":"log-mongo-repository.js","sourceRoot":"","sources":["../../../../../src/infra/db/mongodb/log/log-mongo-repository.ts"],"names":[],"mappings":";;AAAA,mFAA4E;AAC5E,6CAEqB;AAGrB,MAAa,kBAAkB;CAAiC;AAAhE,gDAAgE;AAEhE,wBAAW,CAAC,kBAAkB,EAAE;IAC9B,oDAAuB;CACxB,CAAC,CAAA"}
+{"version":3,"file":"log-mongo-repository.js","sourceRoot":"","sources":["../../../../../src/infra/db/mongodb/log/log-mongo-repository.ts"],"names":[],"mappings":";;;AAAA,mFAA4E;AAC5E,6CAEqB;AAGrB,MAAa,kBAAkB;CAAiC;AAAhE,gDAAgE;AAEhE,wBAAW,CAAC,kBAAkB,EAAE;IAC9B,oDAAuB;CACxB,CAAC,CAAA"}

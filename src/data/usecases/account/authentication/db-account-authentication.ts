@@ -7,24 +7,24 @@ import {
 } from './db-account-authentication-protocols'
 
 export class DatabaseAccountAuthenticationController implements IAuthentication {
+  private accessToken: string = ''
+
   constructor (
-    private readonly readAccount: ISearchAccountByFieldRepository,
+    private readonly accountRepositoryRead: ISearchAccountByFieldRepository,
     private readonly hashComparer: IHashComparer,
     private readonly encrypter: IEncrypter,
-    private readonly updateAccountRepository: IUpdateAccessTokenRepository
+    private readonly accountRepositoryUpdate: IUpdateAccessTokenRepository
   ) {}
 
   async auth (authentication: IAuthenticationModel): Promise<string | null> {
-    const account = await this.readAccount.searchByField({ email: authentication.email })
+    const account = await this.accountRepositoryRead.searchByField({ id: '', email: authentication.email })
 
-    if (account) {
-      const isEqual = await this.hashComparer.compare(authentication.password, account.password)
+    if (account?.enabled) {
+      if (await this.hashComparer.compare(authentication.password, account.personal.password)) {
+        this.accessToken = await this.encrypter.encrypt(account.personal.id)
+        await this.accountRepositoryUpdate.updateAccessToken(account.personal.id, this.accessToken)
 
-      if (isEqual) {
-        const accessToken = await this.encrypter.encrypt(account.id)
-        await this.updateAccountRepository.updateAccessToken(account.id, accessToken)
-
-        return accessToken
+        return this.accessToken
       }
     }
 

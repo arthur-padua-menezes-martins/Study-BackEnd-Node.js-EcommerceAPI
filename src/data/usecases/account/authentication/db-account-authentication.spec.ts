@@ -7,7 +7,7 @@ import {
   IUpdateAccessTokenRepository,
   IAccountModel
 } from './db-account-authentication-protocols'
-import { signInHttpRequestBodyMatchComplete, accountModelDisabled, accountModelEnabled } from './db-account-authentication-utils'
+import { signInHttpRequestBodyMatch, accountModelEnabled } from './db-account-authentication-utils'
 
 const makeSearchAccountByEmailRepository = async (): Promise<ISearchAccountByFieldRepository> => {
   class SearchAccountByFieldRepositoryStub implements ISearchAccountByFieldRepository {
@@ -76,7 +76,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   }
 }
 
-const authentication: IAuthenticationModel = signInHttpRequestBodyMatchComplete
+const authentication: IAuthenticationModel = signInHttpRequestBodyMatch
 
 describe('DatabaseAuthenticationController Usecases', () => {
   test('should call SearchAccountByEmailRepository with correct email <version: 0.0.1>', async () => {
@@ -108,7 +108,7 @@ describe('DatabaseAuthenticationController Usecases', () => {
     const spyOnCompare = jest.spyOn(hashComparerStub, 'compare')
 
     await systemUnderTest.auth(authentication)
-    expect(spyOnCompare).toHaveBeenCalledWith(authentication.password, accountModelEnabled.password)
+    expect(spyOnCompare).toHaveBeenCalledWith(authentication.password, accountModelEnabled.personal.password)
   })
 
   test('should throw if HashComparer throws <version: 0.0.1>', async () => {

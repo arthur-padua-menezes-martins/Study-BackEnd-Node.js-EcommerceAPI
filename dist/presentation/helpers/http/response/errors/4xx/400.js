@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.badRequest = void 0;
 /**
 * the server cannot or will not process the request due to client error
 * @param body

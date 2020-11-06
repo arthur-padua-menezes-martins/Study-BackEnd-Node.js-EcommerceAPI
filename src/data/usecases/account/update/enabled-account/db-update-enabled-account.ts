@@ -5,10 +5,10 @@ import {
 
 export class DatabaseEnabledAccountController implements IUpdateEnabledAccount {
   constructor (
-    private readonly updateAccountRepository: IUpdateEnabledAccountRepository
+    private readonly accountRepositoryUpdate: IUpdateEnabledAccountRepository
   ) {}
 
   async updateEnabled (id: string, status: boolean): Promise<void> {
-    await this.updateAccountRepository.updateEnabled(id, status)
+    await this.accountRepositoryUpdate.updateEnabled(id, status)
   }
 }

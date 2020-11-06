@@ -1,7 +1,7 @@
 /**
 * @interface
 * specific interface to update the accessToken field
-* @method `add`
+* @method `updateAccessToken`
 * update the accessToken value for a given account
 */
 export interface IUpdateAccessTokenRepository {

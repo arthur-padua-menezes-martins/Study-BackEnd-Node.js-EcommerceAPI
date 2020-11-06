@@ -4,12 +4,12 @@ import { makeSignUpController } from '../../factories/user/sign-up-controller-fa
 import { makeSignInController } from '../../factories/user/sign-in-controller-factory'
 
 export default (router: Router): void => {
-  router
-    .post('/sign-up', expressRouteAdapter(
-      makeSignUpController()
-    )).get('/sign-up', expressRouteAdapter(
-      makeSignUpController()
-    ))
+  router.post('/sign-up', expressRouteAdapter(
+    makeSignUpController()
+  ))
+  router.get('/sign-up', expressRouteAdapter(
+    makeSignUpController()
+  ))
 
   router.post('/sign-in', expressRouteAdapter(
     makeSignInController()

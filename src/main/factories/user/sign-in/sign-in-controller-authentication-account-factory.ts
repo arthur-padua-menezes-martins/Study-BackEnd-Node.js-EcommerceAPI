@@ -6,9 +6,9 @@ import { JwtAdapter } from '../../../../infra/criptography/adapter/jwt/jwt-adapt
 import env from '../../../config/env'
 
 const accountRepositoryRead = new AccountMongoRepositoryRead()
-const accountRepositoryUpdate = new AccountMongoRepositoryUpdate()
 const bcryptAdapter = new BcryptAdapter(12)
 const jwtAdapter = new JwtAdapter(env.jwtSecret)
+const accountRepositoryUpdate = new AccountMongoRepositoryUpdate()
 
 export const accountAuthentication = new DatabaseAccountAuthenticationController(
   accountRepositoryRead, bcryptAdapter, jwtAdapter, accountRepositoryUpdate

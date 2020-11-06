@@ -1,10 +1,12 @@
 export interface IAccountModel {
-  [field: string]: string | boolean | object
-  id: string
-  name: string
-  email: string
-  password: string
-  passwordConfirmation: string
+  [field: string]: string | object | boolean
+  personal: {
+    [field: string]: string
+    name: string
+    email: string
+    password: string
+    passwordConfirmation: string
+  }
   address: {
     [field: string]: string
     cep: string
@@ -15,4 +17,5 @@ export interface IAccountModel {
     state: string
   }
   enabled: boolean
+  id: string
 }

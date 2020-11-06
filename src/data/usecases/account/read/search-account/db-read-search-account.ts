@@ -5,12 +5,12 @@ import {
 
 export class DatabaseSearchAccountController implements ISearchAccountByFieldRepository {
   constructor (
-    private readonly searchAccountByFieldRepository: ISearchAccountByFieldRepository
+    private readonly accountRepositoryRead: ISearchAccountByFieldRepository
   ) {}
 
   async searchByField (field: ISearchAccountByFieldModel): Promise<IAccountModel | null> {
-    const account = this.searchAccountByFieldRepository.searchByField(field)
+    const account = await this.accountRepositoryRead.searchByField({ email: '', id: '', ...field })
 
-    return await Promise.resolve(account)
+    return account
   }
 }

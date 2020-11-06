@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ValidationComposite = void 0;
 class ValidationComposite {
     constructor(components) {
         this.types = ['validate fields', 'required fields', 'compare fields', 'verify types'];
