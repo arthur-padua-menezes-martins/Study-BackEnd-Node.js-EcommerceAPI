@@ -1,3 +1,4 @@
+import { Collection } from 'mongodb'
 import { ISearchAccountByFieldRepository, ISearchAccountByFieldRepositoryParams } from '../../../../../data/protocols/repository/account/read/search-account-by-field-repository'
 import {
   IAccountModel,
@@ -8,24 +9,45 @@ export class AccountMongoRepositoryRead implements ISearchAccountByFieldReposito
   private account: IAccountModel | null = null
 
   /**
-  * @param {string} field
+  * @param {ISearchAccountByFieldRepositoryParams} fields
   * field to search for an account
   */
-  async searchByField (field: ISearchAccountByFieldRepositoryParams): Promise<IAccountModel | null> {
-    const accountsCollection = await mongoHelper.getCollection('accounts')
+  public async searchByField (fields: ISearchAccountByFieldRepositoryParams): Promise<IAccountModel | null> {
+    const collection = await mongoHelper.getCollection('accounts')
 
-    if (field.id) {
-      this.account = await accountsCollection.findOne({
-        _id: await mongoHelper.createObjectId(field.id)
-      })
+    const { id } = fields
+    if (id) {
+      this.account = await AccountMongoRepositoryRead.searchById(collection, id)
+    } else if (Object.keys(fields).length === 1) {
+      this.account = await AccountMongoRepositoryRead.searchByOneField(collection, fields)
     } else {
-      for (const key in field) {
-        if (field[key]) {
-          this.account = await accountsCollection.findOne({ [`personal.${key}`]: field[key] })
-        }
-      }
+      this.account = await AccountMongoRepositoryRead.searchByManyFields(collection, fields)
     }
 
     return this.account
+  }
+
+  static async searchById (collection: Collection<any>, id: string): Promise<IAccountModel | null> {
+    return await collection.findOne({
+      _id: await mongoHelper.createObjectId(id)
+    })
+  }
+
+  static async searchByOneField (collection: Collection<any>, fields: object): Promise<IAccountModel | null> {
+    let search: IAccountModel | null = null
+    for (const [key, value] of Object.entries(fields)) {
+      search = await collection.findOne({ [`personal.${key}`]: value })
+    }
+
+    return search
+  }
+
+  static async searchByManyFields (collection: Collection<any>, fields: object): Promise<IAccountModel | null> {
+    let search: object = {}
+    for (const [key, value] of Object.entries(fields)) {
+      search = Object.assign({}, search, { [`personal.${key}`]: value })
+    }
+
+    return await collection.findOne(search)
   }
 }

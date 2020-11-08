@@ -1,3 +1,3 @@
 export * from './validation-composite'
-export * from './regEx/export-all'
-export * from './validations/export-all'
+export { FieldValidation } from './validations/field/field-validation'
+export * from './types/export-all'

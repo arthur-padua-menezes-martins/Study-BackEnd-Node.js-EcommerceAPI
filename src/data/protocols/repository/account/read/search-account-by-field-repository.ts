@@ -16,5 +16,5 @@ export interface ISearchAccountByFieldRepository {
   * @param field
   * key and value to search an account
   */
-  searchByField: (field: ISearchAccountByFieldRepositoryParams) => Promise<IAccountModel | null>
+  searchByField: (fields: ISearchAccountByFieldRepositoryParams) => Promise<IAccountModel | null>
 }

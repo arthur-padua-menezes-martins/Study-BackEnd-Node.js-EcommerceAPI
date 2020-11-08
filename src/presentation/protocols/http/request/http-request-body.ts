@@ -8,6 +8,7 @@ export interface IHttpRequestBody {
         email: string
         password: string
         passwordConfirmation: string
+        cpf: string
       }
       address: {
         [field: string]: string

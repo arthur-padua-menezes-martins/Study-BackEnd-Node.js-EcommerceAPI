@@ -6,5 +6,5 @@ export {
   VerifyTypesValidator
 } from '../../../../helpers/validators/export-all'
 export {
-  makeFieldValidationWithRegEx
-} from '../../field/make-field-validation-with-reg-ex'
+  makeFieldValidation
+} from '../../validations/field/make-field-validation'

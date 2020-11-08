@@ -10,19 +10,12 @@ exports.expressRouteAdapter = (controller) => {
             body: req.body || {}
         };
         const httpResponse = await controller.handle(httpRequest);
-        const httpResponseAssign = Object.assign({}, {
-            json: {
-                statusCode: httpResponse.statusCode,
-                body: httpResponse.body,
-                successMessage: httpResponse.successMessage,
-                errorMessage: httpResponse.errorMessage
-            }
-        });
-        if (httpResponseAssign.json.statusCode === 200) {
-            res.status(httpResponseAssign.json.statusCode).json(httpResponseAssign.json);
+        const response = Object.assign({}, httpResponse);
+        if (response.statusCode === 200) {
+            res.status(response.statusCode).json(httpResponse);
         }
         else {
-            res.status(httpResponseAssign.json.statusCode).json(Object.assign(Object.assign({}, httpResponseAssign.json), { errorMessage: (_a = httpResponseAssign.json.errorMessage) === null || _a === void 0 ? void 0 : _a.message }));
+            res.status(response.statusCode).json(Object.assign(Object.assign({}, response), { errorMessage: (_a = response.errorMessage) === null || _a === void 0 ? void 0 : _a.message, invalidFields: response.invalidFields }));
         }
     };
 };

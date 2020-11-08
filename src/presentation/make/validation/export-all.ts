@@ -1,1 +1,1 @@
-export { makeFieldValidationWithRegEx } from './field/make-field-validation-with-reg-ex'
+export { makeFieldValidation } from './validations/field/make-field-validation'

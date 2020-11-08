@@ -1,12 +1,12 @@
 import {
-  FieldValidationWithRegEx,
+  FieldValidation,
   NameValidatorAdapter,
   EmailValidatorAdapter,
   PasswordValidatorAdapter
-} from './make-field-validation-with-reg-ex-components'
+} from './make-field-validation-components'
 
-export const makeFieldValidationWithRegEx = function (): FieldValidationWithRegEx {
-  return new FieldValidationWithRegEx({
+export const makeFieldValidation = function (): FieldValidation {
+  return new FieldValidation({
     name: (new NameValidatorAdapter()).isValid,
     email: (new EmailValidatorAdapter()).isValid,
     password: (new PasswordValidatorAdapter()).isValid

@@ -1,6 +1,6 @@
 import { IFieldValidation, IFieldValidationOptions, IFieldValidationInputContent } from '../../../../protocols/validation/field/export-all'
 
-export class FieldValidationWithRegEx implements IFieldValidation {
+export class FieldValidation implements IFieldValidation {
   public readonly fieldValidationOptions: any = {}
   public readonly invalidFields: string[] = []
 

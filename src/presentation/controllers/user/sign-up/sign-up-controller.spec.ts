@@ -7,7 +7,6 @@ import {
 } from './sign-up-controller-protocols'
 import {
   validationCompositeStub,
-  makeReadAccount,
   makeWriteAccount,
   makeUpdateAccount,
   makeEmailSender
@@ -21,11 +20,10 @@ interface ISignUpControllerTypes {
   writeAccountStub: IAddAccount
 }
 const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
-  const readAccountStub = await makeReadAccount()
   const writeAccountStub = await makeWriteAccount()
   const updateAccountStub = await makeUpdateAccount()
   const emailSender = await makeEmailSender()
-  const systemUnderTest = new SignUpController(validationCompositeStub, readAccountStub, writeAccountStub, updateAccountStub, emailSender)
+  const systemUnderTest = new SignUpController(validationCompositeStub, writeAccountStub, updateAccountStub, emailSender)
 
   return {
     systemUnderTest,

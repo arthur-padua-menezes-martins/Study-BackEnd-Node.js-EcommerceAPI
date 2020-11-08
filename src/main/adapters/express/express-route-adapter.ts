@@ -10,21 +10,15 @@ export const expressRouteAdapter = (controller: IController) => {
     }
 
     const httpResponse: IHttpResponse = await controller.handle(httpRequest)
-    const httpResponseAssign = Object.assign({}, {
-      json: {
-        statusCode: httpResponse.statusCode,
-        body: httpResponse.body,
-        successMessage: httpResponse.successMessage,
-        errorMessage: httpResponse.errorMessage
-      }
-    })
+    const response = Object.assign({}, httpResponse)
 
-    if (httpResponseAssign.json.statusCode === 200) {
-      res.status(httpResponseAssign.json.statusCode).json(httpResponseAssign.json)
+    if (response.statusCode === 200) {
+      res.status(response.statusCode).json(httpResponse)
     } else {
-      res.status(httpResponseAssign.json.statusCode).json({
-        ...httpResponseAssign.json,
-        errorMessage: httpResponseAssign.json.errorMessage?.message
+      res.status(response.statusCode).json({
+        ...response,
+        errorMessage: response.errorMessage?.message,
+        invalidFields: response.invalidFields
       })
     }
   }

@@ -1,6 +1,5 @@
 import { IController, SignUpController } from './import-all'
-import { accountValidation } from './geral/account-validation-factory'
-import { readAccount } from './sign-up/sign-up-controller-search-account-by-fields-factory'
+import { accountValidation } from './sign-up/sign-up-controller-account-validation-factory'
 import { writeAccount } from './sign-up/sign-up-controller-add-account-factory'
 import { updateAccount } from './sign-up/sign-up-controller-update-enabled-account-factory'
 import { emailSender } from './sign-up/sign-up-controller-email-sender-factory'
@@ -10,7 +9,6 @@ export const makeSignUpController = (): IController => {
   return makeLogErrorControllerDecorator(
     new SignUpController(
       accountValidation,
-      readAccount,
       writeAccount,
       updateAccount,
       emailSender

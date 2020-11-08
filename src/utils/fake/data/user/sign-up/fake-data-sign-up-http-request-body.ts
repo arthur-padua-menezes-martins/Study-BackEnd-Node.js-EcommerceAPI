@@ -1,23 +1,24 @@
 import { IHttpRequestBody } from '../../../../../presentation/protocols/http/request/http-request-body'
 
-export const signUpHttpRequestBodyFields: string[] = ['name', 'email', 'password', 'passwordConfirmation']
+export const signUpHttpRequestBodyFields: string[] = ['name', 'email', 'password', 'passwordConfirmation', 'cpf']
 
 export const signUpHttpRequestBodyAddressFields: string[] = ['cep', 'street', 'number', 'neighborhood', 'city', 'state']
 
 const signUpHttpRequestBodyMatchData: any = {
   personal: {
-    name: 'name lastName' as string,
-    email: 'arthur.software.developer@gmail.com' as string,
-    password: 'password123' as string,
-    passwordConfirmation: 'password123' as string
+    name: 'name lastName',
+    email: 'arthur.software.developer@gmail.com',
+    password: 'password123',
+    passwordConfirmation: 'password123',
+    cpf: '624.804.443-09'
   },
   address: {
-    cep: '60741-025' as string,
-    street: 'Rua Dr. Justa Araújo' as string,
-    number: '185' as string,
-    neighborhood: 'Serrinha' as string,
-    city: 'Fortaleza' as string,
-    state: 'CE' as string
+    cep: '60741-025',
+    street: 'Rua Dr. Justa Araújo',
+    number: '185',
+    neighborhood: 'Serrinha',
+    city: 'Fortaleza',
+    state: 'CE'
   }
 }
 export const signUpHttpRequestBodyMatch: IHttpRequestBody['user']['informations'] = {
@@ -26,51 +27,54 @@ export const signUpHttpRequestBodyMatch: IHttpRequestBody['user']['informations'
 
 export const signUpHttpRequestBodyNotMatch: IHttpRequestBody['user']['informations'] = {
   personal: {
-    name: 'name' as string,
-    email: '$#@!%¨&*()_+[]{}`^?:;/~@' as string,
-    password: 'password' as string,
-    passwordConfirmation: 'password' as string
+    name: 'name',
+    email: '$#@!%¨&*()_+[]{}`^?:;/~@',
+    password: 'password',
+    passwordConfirmation: 'password',
+    cpf: '624.804.443-00'
   },
   address: {
-    cep: '00000-000' as string,
-    street: 'Rua Dr. Justa Araújo' as string,
-    number: '185' as string,
-    neighborhood: 'Serrinha' as string,
-    city: 'Fortaleza' as string,
-    state: 'YZ' as string
+    cep: '00000-000',
+    street: 'Rua Dr. Justa Araújo',
+    number: '185',
+    neighborhood: 'Serrinha',
+    city: 'Fortaleza',
+    state: 'YZ'
   }
 }
 
 export const signUpHttpRequestBodyMissingField: any = {
   personal: {
-    email: 'arthur.software.developer@gmail.com' as string,
-    password: 'password' as string,
-    passwordConfirmation: 'password' as string
+    email: 'arthur.software.developer@gmail.com',
+    password: 'password',
+    passwordConfirmation: 'password',
+    cpf: '624.804.443-09'
   },
   address: {
-    cep: '60741-025' as string,
-    street: 'Rua Dr. Justa Araújo' as string,
-    number: '185' as string,
-    neighborhood: 'Serrinha' as string,
-    city: 'Fortaleza' as string,
-    state: 'CE' as string
+    cep: '60741-025',
+    street: 'Rua Dr. Justa Araújo',
+    number: '185',
+    neighborhood: 'Serrinha',
+    city: 'Fortaleza',
+    state: 'CE'
   }
 }
 
 export const signUpHttpRequestBodyInvalidPasswordConfirmation: any = {
   personal: {
-    name: 'name lastName' as string,
-    email: 'arthur.software.developer@gmail.com' as string,
-    password: 'password' as string,
-    passwordConfirmation: 'pass' as string
+    name: 'name lastName',
+    email: 'arthur.software.developer@gmail.com',
+    password: 'password',
+    passwordConfirmation: 'pass',
+    cpf: '624.804.443-09'
   },
   address: {
-    cep: '60741-025' as string,
-    street: 'Rua Dr. Justa Araújo' as string,
-    number: '185' as string,
-    neighborhood: 'Serrinha' as string,
-    city: 'Fortaleza' as string,
-    state: 'CE' as string
+    cep: '60741-025',
+    street: 'Rua Dr. Justa Araújo',
+    number: '185',
+    neighborhood: 'Serrinha',
+    city: 'Fortaleza',
+    state: 'CE'
   }
 }
 

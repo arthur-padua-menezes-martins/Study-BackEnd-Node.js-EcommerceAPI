@@ -1,12 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VerifyTypesValidator = void 0;
 class VerifyTypesValidator {
+    constructor() {
+        this.theTypeOfThisIsNotValid = [];
+    }
     async validate(input) {
-        const { checkThisType, checkTheTypeOfThis } = input;
-        return Object.keys(checkTheTypeOfThis).map((key) => {
-            return typeof checkTheTypeOfThis[key] === typeof checkThisType;
+        const { checkTheTypeOfThis, checkThisType } = input;
+        Object.keys(checkTheTypeOfThis).map((key) => {
+            (typeof checkTheTypeOfThis[key] !== typeof checkThisType) &&
+                this.theTypeOfThisIsNotValid.push(checkTheTypeOfThis);
         });
+        return this.theTypeOfThisIsNotValid;
     }
 }
 exports.VerifyTypesValidator = VerifyTypesValidator;

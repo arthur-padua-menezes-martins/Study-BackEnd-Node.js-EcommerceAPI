@@ -12,7 +12,6 @@ coverage
 # production
 build
 docker
-dist
 /dist
 
 # misc

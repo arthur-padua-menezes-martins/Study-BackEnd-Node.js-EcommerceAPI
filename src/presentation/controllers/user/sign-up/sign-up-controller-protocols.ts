@@ -5,7 +5,6 @@ export {
   IValidation
 } from '../../../protocols/validation/validation'
 export {
-  ISearchAccountByField,
   IAddAccount, IAddAccountModel,
   IUpdateEnabledAccount
 } from '../../../../domain/usecases/account/export-all'

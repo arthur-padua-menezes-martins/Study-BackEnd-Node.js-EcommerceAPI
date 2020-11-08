@@ -1,8 +1,7 @@
 import {
-  IController, IHttpRequest,
+  IController, IHttpRequest, IHttpResponse,
   IValidation,
-  ISearchAccountByField,
-  IAddAccount, IAccountModel,
+  IAddAccount,
   IUpdateEnabledAccount,
   ISendEmailSignUp
 } from './sign-up-controller-protocols'
@@ -17,15 +16,19 @@ import {
 * validates the insertion of a new account in the database
 */
 export class SignUpController implements IController {
-  public readonly content: {
+  public handleValidate: Function
+
+  public generateTypes: Generator<string>
+
+  public content: {
     fields: string[]
     checkThisType: string
+    validationTypes: string[]
   } = {
-    fields: [],
-    checkThisType: ''
+    fields: signUpHttpRequestBodyFields.concat(signUpHttpRequestBodyAddressFields),
+    checkThisType: 'string',
+    validationTypes: ['required fields', 'verify types', 'compare fields', 'validate fields']
   }
-
-  private account: IAccountModel | null = null
 
   /**
   * @param {IValidation} validationComposite
@@ -41,85 +44,76 @@ export class SignUpController implements IController {
   */
   constructor (
     private readonly validationComposite: IValidation,
-    private readonly readAccount: ISearchAccountByField,
     private readonly writeAccount: IAddAccount,
     private readonly updateAccount: IUpdateEnabledAccount,
     private readonly emailSender: ISendEmailSignUp
-  ) {
-    Object.defineProperties(this.content, {
-      fields: {
-        value: signUpHttpRequestBodyFields.concat(signUpHttpRequestBodyAddressFields),
-        enumerable: true,
-        writable: false,
-        configurable: false
-      },
-      checkThisType: {
-        value: 'string',
-        enumerable: true,
-        writable: false,
-        configurable: false
-      }
-    })
-  }
+  ) {}
 
-  async handle (httpRequest: IHttpRequest): Promise<any> {
+  async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       if (!httpRequest.body?.user?.informations && httpRequest.query?.id) {
         const { id } = httpRequest.query
-
         await this.updateAccount.updateEnabled(id, true)
-        this.account = await this.readAccount.searchByField({ id: id })
 
-        if (this.account?.enabled) {
-          return created()
+        return created()
+      } else if (httpRequest.body?.user?.informations) {
+        let { body, generateTypes, validation } = await this.defineProperties(httpRequest)
+        do {
+          validation.content = await this.handleValidate({ type: generateTypes.value })
+
+          if (validation.content.length > 0) {
+            if (generateTypes.value === this.content.validationTypes[0]) {
+              validation.error = badRequest(undefined, undefined, new MissingParamError(validation.content.join(' ')), validation.content)
+            } else {
+              validation.error = badRequest(undefined, undefined, new InvalidParamError(validation.content.join(' ')), validation.content)
+            }
+
+            break
+          }
+
+          generateTypes = this.generateTypes.next()
+        } while (!(generateTypes.done))
+
+        if (validation.error) {
+          return validation.error
         }
 
-        return unprocessable()
-      } else {
-        const { body } = await this.defineProperties(httpRequest)
-        const handleValidate = await this.handleValidate(body)
-
-        const missingFields: string[] = await handleValidate({ type: 'required fields' })
-        if (missingFields.length > 0) {
-          return badRequest({}, '', new MissingParamError(missingFields.join(' ')), missingFields)
-        }
-
-        const theTypeOfThisIsValid: boolean[] = await handleValidate({ type: 'verify types' })
-        if (!theTypeOfThisIsValid.every((verify: boolean) => verify)) {
-          return badRequest({}, '', new InvalidParamError())
-        }
-
-        const isEqual: boolean = await handleValidate({ type: 'compare fields' })
-        if (!isEqual) {
-          return badRequest({}, '', new InvalidParamError('passwordConfirmation'))
-        }
-
-        const invalidFields: string[] = await handleValidate({ type: 'validate fields' })
-        if (invalidFields.length > 0) {
-          return badRequest({}, '', new InvalidParamError(invalidFields.join(' ')), invalidFields)
-        }
-
-        this.account = await this.readAccount.searchByField({ email: body.personal.email })
-        if (this.account?.enabled) {
-          return unprocessable()
-        }
-
-        this.account = await this.writeAccount.add({
+        const account = await this.writeAccount.add({
           personal: body.personal,
           address: body.address
         })
+        if (!account) {
+          return unprocessable()
+        }
 
-        await this.handleSendEmail(this.account.id, body.personal.name, body.personal.email)
+        await this.handleSendEmail(account.id, body.personal.name, body.personal.email)
 
         return accepted()
       }
+
+      return unprocessable()
     } catch (error) {
       return serverError(error)
     }
   }
 
-  async handleValidate (body: any): Promise<Function> {
-    return async (content: { type: string }) => {
+  async handleSendEmail (signUpConfirmationId: string, name: string, email: string): Promise<void> {
+    await this.emailSender.signUpConfirmation(signUpConfirmationId, name, email)
+  }
+
+  async defineProperties (httpRequest: IHttpRequest): Promise<{
+    body: IHttpRequest['body']['user']['informations']
+    generateTypes: IteratorResult<string, any>
+    validation: {
+      content: string[]
+      error: IHttpResponse | null
+    }
+  }> {
+    const { address, personal } = httpRequest.body.user.informations
+    const body = { personal: personal, address: address }
+
+    this.generateTypes = generateTypes(this.content.validationTypes, 0)
+    this.handleValidate = async (content: { type: string }) => {
       return await this.validationComposite.validate({
         type: content.type,
         fields: this.content.fields,
@@ -130,19 +124,21 @@ export class SignUpController implements IController {
         checkTheTypeOfThis: Object.assign({}, { ...body.personal }, { ...body.address })
       })
     }
-  }
-
-  async handleSendEmail (signUpConfirmationId: string, name: string, email: string): Promise<void> {
-    await this.emailSender.signUpConfirmation(signUpConfirmationId, name, email)
-  }
-
-  async defineProperties (httpRequest: IHttpRequest): Promise<{
-    body: IHttpRequest['body']['user']['informations']
-  }> {
-    const { body: { user: { informations: { address, personal } } } } = Object.assign({}, httpRequest)
 
     return {
-      body: Object.assign({}, { personal: personal }, { address: address }) || {}
+      body: body,
+      generateTypes: this.generateTypes.next(),
+      validation: {
+        content: [],
+        error: null
+      }
+    }
+
+    function * generateTypes (types: string[], index: number): Generator<string> {
+      while (index < types.length) {
+        yield types[index]
+        index++
+      }
     }
   }
 }
