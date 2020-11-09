@@ -12,7 +12,7 @@ import {
   makeEmailSender
 } from './sign-up-controller-make'
 import {
-  signUpHttpRequestBodyMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation
+  fakeDataSignUpHttpRequestBodyMatch, fakeDataSignUpHttpRequestBodyMissingField, fakeDataSignUpHttpRequestBodyInvalidPasswordConfirmation
 } from './sign-up-controller-helpers'
 
 interface ISignUpControllerTypes {
@@ -35,7 +35,7 @@ const httpRequest: any = {
   params: {},
   body: {
     user: {
-      informations: signUpHttpRequestBodyMatch
+      informations: fakeDataSignUpHttpRequestBodyMatch
     }
   },
   query: {}
@@ -46,9 +46,9 @@ let httpResponse: IHttpResponse = {
 }
 
 describe('SignUpController', () => {
-  test('returns from httpResponse: "{statusCode: 400}" if any required fields belonging to httpRequestBody do not exist <version 0.0.3>', async () => {
+  test('returns from httpResponse: "{statusCode: 400}" if any required_fields belonging to httpRequestBody do not exist <version 0.0.3>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    httpRequest.body.user.informations = signUpHttpRequestBodyMissingField
+    httpRequest.body.user.informations = fakeDataSignUpHttpRequestBodyMissingField
 
     httpResponse = await systemUnderTest.handle(httpRequest)
 
@@ -58,7 +58,7 @@ describe('SignUpController', () => {
 
   test('returns from httpResponse "{status Code: 400}" if the password confirmation does not match the password <version 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    httpRequest.body.user.informations = signUpHttpRequestBodyInvalidPasswordConfirmation
+    httpRequest.body.user.informations = fakeDataSignUpHttpRequestBodyInvalidPasswordConfirmation
 
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
@@ -67,7 +67,7 @@ describe('SignUpController', () => {
 
   test('returns from httpResponse "{status Code: 500}" if AddAccount throw error <version 0.0.1>', async () => {
     const { systemUnderTest, writeAccountStub } = await makeSystemUnderTest()
-    httpRequest.body.user.informations = signUpHttpRequestBodyMatch
+    httpRequest.body.user.informations = fakeDataSignUpHttpRequestBodyMatch
 
     jest.spyOn(writeAccountStub, 'add').mockImplementationOnce(async () => {
       throw new Error()
@@ -85,7 +85,7 @@ describe('SignUpController', () => {
     const spyOnAdd = jest.spyOn(writeAccountStub, 'add')
 
     await systemUnderTest.handle(httpRequest)
-    expect(spyOnAdd).toHaveBeenCalledWith(signUpHttpRequestBodyMatch)
+    expect(spyOnAdd).toHaveBeenCalledWith(fakeDataSignUpHttpRequestBodyMatch)
   })
 
   test('returns from httpResponse "{status Code: 202}" if valid information is sent to AddAccount <version 0.0.2>', async () => {

@@ -1,8 +1,8 @@
 export {
   validationCompositeStub
-} from '../../../make/validation/composite/user/make-validation-composite'
+} from '../../../../data/make/validation/composite/user/make-validation-composite'
 export {
   makeWriteAccount,
   makeUpdateAccount,
   makeEmailSender
-} from '../../../make/export-all'
+} from '../../../../data/make/export-all'

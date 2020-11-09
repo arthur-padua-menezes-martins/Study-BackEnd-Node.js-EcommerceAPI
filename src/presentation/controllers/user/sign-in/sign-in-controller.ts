@@ -4,13 +4,22 @@ import {
 } from './sign-in-controller-protocols'
 import {
   SuperClassSignInAndSignUpController
-} from '../super-class/sign-in-and-sign-up/super-class-sign-in-and-sign-up-controller'
+} from '../super/super-class-controller'
 import {
   MissingParamError, InvalidParamError,
   ok, badRequest, unauthorized, serverError,
   fakeDataSignInHttpRequestBodyFields
 } from './sign-in-controller-helpers'
 
+interface IDefineProperties {
+  personal: IHttpRequest['body']['user']['informations']['personal']
+  generateTypes: Generator<string, any, unknown>
+  generatedType: IteratorResult<string, any>
+  validation: {
+    content: string[]
+    error: IHttpResponse | null
+  }
+}
 /**
 * @implements {Controller}
 *
@@ -33,7 +42,7 @@ export class SignInController extends SuperClassSignInAndSignUpController implem
     this.content = {
       fields: fakeDataSignInHttpRequestBodyFields,
       checkThisType: 'string',
-      validationTypes: ['required fields', 'verify types', 'validate fields']
+      validationTypes: ['required_fields', 'verify_types', 'validate_fields']
     }
   }
 
@@ -77,15 +86,7 @@ export class SignInController extends SuperClassSignInAndSignUpController implem
     }
   }
 
-  async defineProperties (httpRequest: IHttpRequest): Promise<{
-    personal: IHttpRequest['body']['user']['informations']['personal']
-    generateTypes: Generator<string, any, unknown>
-    generatedType: IteratorResult<string, any>
-    validation: {
-      content: string[]
-      error: IHttpResponse | null
-    }
-  }> {
+  async defineProperties (httpRequest: IHttpRequest): Promise<IDefineProperties> {
     const { body: { user: { informations: { personal } } } } = httpRequest
     const generateTypes: Generator<string> = (this.generateTypes(this.content.validationTypes, 0))()
 

@@ -23,6 +23,9 @@ export interface IHttpRequestBody {
   }
   survey: {
     question: string
-    answers: any
+    answers: [{
+      image: string
+      answer: string
+    }]
   }
 }

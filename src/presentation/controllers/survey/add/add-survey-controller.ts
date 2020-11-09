@@ -1,4 +1,7 @@
 import {
+  SuperClassAddSurveyController
+} from '../super/super-class-controller'
+import {
   IController,
   IHttpRequest, IHttpResponse,
   IValidation,
@@ -6,12 +9,20 @@ import {
 } from './add-survey-controller-protocols'
 import {
   MissingParamError,
-  badRequest, serverError
+  accepted, badRequest, serverError
 } from './add-survey-controller-helpers'
 
-export class AddSurveyController implements IController {
-  private readonly validate: any = {}
-
+interface IDefineProperties {
+  answers: IHttpRequest['body']['survey']['answers']
+  question: IHttpRequest['body']['survey']['question']
+  generateTypes: Generator<string, any, unknown>
+  generatedType: IteratorResult<string, any>
+  validation: {
+    content: string[]
+    error: IHttpResponse | null
+  }
+}
+export class AddSurveyController extends SuperClassAddSurveyController implements IController {
   /**
   * @param {ValidationComposite} validationComposite
   * implementation of the validation
@@ -22,35 +33,64 @@ export class AddSurveyController implements IController {
     private readonly validationComposite: IValidation,
     private readonly writeSurvey: IAddSurvey
   ) {
+    super()
 
+    this.content = {
+      validationTypes: ['']
+    }
   }
 
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      const { body } = httpRequest
-      this.validate.body = body
+      let { answers, question, generateTypes, generatedType, validation } = await this.defineProperties(httpRequest)
 
-      const missingFields: string[] = await this.handleValidate({ type: '' })
-      if (missingFields.length > 0) {
-        return badRequest({}, '', new MissingParamError(missingFields.join(' ')))
+      do {
+        validation.content = await this.handleValidate({ type: generatedType.value })
+
+        if (validation.content.length > 0) {
+          validation.error = badRequest(undefined, undefined, new MissingParamError(validation.content.join(' ')), validation.content)
+
+          break
+        }
+
+        generatedType = generateTypes.next()
+      } while (!(generatedType.done))
+
+      if (validation.error) {
+        return validation.error
       }
 
-      const { question, answers } = body
       await this.writeSurvey.add({
         question,
         answers
       })
 
-      return badRequest()
+      return accepted()
     } catch (error) {
       return serverError(error)
     }
   }
 
-  async handleValidate (content: {type: string}): Promise<any[]> {
-    return await this.validationComposite.validate({
-      type: content.type,
-      body: this.validate.body
-    })
+  async defineProperties (httpRequest: IHttpRequest): Promise<IDefineProperties> {
+    const { answers, question } = httpRequest.body.survey
+    const generateTypes: Generator<string> = (this.generateTypes(this.content.validationTypes, 0))()
+
+    this.handleValidate = async (content: { type: string }) => {
+      return await this.validationComposite.validate({
+        type: content.type,
+        body: { ...answers, question }
+      })
+    }
+
+    return {
+      answers,
+      question,
+      generateTypes: generateTypes,
+      generatedType: generateTypes.next(),
+      validation: {
+        content: [],
+        error: null
+      }
+    }
   }
 }

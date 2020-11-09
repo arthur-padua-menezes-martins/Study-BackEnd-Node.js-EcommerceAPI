@@ -6,7 +6,7 @@ export {
   created, accepted, badRequest, unauthorized, unprocessable, serverError
 } from '../../../helpers/http/response/export-all'
 export {
-  signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields, signUpHttpRequestBodyMatch, signUpHttpRequestBodyMissingField, signUpHttpRequestBodyInvalidPasswordConfirmation
+  fakeDataSignUpHttpRequestBodyFields, fakeDataSignUpHttpRequestBodyAddressFields, fakeDataSignUpHttpRequestBodyMatch, fakeDataSignUpHttpRequestBodyMissingField, fakeDataSignUpHttpRequestBodyInvalidPasswordConfirmation
 } from '../../../../utils/fake/data/user/sign-up/fake-data-sign-up-http-request-body'
 export {
   accountModelDisabled

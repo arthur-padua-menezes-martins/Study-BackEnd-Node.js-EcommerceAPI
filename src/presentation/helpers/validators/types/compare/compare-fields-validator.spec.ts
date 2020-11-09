@@ -18,27 +18,36 @@ const makeSystemUnderTest = async (): Promise<ICompareFieldsValidatorTypes> => {
 }
 
 describe('CompareFieldsValidator', () => {
-  test('', async () => {
+  test('returns error if validation throws <version: 0.0.1>', async () => {
     const { compareFieldsValidator, input } = await makeSystemUnderTest()
 
-    jest.spyOn(compareFieldsValidator, 'validate').mockReturnValue(Promise.resolve(new Error()))
+    jest.spyOn(compareFieldsValidator, 'validate').mockImplementationOnce(async () => {
+      throw new Error()
+    })
 
-    expect((await compareFieldsValidator.validate(input)) instanceof Error).toBe(true)
+    await expect(compareFieldsValidator.validate(input)).rejects.toThrow()
   })
 
-  test('returns true if validation success <version: 0.0.1>', async () => {
+  test('should call validation with correct values <version: 0.0.1>', async () => {
     const { compareFieldsValidator, input } = await makeSystemUnderTest()
 
-    expect(await compareFieldsValidator.validate(input)).toBe(true)
+    const spyOnValidate = jest.spyOn(compareFieldsValidator, 'validate')
+
+    await compareFieldsValidator.validate(input)
+    expect(spyOnValidate).toHaveBeenCalledWith(input)
   })
 
-  test('returns false if validation fails <version: 0.0.1>', async () => {
+  test('returns an not empty if validation fails <version: 0.0.1>', async () => {
     const { compareFieldsValidator, input } = await makeSystemUnderTest()
 
-    jest.spyOn(compareFieldsValidator, 'validate').mockReturnValue(Promise.resolve(false))
+    expect(await compareFieldsValidator.validate({
+      ...input, withThis: 'another_value'
+    })).toEqual([''])
+  })
 
-    expect(await compareFieldsValidator.validate(
-      Object.assign({}, { ...input, withThis: 'another_value' })
-    )).toBe(false)
+  test('returns an empty array if validation success <version: 0.0.1>', async () => {
+    const { compareFieldsValidator, input } = await makeSystemUnderTest()
+
+    expect(await compareFieldsValidator.validate(input)).toEqual([])
   })
 })

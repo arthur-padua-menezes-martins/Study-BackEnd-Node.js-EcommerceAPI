@@ -15,7 +15,7 @@ interface IValidationCompositeParams {
   withThis?: string
 }
 export class ValidationComposite implements IValidation {
-  private readonly types: string[] = ['validate fields', 'required fields', 'compare fields', 'verify types']
+  private readonly types: string[] = ['validate_fields', 'required_fields', 'compare_fields', 'verify_types']
   private readonly validateFields: any
   private readonly requiredFields: any
   private readonly compareFields: any
@@ -23,13 +23,13 @@ export class ValidationComposite implements IValidation {
 
   constructor (components: IValidationCompositeComponents[]) {
     for (const component of components) {
-      if (component.type === 'validate fields') {
+      if (component.type === 'validate_fields') {
         this.validateFields = component.content
-      } else if (component.type === 'required fields') {
+      } else if (component.type === 'required_fields') {
         this.requiredFields = component.content
-      } else if (component.type === 'compare fields') {
+      } else if (component.type === 'compare_fields') {
         this.compareFields = component.content
-      } else if (component.type === 'verify types') {
+      } else if (component.type === 'verify_types') {
         this.verifyTypes = component.content
       }
     }
@@ -38,13 +38,13 @@ export class ValidationComposite implements IValidation {
   async validate (input: IValidationCompositeParams): Promise<any> {
     const { type } = input
 
-    if (type === 'validate fields') {
+    if (type === 'validate_fields') {
       return this.validateFields.validate(input)
-    } else if (type === 'required fields') {
+    } else if (type === 'required_fields') {
       return this.requiredFields.validate(input)
-    } else if (type === 'compare fields') {
+    } else if (type === 'compare_fields') {
       return this.compareFields.validate(input)
-    } else if (type === 'verify types') {
+    } else if (type === 'verify_types') {
       return this.verifyTypes.validate(input)
     }
   }

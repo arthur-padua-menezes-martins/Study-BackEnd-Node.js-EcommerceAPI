@@ -16,8 +16,8 @@ export const makeFieldValidation = (): FieldValidation => {
 }
 
 export const accountValidation = new ValidationComposite([
-  { content: new ValidateFieldsValidator(makeFieldValidation()), type: 'validate fields' },
-  { content: new RequiredFieldsValidator(), type: 'required fields' },
-  { content: new VerifyTypesValidator(), type: 'verify types' },
-  { content: new CompareFieldsValidator(), type: 'compare fields' }
+  { content: new ValidateFieldsValidator(makeFieldValidation()), type: 'validate_fields' },
+  { content: new RequiredFieldsValidator(), type: 'required_fields' },
+  { content: new VerifyTypesValidator(), type: 'verify_types' },
+  { content: new CompareFieldsValidator(), type: 'compare_fields' }
 ])

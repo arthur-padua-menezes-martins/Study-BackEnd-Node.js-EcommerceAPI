@@ -1,7 +1,7 @@
 export {
   IAccountModel,
-  accountModelDisabled
-} from '../import-all'
+  accountModelEnabled
+} from '../../import-all'
 export {
   ISearchAccountByField
 } from '../../../../domain/usecases/account/export-all'

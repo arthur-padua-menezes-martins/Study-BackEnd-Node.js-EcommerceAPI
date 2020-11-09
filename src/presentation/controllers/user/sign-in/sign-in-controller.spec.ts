@@ -42,19 +42,20 @@ let httpResponse: IHttpResponse = {
 }
 
 describe('SignInController', () => {
-  test('returns from httpResponse: "{statusCode: 400}" if any required fields belonging to httpRequest.body do not exist <version 0.0.1>', async () => {
+  test('returns from httpResponse: "{statusCode: 400}" if any required_fields belonging to httpRequest.body do not exist <version 0.0.1>', async () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
-    const SpyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
+    httpRequest.body.user.informations.personal = fakeDataSignInHttpRequestBodyMissingField
+    const { personal } = httpRequest.body.user.informations
 
-    httpRequest.body.user.informations = await fakeDataSignInHttpRequestBodyMissingField
+    const SpyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
 
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(SpyOnValidate).toHaveBeenCalledWith(({
-      type: 'required fields',
+      type: 'required_fields',
       fields: fakeDataSignInHttpRequestBodyFields,
-      body: httpRequest.body,
+      body: personal,
       checkThisType: 'string',
-      checkTheTypeOfThis: httpRequest.body
+      checkTheTypeOfThis: personal
     }))
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.errorMessage?.name).toBe('MissingParamError')
@@ -62,17 +63,18 @@ describe('SignInController', () => {
 
   test('returns from httpResponse "{status Code: 400}" if any fields do not match validation <version 0.0.1>', async () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
-    const SpyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
+    httpRequest.body.user.informations.personal = fakeDataSignInHttpRequestBodyNotMatch
+    const { personal } = httpRequest.body.user.informations
 
-    httpRequest.body.user.informations = await fakeDataSignInHttpRequestBodyNotMatch
+    const SpyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
 
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(SpyOnValidate).toHaveBeenCalledWith(({
-      type: 'validate fields',
+      type: 'validate_fields',
       fields: fakeDataSignInHttpRequestBodyFields,
-      body: httpRequest.body,
+      body: personal,
       checkThisType: 'string',
-      checkTheTypeOfThis: httpRequest.body
+      checkTheTypeOfThis: personal
     }))
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.errorMessage?.name).toBe('InvalidParamError')
@@ -80,6 +82,7 @@ describe('SignInController', () => {
 
   test('returns from httpResponse "{status Code: 500}" if sending data to validate any field generates an error <version 0.0.1>', async () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
+
     jest.spyOn(validationCompositeStub, 'validate').mockImplementationOnce(() => {
       throw new Error()
     })

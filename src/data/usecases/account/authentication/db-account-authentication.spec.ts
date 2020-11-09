@@ -1,106 +1,81 @@
-import { DatabaseAccountAuthenticationController } from './db-account-authentication'
 import {
-  ISearchAccountByFieldRepository, ISearchAccountByFieldModel,
+  DatabaseAccountAuthenticationController
+} from './db-account-authentication'
+import {
+  makeReadAccount,
+  makeHasherCryptography,
+  makeEncrypterCryptography,
+  makeUpdateAccount
+} from './db-account-authentication-make'
+import {
+  ISearchAccountByFieldRepository,
   IAuthenticationModel,
   IHashComparer,
   IEncrypter,
-  IUpdateAccessTokenRepository,
-  IAccountModel
+  IUpdateAccessTokenRepository
 } from './db-account-authentication-protocols'
 import { fakeDataSignInHttpRequestBodyMatch, accountModelEnabled } from './db-account-authentication-utils'
 
-const makeSearchAccountByEmailRepository = async (): Promise<ISearchAccountByFieldRepository> => {
-  class SearchAccountByFieldRepositoryStub implements ISearchAccountByFieldRepository {
-    async searchByField (field: ISearchAccountByFieldModel): Promise<IAccountModel> {
-      const account: IAccountModel = accountModelEnabled
-      return await Promise.resolve(account)
-    }
-  }
-
-  return new SearchAccountByFieldRepositoryStub()
-}
-
-const makeHashComparer = async (): Promise<IHashComparer> => {
-  class HashComparerStub implements IHashComparer {
-    async compare (password: string, passwordHash: string): Promise<boolean> {
-      return await Promise.resolve(true)
-    }
-  }
-
-  return new HashComparerStub()
-}
-
-const accessToken = 'any_token'
-const makeEncrypterGenerator = async (): Promise<IEncrypter> => {
-  class EncrypterStub implements IEncrypter {
-    async encrypt (value: string): Promise<string> {
-      return await Promise.resolve(accessToken)
-    }
-  }
-
-  return new EncrypterStub()
-}
-
-const makeUpdateAccessTokenRepository = async (): Promise<IUpdateAccessTokenRepository> => {
-  class UpdateAccessTokenRepositoryStub implements IUpdateAccessTokenRepository {
-    async updateAccessToken (id: string, accessToken: string): Promise<void> {
-
-    }
-  }
-
-  return new UpdateAccessTokenRepositoryStub()
-}
-
 interface ISystemUnderTestTypes {
   systemUnderTest: DatabaseAccountAuthenticationController
-  SearchAccountByEmailRepositoryStub: ISearchAccountByFieldRepository
   hashComparerStub: IHashComparer
   encrypterStub: IEncrypter
-  updateAccessTokenRepositoryStub: IUpdateAccessTokenRepository
+  readAccountStub: ISearchAccountByFieldRepository
+  updateAccountStub: IUpdateAccessTokenRepository
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
-  const SearchAccountByEmailRepositoryStub = await makeSearchAccountByEmailRepository()
-  const hashComparerStub = await makeHashComparer()
-  const encrypterStub = await makeEncrypterGenerator()
-  const updateAccessTokenRepositoryStub = await makeUpdateAccessTokenRepository()
+  const readAccountStub = await makeReadAccount()
+  const hashComparerStub = await makeHasherCryptography()
+  const encrypterStub = await makeEncrypterCryptography()
+  const updateAccountStub = await makeUpdateAccount()
+
   const systemUnderTest = new DatabaseAccountAuthenticationController(
-    SearchAccountByEmailRepositoryStub, hashComparerStub, encrypterStub, updateAccessTokenRepositoryStub
+    readAccountStub, hashComparerStub, encrypterStub, updateAccountStub
   )
 
   return {
     systemUnderTest,
-    SearchAccountByEmailRepositoryStub,
+    readAccountStub,
     hashComparerStub,
     encrypterStub,
-    updateAccessTokenRepositoryStub
+    updateAccountStub
   }
 }
 
 const authentication: IAuthenticationModel = fakeDataSignInHttpRequestBodyMatch
+const accessToken: string = 'any_token'
 
 describe('DatabaseAuthenticationController Usecases', () => {
-  test('should call SearchAccountByEmailRepository with correct email <version: 0.0.1>', async () => {
-    const { systemUnderTest, SearchAccountByEmailRepositoryStub } = await makeSystemUnderTest()
-    const spyOnSearchByEmail = jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByField')
-
-    await systemUnderTest.auth(authentication)
-    expect(spyOnSearchByEmail).toHaveBeenCalledWith({ email: authentication.email })
-  })
-
-  test('should throw if SearchAccountByEmailRepository throws <version: 0.0.1>', async () => {
-    const { systemUnderTest, SearchAccountByEmailRepositoryStub } = await makeSystemUnderTest()
-    jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByField').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+  test('should throw if SearchAccountByFieldRepository throws <version: 0.0.1>', async () => {
+    const { systemUnderTest, readAccountStub } = await makeSystemUnderTest()
+    jest.spyOn(readAccountStub, 'searchByField').mockImplementationOnce(async () => {
+      throw new Error()
+    })
 
     const authorization = systemUnderTest.auth(authentication)
     await expect(authorization).rejects.toThrow()
   })
 
-  test('should return an null if SearchAccountByEmailRepository returns null <version: 0.0.1>', async () => {
-    const { systemUnderTest, SearchAccountByEmailRepositoryStub } = await makeSystemUnderTest()
-    jest.spyOn(SearchAccountByEmailRepositoryStub, 'searchByField').mockReturnValueOnce(Promise.resolve(null))
+  test('should return an null if SearchAccountByFieldRepository returns null <version: 0.0.1>', async () => {
+    const { systemUnderTest, readAccountStub } = await makeSystemUnderTest()
+    jest.spyOn(readAccountStub, 'searchByField').mockReturnValueOnce(Promise.resolve(null))
 
-    const authorization = await systemUnderTest.auth(authentication)
+    const authorization = await systemUnderTest.auth({
+      email: authentication.email,
+      password: authentication.password
+    })
     expect(authorization).toBe(null)
+  })
+
+  test('should call SearchAccountByFieldRepository with correct email <version: 0.0.1>', async () => {
+    const { systemUnderTest, readAccountStub } = await makeSystemUnderTest()
+    const spyOnSearchByField = jest.spyOn(readAccountStub, 'searchByField')
+
+    await systemUnderTest.auth(authentication)
+    expect(spyOnSearchByField).toHaveBeenCalledWith({
+      id: '',
+      email: authentication.email
+    })
   })
 
   test('should call HashComparer with correct values <version: 0.0.1>', async () => {
@@ -137,30 +112,38 @@ describe('DatabaseAuthenticationController Usecases', () => {
 
   test('should return an null if Encrypter fails <version: 0.0.1>', async () => {
     const { systemUnderTest, encrypterStub } = await makeSystemUnderTest()
-    jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()))
+    jest.spyOn(encrypterStub, 'encrypt').mockImplementationOnce(async () => {
+      throw new Error()
+    })
 
     const authorization = systemUnderTest.auth(authentication)
     await expect(authorization).rejects.toThrow()
   })
 
   test('must return the authentication token if Encrypter succeeds <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
+    const { systemUnderTest, encrypterStub } = await makeSystemUnderTest()
+
+    jest.spyOn(encrypterStub, 'encrypt').mockReturnValue(Promise.resolve(accessToken))
 
     const authorization = await systemUnderTest.auth(authentication)
     expect(authorization).toBe(accessToken)
   })
 
   test('should call UpdateAccessTokenRepository with correct values <version: 0.0.1>', async () => {
-    const { systemUnderTest, updateAccessTokenRepositoryStub } = await makeSystemUnderTest()
-    const spyOnUpdate = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
+    const { systemUnderTest, encrypterStub, updateAccountStub } = await makeSystemUnderTest()
+
+    jest.spyOn(encrypterStub, 'encrypt').mockReturnValue(Promise.resolve(accessToken))
+    const spyOnUpdate = jest.spyOn(updateAccountStub, 'updateAccessToken')
 
     await systemUnderTest.auth(authentication)
     expect(spyOnUpdate).toHaveBeenCalledWith(accountModelEnabled.id, accessToken)
   })
 
-  test('should return an Error if UpdateAccessTokenRepository returns Error <version: 0.0.1>', async () => {
-    const { systemUnderTest, updateAccessTokenRepositoryStub } = await makeSystemUnderTest()
-    jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockReturnValueOnce(Promise.reject(new Error()))
+  test('should return an error if UpdateAccessTokenRepository throws error <version: 0.0.1>', async () => {
+    const { systemUnderTest, updateAccountStub } = await makeSystemUnderTest()
+    jest.spyOn(updateAccountStub, 'updateAccessToken').mockImplementationOnce(async () => {
+      throw new Error()
+    })
 
     const authorization = systemUnderTest.auth(authentication)
     await expect(authorization).rejects.toThrow()

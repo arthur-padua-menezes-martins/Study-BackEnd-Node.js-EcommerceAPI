@@ -6,5 +6,5 @@ export {
   created, accepted, badRequest, unauthorized, unprocessable, serverError
 } from '../../../helpers/http/response/export-all'
 export {
-  surveyHttpRequestBodyAdd
+  fakeDataAddSurveyHttpRequestBody
 } from '../../../../utils/fake/data/survey/add/fake-data-add-survey-http-request-body'

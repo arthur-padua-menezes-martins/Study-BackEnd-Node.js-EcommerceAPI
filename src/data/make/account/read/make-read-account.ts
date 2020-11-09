@@ -1,13 +1,13 @@
 import {
   IAccountModel,
   ISearchAccountByField,
-  accountModelDisabled
+  accountModelEnabled
 } from './make-read-account-components'
 
 export const makeReadAccount = async (): Promise<ISearchAccountByField> => {
   class ReadAccountStub implements ISearchAccountByField {
     async searchByField (): Promise<IAccountModel | null> {
-      return await Promise.resolve(accountModelDisabled)
+      return accountModelEnabled
     }
   }
 

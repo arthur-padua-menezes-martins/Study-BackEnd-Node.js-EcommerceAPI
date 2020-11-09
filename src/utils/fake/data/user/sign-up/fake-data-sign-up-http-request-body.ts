@@ -1,10 +1,10 @@
-import { IHttpRequestBody } from '../../../../../presentation/protocols/http/request/http-request-body'
+import { IHttpRequestBody } from '../../import-all'
 
-export const signUpHttpRequestBodyFields: string[] = ['name', 'email', 'password', 'passwordConfirmation', 'cpf']
+export const fakeDataSignUpHttpRequestBodyFields: string[] = ['name', 'email', 'password', 'passwordConfirmation', 'cpf', 'cep', 'street', 'number', 'neighborhood', 'city', 'state']
+export const fakeDataSignUpHttpRequestBodyPersonalFields: string[] = ['name', 'email', 'password', 'passwordConfirmation', 'cpf']
+export const fakeDataSignUpHttpRequestBodyAddressFields: string[] = ['cep', 'street', 'number', 'neighborhood', 'city', 'state']
 
-export const signUpHttpRequestBodyAddressFields: string[] = ['cep', 'street', 'number', 'neighborhood', 'city', 'state']
-
-const signUpHttpRequestBodyMatchData: any = {
+const fakeDatafakeDataSignUpHttpRequestBodyMatchData: any = {
   personal: {
     name: 'name lastName',
     email: 'arthur.software.developer@gmail.com',
@@ -21,11 +21,11 @@ const signUpHttpRequestBodyMatchData: any = {
     state: 'CE'
   }
 }
-export const signUpHttpRequestBodyMatch: IHttpRequestBody['user']['informations'] = {
-  ...signUpHttpRequestBodyMatchData
+export const fakeDataSignUpHttpRequestBodyMatch: IHttpRequestBody['user']['informations'] = {
+  ...fakeDatafakeDataSignUpHttpRequestBodyMatchData
 }
 
-export const signUpHttpRequestBodyNotMatch: IHttpRequestBody['user']['informations'] = {
+export const fakeDataSignUpHttpRequestBodyNotMatch: IHttpRequestBody['user']['informations'] = {
   personal: {
     name: 'name',
     email: '$#@!%¨&*()_+[]{}`^?:;/~@',
@@ -43,7 +43,7 @@ export const signUpHttpRequestBodyNotMatch: IHttpRequestBody['user']['informatio
   }
 }
 
-export const signUpHttpRequestBodyMissingField: any = {
+export const fakeDataSignUpHttpRequestBodyMissingField: any = {
   personal: {
     email: 'arthur.software.developer@gmail.com',
     password: 'password',
@@ -60,12 +60,12 @@ export const signUpHttpRequestBodyMissingField: any = {
   }
 }
 
-export const signUpHttpRequestBodyInvalidPasswordConfirmation: any = {
+export const fakeDataSignUpHttpRequestBodyInvalidPasswordConfirmation: any = {
   personal: {
     name: 'name lastName',
     email: 'arthur.software.developer@gmail.com',
     password: 'password',
-    passwordConfirmation: 'pass',
+    passwordConfirmation: 'pass123',
     cpf: '624.804.443-09'
   },
   address: {
@@ -78,14 +78,14 @@ export const signUpHttpRequestBodyInvalidPasswordConfirmation: any = {
   }
 }
 
-export const getSignUpHttpRequestBodyNotMatchField = (personalField: string, addressField?: string): string => {
+export const getfakeDataSignUpHttpRequestBodyNotMatchField = (personalField: string, addressField?: string): string => {
   return addressField
-    ? signUpHttpRequestBodyNotMatch.address[addressField]
-    : signUpHttpRequestBodyNotMatch.personal[personalField]
+    ? fakeDataSignUpHttpRequestBodyNotMatch.address[addressField]
+    : fakeDataSignUpHttpRequestBodyNotMatch.personal[personalField]
 }
 
-export const getSignUpHttpRequestBodyMatchField = (personalField: string, addressField?: string): string => {
+export const getfakeDataSignUpHttpRequestBodyMatchField = (personalField: string, addressField?: string): string => {
   return addressField
-    ? signUpHttpRequestBodyMatch.address[addressField]
-    : signUpHttpRequestBodyMatch.personal[personalField]
+    ? fakeDataSignUpHttpRequestBodyMatch.address[addressField]
+    : fakeDataSignUpHttpRequestBodyMatch.personal[personalField]
 }

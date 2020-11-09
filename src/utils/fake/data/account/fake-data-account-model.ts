@@ -1,21 +1,21 @@
-import { signUpHttpRequestBodyMatch } from '../user/sign-up/fake-data-sign-up-http-request-body'
+import { fakeDataSignUpHttpRequestBodyMatch } from '../user/sign-up/fake-data-sign-up-http-request-body'
 
 export const accountModelEnabled = {
   personal: {
-    ...signUpHttpRequestBodyMatch.personal,
-    password: 'encrypted_password' as string
+    ...fakeDataSignUpHttpRequestBodyMatch.personal,
+    password: 'encrypted_password'
   },
-  address: signUpHttpRequestBodyMatch.address,
+  address: fakeDataSignUpHttpRequestBodyMatch.address,
   enabled: true,
-  id: 'valid_id' as string
+  id: 'valid_id'
 }
 
 export const accountModelDisabled = {
   personal: {
-    ...signUpHttpRequestBodyMatch.personal,
-    password: 'encrypted_password' as string
+    ...fakeDataSignUpHttpRequestBodyMatch.personal,
+    password: 'encrypted_password'
   },
-  address: signUpHttpRequestBodyMatch.address,
+  address: fakeDataSignUpHttpRequestBodyMatch.address,
   enabled: false,
-  id: 'valid_id' as string
+  id: 'valid_id'
 }

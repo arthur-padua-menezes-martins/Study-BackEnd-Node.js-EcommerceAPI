@@ -1,3 +1,3 @@
 export {
   SuperClassSignInAndSignUpController
-} from '../super-class/sign-in-and-sign-up/super-class-sign-in-and-sign-up-controller'
+} from '../super/super-class-controller'

@@ -2,8 +2,8 @@ import { Collection } from 'mongodb'
 import { AccountMongoRepository } from './account-mongo-repository'
 import { mongoHelper } from '../helper/mongo-helper'
 import {
-  signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields,
-  signUpHttpRequestBodyMatch, fakeDataSignInHttpRequestBodyMatch,
+  fakeDataSignUpHttpRequestBodyFields, fakeDataSignUpHttpRequestBodyAddressFields,
+  fakeDataSignUpHttpRequestBodyMatch, fakeDataSignInHttpRequestBodyMatch,
   fakeDataSearchAccountByField
 } from '../../../../utils/fake/data/export-all'
 
@@ -35,29 +35,29 @@ describe('AccountMongoRepository', () => {
 
   test('Should return an account on add success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const account = await systemUnderTest.add(signUpHttpRequestBodyMatch)
+    const account = await systemUnderTest.add(fakeDataSignUpHttpRequestBodyMatch)
 
     expect(account).toBeTruthy()
-    for (const key of signUpHttpRequestBodyFields.slice(0, 2)) {
-      expect(signUpHttpRequestBodyMatch[key]).toEqual(account[key])
+    for (const key of fakeDataSignUpHttpRequestBodyFields.slice(0, 2)) {
+      expect(fakeDataSignUpHttpRequestBodyMatch[key]).toEqual(account[key])
     }
-    for (const key of signUpHttpRequestBodyAddressFields) {
-      expect(signUpHttpRequestBodyMatch[key]).toEqual(account[key])
+    for (const key of fakeDataSignUpHttpRequestBodyAddressFields) {
+      expect(fakeDataSignUpHttpRequestBodyMatch[key]).toEqual(account[key])
     }
   })
 
   test('Should return an account on searchByField success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    await collection.insertOne(signUpHttpRequestBodyMatch)
+    await collection.insertOne(fakeDataSignUpHttpRequestBodyMatch)
     const account = await systemUnderTest.searchByField({ ...fakeDataSearchAccountByField, email: fakeDataSignInHttpRequestBodyMatch.email })
 
     expect(account).toBeTruthy()
     if (account) {
-      for (const key of signUpHttpRequestBodyFields.slice(0, 2)) {
-        expect(signUpHttpRequestBodyMatch[key]).toEqual(account[key])
+      for (const key of fakeDataSignUpHttpRequestBodyFields.slice(0, 2)) {
+        expect(fakeDataSignUpHttpRequestBodyMatch[key]).toEqual(account[key])
       }
-      for (const key of signUpHttpRequestBodyAddressFields) {
-        expect(signUpHttpRequestBodyMatch[key]).toEqual(account[key])
+      for (const key of fakeDataSignUpHttpRequestBodyAddressFields) {
+        expect(fakeDataSignUpHttpRequestBodyMatch[key]).toEqual(account[key])
       }
     }
   })
@@ -71,7 +71,7 @@ describe('AccountMongoRepository', () => {
 
   test('Should update the account accessToken on updateAccessToken success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const accountOptions = await collection.insertOne(signUpHttpRequestBodyMatch)
+    const accountOptions = await collection.insertOne(fakeDataSignUpHttpRequestBodyMatch)
     await systemUnderTest.updateAccessToken((accountOptions.ops[0])._id, anyToken)
     const account = await collection.findOne({ _id: (accountOptions.ops[0])._id })
 

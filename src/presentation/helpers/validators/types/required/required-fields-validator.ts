@@ -3,7 +3,7 @@ import { IValidation } from '../../../../protocols/validation/validation'
 
 interface IRequiredFieldsValidatorParams {
   fields: string[]
-  body: IHttpRequestBody
+  body: IHttpRequestBody['user']['informations']
 }
 export class RequiredFieldsValidator implements IValidation {
   async validate (input: IRequiredFieldsValidatorParams): Promise<string[]> {

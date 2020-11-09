@@ -7,8 +7,6 @@ import {
 } from './db-account-authentication-protocols'
 
 export class DatabaseAccountAuthenticationController implements IAuthentication {
-  private accessToken: string = ''
-
   constructor (
     private readonly accountRepositoryRead: ISearchAccountByFieldRepository,
     private readonly hashComparer: IHashComparer,
@@ -18,14 +16,16 @@ export class DatabaseAccountAuthenticationController implements IAuthentication 
 
   async auth (authentication: IAuthenticationModel): Promise<string | null> {
     const account = await this.accountRepositoryRead.searchByField({ id: '', email: authentication.email })
+    let accessToken: string = ''
 
-    if (account?.enabled) {
-      if (await this.hashComparer.compare(authentication.password, account.personal.password)) {
-        this.accessToken = await this.encrypter.encrypt(account.personal.id)
-        await this.accountRepositoryUpdate.updateAccessToken(account.personal.id, this.accessToken)
+    if (
+      account?.enabled &&
+      await this.hashComparer.compare(authentication.password, account.personal.password)
+    ) {
+      accessToken = await this.encrypter.encrypt(account.id)
+      await this.accountRepositoryUpdate.updateAccessToken(account.id, accessToken)
 
-        return this.accessToken
-      }
+      return accessToken
     }
 
     return null

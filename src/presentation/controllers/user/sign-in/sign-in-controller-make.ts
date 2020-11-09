@@ -1,6 +1,6 @@
 export {
   validationCompositeStub
-} from '../../../make/validation/composite/user/make-validation-composite'
+} from '../../../../data/make/validation/composite/user/make-validation-composite'
 export {
   makeAuthenticationAccount
-} from '../../../make/export-all'
+} from '../../../../data/make/export-all'

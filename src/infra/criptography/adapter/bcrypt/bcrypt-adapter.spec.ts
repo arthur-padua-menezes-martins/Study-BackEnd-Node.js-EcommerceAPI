@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { BcryptAdapter } from './bcrypt-adapter'
-import { signUpHttpRequestBodyMatch, fakeDataSignInHttpRequestBodyMatch } from '../../../../utils/fake/data/export-all'
+import { fakeDataSignUpHttpRequestBodyMatch, fakeDataSignInHttpRequestBodyMatch } from '../../../../utils/fake/data/export-all'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: BcryptAdapter
@@ -30,14 +30,14 @@ describe('BcryptAdapter', () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     const spyOnHash = jest.spyOn(bcrypt, 'hash')
 
-    await systemUnderTest.hash(signUpHttpRequestBodyMatch.personal.password)
-    expect(spyOnHash).toHaveBeenLastCalledWith(signUpHttpRequestBodyMatch.personal.password, salt)
+    await systemUnderTest.hash(fakeDataSignUpHttpRequestBodyMatch.personal.password)
+    expect(spyOnHash).toHaveBeenLastCalledWith(fakeDataSignUpHttpRequestBodyMatch.personal.password, salt)
   })
 
   test('Should return a hashedPassword on success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
-    const hash = await systemUnderTest.hash(signUpHttpRequestBodyMatch.personal.password)
+    const hash = await systemUnderTest.hash(fakeDataSignUpHttpRequestBodyMatch.personal.password)
     expect(hash).toBe('hashed_value')
   })
 
@@ -45,7 +45,7 @@ describe('BcryptAdapter', () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     jest.spyOn(bcrypt, 'hash').mockReturnValue(Promise.reject(await new Error()))
 
-    const hash = systemUnderTest.hash(signUpHttpRequestBodyMatch.personal.password)
+    const hash = systemUnderTest.hash(fakeDataSignUpHttpRequestBodyMatch.personal.password)
     await expect(hash).rejects.toThrow()
   })
 
@@ -76,7 +76,7 @@ describe('BcryptAdapter', () => {
     const { systemUnderTest } = await makeSystemUnderTest()
     jest.spyOn(bcrypt, 'compare').mockReturnValue(Promise.reject(await new Error()))
 
-    const isEqual = systemUnderTest.compare(signUpHttpRequestBodyMatch.personal.password, anyHash)
+    const isEqual = systemUnderTest.compare(fakeDataSignUpHttpRequestBodyMatch.personal.password, anyHash)
     await expect(isEqual).rejects.toThrow()
   })
 })

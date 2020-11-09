@@ -1,6 +1,6 @@
 export {
   FieldValidation
-} from '../../../../helpers/validators/validations/export-all'
+} from '../../../../../presentation/helpers/validators/validations/export-all'
 export {
   EmailValidatorAdapter,
   NameValidatorAdapter,

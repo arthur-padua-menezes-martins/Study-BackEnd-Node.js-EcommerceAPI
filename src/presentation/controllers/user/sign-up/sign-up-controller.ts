@@ -11,9 +11,19 @@ import {
 import {
   MissingParamError, InvalidParamError,
   created, accepted, badRequest, unprocessable, serverError,
-  signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields
+  fakeDataSignUpHttpRequestBodyFields, fakeDataSignUpHttpRequestBodyAddressFields
 } from './sign-up-controller-helpers'
 
+interface IDefineProperties {
+  personal: IHttpRequest['body']['user']['informations']['personal']
+  address: IHttpRequest['body']['user']['informations']['address']
+  generateTypes: Generator<string, any, unknown>
+  generatedType: IteratorResult<string, any>
+  validation: {
+    content: string[]
+    error: IHttpResponse | null
+  }
+}
 /**
 * @method handle
 * validates the insertion of a new account in the database
@@ -40,9 +50,9 @@ export class SignUpController extends SuperClassSignInAndSignUpController implem
     super()
 
     this.content = {
-      fields: signUpHttpRequestBodyFields.concat(signUpHttpRequestBodyAddressFields),
+      fields: fakeDataSignUpHttpRequestBodyFields.concat(fakeDataSignUpHttpRequestBodyAddressFields),
       checkThisType: 'string',
-      validationTypes: ['required fields', 'verify types', 'compare fields', 'validate fields']
+      validationTypes: ['required_fields', 'verify_types', 'compare_fields', 'validate_fields']
     }
   }
 
@@ -99,16 +109,7 @@ export class SignUpController extends SuperClassSignInAndSignUpController implem
     await this.emailSender.signUpConfirmation(signUpConfirmationId, name, email)
   }
 
-  async defineProperties (httpRequest: IHttpRequest): Promise<{
-    personal: IHttpRequest['body']['user']['informations']['personal']
-    address: IHttpRequest['body']['user']['informations']['address']
-    generateTypes: Generator<string, any, unknown>
-    generatedType: IteratorResult<string, any>
-    validation: {
-      content: string[]
-      error: IHttpResponse | null
-    }
-  }> {
+  async defineProperties (httpRequest: IHttpRequest): Promise<IDefineProperties> {
     const { address, personal } = httpRequest.body.user.informations
     const generateTypes: Generator<string> = (this.generateTypes(this.content.validationTypes, 0))()
 
