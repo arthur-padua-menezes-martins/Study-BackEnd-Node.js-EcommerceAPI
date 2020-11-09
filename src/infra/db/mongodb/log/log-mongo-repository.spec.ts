@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb'
 import { LogMongoRepository } from './log-mongo-repository'
 import {
-  mongoHelper
+  MongoHelper
 } from './import-all'
 import env from '../../../../main/config/env'
 
@@ -20,14 +20,14 @@ describe('LogMongoRepository', () => {
   let logErrorCollection: Collection
 
   beforeAll(async () => {
-    await mongoHelper.connect('mongodb://localhost:27017')
+    await MongoHelper.connect('mongodb://localhost:27017')
   })
   beforeEach(async () => {
-    logErrorCollection = await mongoHelper.getCollection(env.collections.log.error)
+    logErrorCollection = await MongoHelper.getCollection(env.collections.log.error)
     await logErrorCollection.deleteMany({})
   })
   afterAll(async () => {
-    await mongoHelper.disconnect()
+    await MongoHelper.disconnect()
   })
 
   test('Shoud create an error log on succcess', async () => {

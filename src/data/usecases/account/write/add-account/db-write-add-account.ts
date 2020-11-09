@@ -5,7 +5,7 @@ import {
   IAddAccount, IAddAccountModel, IAccountModel
 } from './db-write-add-account-protocols'
 import {
-  mongoHelper
+  MongoHelper
 } from './db-write-add-account-utils'
 
 export class DatabaseAddAccountController implements IAddAccount {
@@ -16,7 +16,7 @@ export class DatabaseAddAccountController implements IAddAccount {
   ) {}
 
   async add (accountData: IAddAccountModel): Promise<IAccountModel | null> {
-    let account: IAccountModel | null = await mongoHelper.map_id(await this.accountRepositoryRead.searchByField({ id: '', email: accountData.personal.email }))
+    let account: IAccountModel | null = await MongoHelper.map_id(await this.accountRepositoryRead.searchByField({ id: '', email: accountData.personal.email }))
 
     if (!account) {
       const encryptedPassword = await this.hasher.hash(accountData.personal.password)

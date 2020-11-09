@@ -51,7 +51,7 @@
 * ✨ *200 ok, requisição completa e retorno das informações*
 * ✨ *201 created, requisição completa e criação de um novo recurso*
 * ✨ *202 accepted, requisição completa*
-* ✨ *204 no content, requisição completa e nenhum conteúdo deverá ser retornado*
+* ✨ *204 no content, requisição completa e nenhum retorno*
 
 <br/></br></br>
 

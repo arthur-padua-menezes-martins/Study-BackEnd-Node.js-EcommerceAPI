@@ -1,8 +1,9 @@
 import { Collection } from 'mongodb'
 import { IUpdateAccessTokenRepository, IUpdateEnabledAccountRepository } from '../../../../../data/protocols/repository/account/update/export-all'
 import {
-  mongoHelper
+  MongoHelper
 } from '../import-all'
+import env from '../../../../../main/config/env'
 
 export class AccountMongoRepositoryUpdate implements IUpdateAccessTokenRepository, IUpdateEnabledAccountRepository {
   /**
@@ -15,7 +16,7 @@ export class AccountMongoRepositoryUpdate implements IUpdateAccessTokenRepositor
     const collection = await AccountMongoRepositoryUpdate.getCollection()
 
     await collection.updateOne(
-      { _id: await mongoHelper.createObjectId(id) },
+      { _id: await MongoHelper.createObjectId(id) },
       { $set: { accessToken } }
     )
   }
@@ -24,12 +25,12 @@ export class AccountMongoRepositoryUpdate implements IUpdateAccessTokenRepositor
     const collection = await AccountMongoRepositoryUpdate.getCollection()
 
     await collection.updateOne(
-      { _id: await mongoHelper.createObjectId(id) },
+      { _id: await MongoHelper.createObjectId(id) },
       { $set: { enabled: status } }
     )
   }
 
   static async getCollection (): Promise<Collection> {
-    return await mongoHelper.getCollection('accounts')
+    return await MongoHelper.getCollection(env.collections.accounts)
   }
 }

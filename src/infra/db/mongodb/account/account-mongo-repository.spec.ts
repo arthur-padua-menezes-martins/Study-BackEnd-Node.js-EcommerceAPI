@@ -1,11 +1,12 @@
 import { Collection } from 'mongodb'
 import { AccountMongoRepository } from './account-mongo-repository'
-import { mongoHelper } from '../helper/mongo-helper'
+import { MongoHelper } from '../helper/mongo-helper'
 import {
   fakeDataSignUpHttpRequestBodyFields, fakeDataSignUpHttpRequestBodyAddressFields,
   fakeDataSignUpHttpRequestBodyMatch, fakeDataSignInHttpRequestBodyMatch,
   fakeDataSearchAccountByField
 } from '../../../../utils/fake/data/export-all'
+import env from '../../../../main/config/env'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: AccountMongoRepository
@@ -23,14 +24,14 @@ const anyToken = 'any_token'
 
 describe('AccountMongoRepository', () => {
   beforeAll(async () => {
-    await mongoHelper.connect('mongodb://localhost:27017')
+    await MongoHelper.connect('mongodb://localhost:27017')
   })
   beforeEach(async () => {
-    collection = await mongoHelper.getCollection('accounts')
+    collection = await MongoHelper.getCollection(env.collections.accounts)
     await collection.deleteMany({})
   })
   afterAll(async () => {
-    await mongoHelper.disconnect()
+    await MongoHelper.disconnect()
   })
 
   test('Should return an account on add success <version: 0.0.1>', async () => {

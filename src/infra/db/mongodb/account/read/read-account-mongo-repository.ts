@@ -2,8 +2,9 @@ import { Collection } from 'mongodb'
 import { ISearchAccountByFieldRepository, ISearchAccountByFieldRepositoryParams } from '../../../../../data/protocols/repository/account/read/search-account-by-field-repository'
 import {
   IAccountModel,
-  mongoHelper
+  MongoHelper
 } from '../import-all'
+import env from '../../../../../main/config/env'
 
 export class AccountMongoRepositoryRead implements ISearchAccountByFieldRepository {
   /**
@@ -28,7 +29,7 @@ export class AccountMongoRepositoryRead implements ISearchAccountByFieldReposito
 
   static async searchById (collection: Collection<any>, id: string): Promise<IAccountModel | null> {
     return await collection.findOne({
-      _id: await mongoHelper.createObjectId(id)
+      _id: await MongoHelper.createObjectId(id)
     })
   }
 
@@ -53,6 +54,6 @@ export class AccountMongoRepositoryRead implements ISearchAccountByFieldReposito
   }
 
   static async getCollection (): Promise<Collection> {
-    return await mongoHelper.getCollection('accounts')
+    return await MongoHelper.getCollection(env.collections.accounts)
   }
 }

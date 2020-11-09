@@ -17,7 +17,7 @@ import { IAccountModel } from '../../../../domain/models/account/account'
 * @this `this.client`
 * references a MongoClient connect
 */
-export const mongoHelper = {
+export const MongoHelper = {
   client: null as unknown as MongoClient,
   url: '' as string,
 

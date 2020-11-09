@@ -14,8 +14,10 @@ export default {
     }
   },
   collections: {
+    accounts: 'accounts',
+    surveys: 'surveys',
     log: {
-      error: 'log-error'
+      error: 'errorLog'
     }
   }
 }

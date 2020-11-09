@@ -1,9 +1,14 @@
-import { IAddAccountRepository } from '../../../../../data/protocols/repository/account/write/add-account-repository'
-import { IAddAccountModel } from '../../../../../domain/usecases/account/write/add-account'
+import {
+  IAddAccountRepository
+} from '../../../../../data/protocols/repository/account/write/add-account-repository'
+import {
+  IAddAccountModel
+} from '../../../../../domain/usecases/account/write/add-account'
 import {
   IAccountModel,
-  mongoHelper
+  MongoHelper
 } from '../import-all'
+import env from '../../../../../main/config/env'
 
 export class AccountMongoRepositoryWrite implements IAddAccountRepository {
   /**
@@ -15,9 +20,9 @@ export class AccountMongoRepositoryWrite implements IAddAccountRepository {
   * the schema to add a new account
   */
   async add (accountData: IAddAccountModel): Promise<IAccountModel> {
-    const accountsCollection = await mongoHelper.getCollection('accounts')
+    const accountsCollection = await MongoHelper.getCollection(env.collections.accounts)
     const accountOptions = await accountsCollection.insertOne(accountData)
-    const account = mongoHelper.map_id(accountOptions.ops[0])
+    const account = MongoHelper.map_id(accountOptions.ops[0])
 
     return account
   }
