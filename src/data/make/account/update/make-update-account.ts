@@ -1,10 +1,10 @@
 import {
-  IUpdateAccessToken,
-  IUpdateEnabledAccount
+  IUpdateAccessTokenRepository,
+  IUpdateEnabledAccountRepository
 } from './make-update-account-components'
 
-export const makeUpdateAccount = async (): Promise<IUpdateAccessToken & IUpdateEnabledAccount> => {
-  class UpdateAccountStub implements IUpdateAccessToken, IUpdateEnabledAccount {
+export const makeUpdateAccount = async (): Promise<IUpdateAccessTokenRepository & IUpdateEnabledAccountRepository> => {
+  class UpdateAccountStub implements IUpdateAccessTokenRepository, IUpdateEnabledAccountRepository {
     async updateAccessToken (id: string, accessToken: string): Promise<void> {
 
     }

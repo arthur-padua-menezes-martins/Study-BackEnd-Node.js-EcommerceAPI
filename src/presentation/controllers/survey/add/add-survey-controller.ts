@@ -9,7 +9,7 @@ import {
 } from './add-survey-controller-protocols'
 import {
   MissingParamError,
-  accepted, badRequest, serverError
+  noContent, badRequest, serverError
 } from './add-survey-controller-helpers'
 
 interface IDefineProperties {
@@ -65,7 +65,7 @@ export class AddSurveyController extends SuperClassAddSurveyController implement
         answers
       })
 
-      return accepted()
+      return noContent()
     } catch (error) {
       return serverError(error)
     }

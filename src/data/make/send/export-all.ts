@@ -1,1 +1,1 @@
-export * from './email/export-all'
+export { makeEmailSender } from './email/make-email-sender'

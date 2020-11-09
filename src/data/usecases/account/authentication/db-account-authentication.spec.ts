@@ -14,7 +14,10 @@ import {
   IEncrypter,
   IUpdateAccessTokenRepository
 } from './db-account-authentication-protocols'
-import { fakeDataSignInHttpRequestBodyMatch, accountModelEnabled } from './db-account-authentication-utils'
+import {
+  fakeDataSignInHttpRequestBodyMatch,
+  accountModelEnabled
+} from './db-account-authentication-utils'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: DatabaseAccountAuthenticationController

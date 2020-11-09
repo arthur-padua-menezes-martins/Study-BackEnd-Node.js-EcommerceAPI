@@ -1,6 +1,6 @@
 export {
-  IUpdateEnabledAccount
-} from '../../../../domain/usecases/account/update/update-account-enabled-account'
+  IUpdateAccessTokenRepository
+} from '../../../protocols/repository/account/update/update-access-token-repository'
 export {
-  IUpdateAccessToken
-} from '../../../../domain/usecases/account/update/update-account-access-token'
+  IUpdateEnabledAccountRepository
+} from '../../../protocols/repository/account/update/update-enabled-account-repository'

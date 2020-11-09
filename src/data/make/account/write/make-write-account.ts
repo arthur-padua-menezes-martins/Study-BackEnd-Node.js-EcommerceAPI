@@ -1,12 +1,12 @@
 import {
+  IAddAccountRepository,
   IAccountModel,
-  IAddAccount,
   IAddAccountModel,
   accountModelDisabled
 } from './make-write-account-components'
 
-export const makeWriteAccount = async (): Promise<IAddAccount> => {
-  class WriteAccountStub implements IAddAccount {
+export const makeWriteAccount = async (): Promise<IAddAccountRepository> => {
+  class WriteAccountStub implements IAddAccountRepository {
     async add (accountData: IAddAccountModel): Promise<IAccountModel> {
       return accountModelDisabled
     }

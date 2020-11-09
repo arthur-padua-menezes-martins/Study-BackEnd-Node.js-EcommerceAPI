@@ -1,7 +1,7 @@
 export {
+  ISearchAccountByFieldRepository
+} from '../../../protocols/repository/account/read/search-account-by-field-repository'
+export {
   IAccountModel,
   accountModelEnabled
 } from '../../import-all'
-export {
-  ISearchAccountByField
-} from '../../../../domain/usecases/account/export-all'

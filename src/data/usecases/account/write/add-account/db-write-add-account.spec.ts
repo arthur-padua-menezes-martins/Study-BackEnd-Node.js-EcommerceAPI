@@ -36,7 +36,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   }
 }
 
-describe('DatabaseAddAccountController Usecases', () => {
+describe('DatabaseAddAccountController', () => {
   test('Should call Encrypter with correct password <version: 0.0.1>', async () => {
     const { systemUnderTest, hasherStub } = await makeSystemUnderTest()
 

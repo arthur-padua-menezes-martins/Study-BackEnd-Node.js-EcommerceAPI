@@ -3,7 +3,7 @@ export {
   InvalidParamError
 } from '../../../errors/export-all'
 export {
-  created, accepted, badRequest, unauthorized, unprocessable, serverError
+  noContent, badRequest, serverError
 } from '../../../helpers/http/response/export-all'
 export {
   fakeDataAddSurveyHttpRequestBody
