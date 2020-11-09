@@ -1,15 +1,17 @@
 import { AddSurveyController } from './add-survey-controller'
 import {
-  IHttpRequest, IHttpResponse,
+  IHttpResponse,
   IValidation,
   IAddSurvey
 } from './add-survey-controller-protocols'
 import {
-  validationCompositeStub,
   makeWriteSurvey
 } from './add-survey-controller-make'
 import {
-  surveyHttpRequestBodyAdd
+  validationCompositeStub
+} from './add-survey-controller-components'
+import {
+  fakeDataAddSurveyHttpRequestBody
 } from './add-survey-controller-helpers'
 
 interface ISystemUnderTestTypes {
@@ -28,8 +30,10 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   }
 }
 
-const httpRequest: IHttpRequest = {
-  body: {}
+const httpRequest: any = {
+  body: {
+    survey: fakeDataAddSurveyHttpRequestBody
+  }
 }
 let httpResponse: IHttpResponse = {
   statusCode: Number(),
@@ -37,18 +41,32 @@ let httpResponse: IHttpResponse = {
 }
 
 describe('AddSurveyController', () => {
+  test('returns error if validation throws error <version 0.0.1>', async () => {
+    const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
+
+    jest.spyOn(validationCompositeStub, 'validate').mockImplementationOnce(async () => {
+      throw new Error()
+    })
+
+    const response = await systemUnderTest.handle(httpRequest)
+    await expect(response.statusCode).toBe(500)
+    await expect(response.errorMessage?.name).toBe('ServerError')
+  })
+
   test('should call validationComposite with correct values <version 0.0.1>', async () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
+    const { answers, question } = httpRequest.body.survey
 
     const spyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
 
-    httpRequest.body = surveyHttpRequestBodyAdd
-
     await systemUnderTest.handle(httpRequest)
-    expect(spyOnValidate).toHaveBeenCalledWith({ type: '', body: httpRequest.body })
+    expect(spyOnValidate).toHaveBeenCalledWith({
+      type: '',
+      body: { ...answers, question }
+    })
   })
 
-  test('returns from httpResponse: "{statusCode: 400}" if any required fields belonging to httpRequest.body do not exist <version 0.0.1>', async () => {
+  test('returns from httpResponse: "{statusCode: 400}" if any validation fails <version 0.0.1>', async () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
 
     jest.spyOn(validationCompositeStub, 'validate').mockImplementationOnce(async () => {
@@ -62,7 +80,7 @@ describe('AddSurveyController', () => {
 
   test('should call AddSurveyController with correct values <version 0.0.1>', async () => {
     const { systemUnderTest, writeSurveyStub } = await makeSystemUnderTest()
-    const { question, answers } = httpRequest.body
+    const { question, answers } = httpRequest.body.survey
 
     jest.spyOn(validationCompositeStub, 'validate').mockImplementationOnce(async () => {
       return []
@@ -72,8 +90,8 @@ describe('AddSurveyController', () => {
 
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(sypOnAdd).toHaveBeenCalledWith({
-      question: question,
-      answers: answers
+      question,
+      answers
     })
   })
 })
