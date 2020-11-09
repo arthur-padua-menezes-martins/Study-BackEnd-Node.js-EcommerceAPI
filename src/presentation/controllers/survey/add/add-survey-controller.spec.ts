@@ -105,5 +105,6 @@ describe('AddSurveyController', () => {
       question,
       answers
     })
+    expect(httpResponse.statusCode).toBe(204)
   })
 })
