@@ -1,4 +1,4 @@
-interface ISurveyAnswer {
+export interface ISurveyAnswer {
   image: string
   answer: string
 }

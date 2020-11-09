@@ -48,9 +48,9 @@ describe('AddSurveyController', () => {
       throw new Error()
     })
 
-    const response = await systemUnderTest.handle(httpRequest)
-    await expect(response.statusCode).toBe(500)
-    await expect(response.errorMessage?.name).toBe('ServerError')
+    const httpResponse = await systemUnderTest.handle(httpRequest)
+    await expect(httpResponse.statusCode).toBe(500)
+    await expect(httpResponse.errorMessage?.name).toBe('ServerError')
   })
 
   test('should call validationComposite with correct values <version 0.0.1>', async () => {
@@ -76,6 +76,18 @@ describe('AddSurveyController', () => {
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.errorMessage?.name).toBe('MissingParamError')
+  })
+
+  test('returns from httpResponse: "{statusCode: 500}" if writeSurvey throws <version 0.0.1>', async () => {
+    const { systemUnderTest, writeSurveyStub } = await makeSystemUnderTest()
+
+    jest.spyOn(writeSurveyStub, 'add').mockImplementationOnce(async () => {
+      throw new Error()
+    })
+
+    const response = await systemUnderTest.handle(httpRequest)
+    expect(response.statusCode).toBe(500)
+    expect(response.errorMessage?.name).toBe('ServerError')
   })
 
   test('should call AddSurveyController with correct values <version 0.0.1>', async () => {
