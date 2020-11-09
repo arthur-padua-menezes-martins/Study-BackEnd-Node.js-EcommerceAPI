@@ -4,10 +4,11 @@ import {
   IAddAccountRepository,
   IAddAccount, IAddAccountModel, IAccountModel
 } from './db-write-add-account-protocols'
+import {
+  mongoHelper
+} from './db-write-add-account-utils'
 
 export class DatabaseAddAccountController implements IAddAccount {
-  private account: IAccountModel | null
-
   constructor (
     private readonly accountRepositoryRead: ISearchAccountByFieldRepository,
     private readonly hasher: IHasher,
@@ -15,11 +16,11 @@ export class DatabaseAddAccountController implements IAddAccount {
   ) {}
 
   async add (accountData: IAddAccountModel): Promise<IAccountModel | null> {
-    this.account = await this.accountRepositoryRead.searchByField({ id: '', email: accountData.personal.email })
+    let account: IAccountModel | null = await mongoHelper.map_id(await this.accountRepositoryRead.searchByField({ id: '', email: accountData.personal.email }))
 
-    if (!(this.account)) {
+    if (!account) {
       const encryptedPassword = await this.hasher.hash(accountData.personal.password)
-      this.account = await this.accountRepositoryWrite.add({
+      account = await this.accountRepositoryWrite.add({
         personal: {
           ...accountData.personal,
           password: encryptedPassword
@@ -28,9 +29,9 @@ export class DatabaseAddAccountController implements IAddAccount {
         enabled: false
       })
 
-      return this.account
-    } else if (!(this.account.enabled)) {
-      return this.account
+      return account
+    } else if (account && !account.enabled) {
+      return account
     }
 
     return null

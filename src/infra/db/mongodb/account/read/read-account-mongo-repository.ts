@@ -6,25 +6,24 @@ import {
 } from '../import-all'
 
 export class AccountMongoRepositoryRead implements ISearchAccountByFieldRepository {
-  private account: IAccountModel | null = null
-
   /**
   * @param {ISearchAccountByFieldRepositoryParams} fields
   * field to search for an account
   */
   public async searchByField (fields: ISearchAccountByFieldRepositoryParams): Promise<IAccountModel | null> {
-    const collection = await mongoHelper.getCollection('accounts')
+    const collection = await AccountMongoRepositoryRead.getCollection()
+    let account: IAccountModel | null = null
 
     const { id } = fields
     if (id) {
-      this.account = await AccountMongoRepositoryRead.searchById(collection, id)
+      account = await AccountMongoRepositoryRead.searchById(collection, id)
     } else if (Object.keys(fields).length === 1) {
-      this.account = await AccountMongoRepositoryRead.searchByOneField(collection, fields)
+      account = await AccountMongoRepositoryRead.searchByOneField(collection, fields)
     } else {
-      this.account = await AccountMongoRepositoryRead.searchByManyFields(collection, fields)
+      account = await AccountMongoRepositoryRead.searchByManyFields(collection, fields)
     }
 
-    return this.account
+    return account
   }
 
   static async searchById (collection: Collection<any>, id: string): Promise<IAccountModel | null> {
@@ -45,9 +44,15 @@ export class AccountMongoRepositoryRead implements ISearchAccountByFieldReposito
   static async searchByManyFields (collection: Collection<any>, fields: object): Promise<IAccountModel | null> {
     let search: object = {}
     for (const [key, value] of Object.entries(fields)) {
-      search = Object.assign({}, search, { [`personal.${key}`]: value })
+      if (value) {
+        search = Object.assign({}, search, { [`personal.${key}`]: value })
+      }
     }
 
     return await collection.findOne(search)
+  }
+
+  static async getCollection (): Promise<Collection> {
+    return await mongoHelper.getCollection('accounts')
   }
 }

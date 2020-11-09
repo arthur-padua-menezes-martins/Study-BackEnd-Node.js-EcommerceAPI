@@ -19,6 +19,6 @@ export class AccountMongoRepositoryWrite implements IAddAccountRepository {
     const accountOptions = await accountsCollection.insertOne(accountData)
     const account = mongoHelper.map_id(accountOptions.ops[0])
 
-    return await Promise.resolve(account)
+    return account
   }
 }

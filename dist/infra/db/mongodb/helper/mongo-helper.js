@@ -76,7 +76,7 @@ exports.mongoHelper = {
     */
     map_id(resultOf) {
         const _a = resultOf || { _id: null }, { _id } = _a, result = __rest(_a, ["_id"]);
-        return _id && result && Object.assign({}, result, { id: _id });
+        return (_id && result) && Object.assign({}, result, { id: _id });
     }
 };
 //# sourceMappingURL=mongo-helper.js.map

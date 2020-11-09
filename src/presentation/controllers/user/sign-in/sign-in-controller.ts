@@ -3,9 +3,12 @@ import {
   IAuthentication, IValidation
 } from './sign-in-controller-protocols'
 import {
+  SuperClassSignInAndSignUpController
+} from '../super-class/sign-in-and-sign-up/super-class-sign-in-and-sign-up-controller'
+import {
   MissingParamError, InvalidParamError,
   ok, badRequest, unauthorized, serverError,
-  signInHttpRequestBodyFields
+  fakeDataSignInHttpRequestBodyFields
 } from './sign-in-controller-helpers'
 
 /**
@@ -14,15 +17,7 @@ import {
 * @method `handle`
 * validates the user entries for apply the sign in
 */
-export class SignInController implements IController {
-  public readonly content: {
-    fields: string[]
-    checkThisType: string
-  } = {
-    fields: [],
-    checkThisType: ''
-  }
-
+export class SignInController extends SuperClassSignInAndSignUpController implements IController {
   /**
   * @param {IValidation} validationComposite
   * implementation of the validation
@@ -33,40 +28,36 @@ export class SignInController implements IController {
     private readonly validationComposite: IValidation,
     private readonly authentication: IAuthentication
   ) {
-    Object.defineProperties(this.content, {
-      fields: {
-        value: signInHttpRequestBodyFields,
-        enumerable: true,
-        writable: false,
-        configurable: false
-      },
-      checkThisType: {
-        value: 'string',
-        enumerable: true,
-        writable: false,
-        configurable: false
-      }
-    })
+    super()
+
+    this.content = {
+      fields: fakeDataSignInHttpRequestBodyFields,
+      checkThisType: 'string',
+      validationTypes: ['required fields', 'verify types', 'validate fields']
+    }
   }
 
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      const { personal } = await this.defineProperties(httpRequest)
-      const handleValidate = await this.handleValidate(personal)
+      let { personal, generateTypes, generatedType, validation } = await this.defineProperties(httpRequest)
 
-      const missingFields: string[] = await handleValidate({ type: 'required fields' })
-      if (missingFields.length > 0) {
-        return badRequest({}, '', new MissingParamError(missingFields.join(' ')))
-      }
+      do {
+        validation.content = await this.handleValidate({ type: generatedType.value })
+        if (validation.content.length > 0) {
+          if (generatedType.value === this.content.validationTypes[0]) {
+            validation.error = badRequest(undefined, undefined, new MissingParamError(validation.content.join(' ')), validation.content)
+          } else {
+            validation.error = badRequest(undefined, undefined, new InvalidParamError(validation.content.join(' ')), validation.content)
+          }
 
-      const theTypeOfThisIsValid: boolean[] = await handleValidate({ type: 'verify types' })
-      if (!theTypeOfThisIsValid.every((verify: boolean) => verify)) {
-        return badRequest({}, '', new InvalidParamError())
-      }
+          break
+        }
 
-      const invalidFields: string[] = await handleValidate({ type: 'validate fields' })
-      if (invalidFields.length > 0) {
-        return badRequest({}, '', new InvalidParamError(invalidFields.join(' ')), invalidFields)
+        generatedType = generateTypes.next()
+      } while (!(generatedType.done))
+
+      if (validation.error) {
+        return validation.error
       }
 
       const authorization = await this.authentication.auth({
@@ -86,25 +77,36 @@ export class SignInController implements IController {
     }
   }
 
-  async handleValidate (body: any): Promise<Function> {
-    return async (content: {type: string}) => {
+  async defineProperties (httpRequest: IHttpRequest): Promise<{
+    personal: IHttpRequest['body']['user']['informations']['personal']
+    generateTypes: Generator<string, any, unknown>
+    generatedType: IteratorResult<string, any>
+    validation: {
+      content: string[]
+      error: IHttpResponse | null
+    }
+  }> {
+    const { body: { user: { informations: { personal } } } } = httpRequest
+    const generateTypes: Generator<string> = (this.generateTypes(this.content.validationTypes, 0))()
+
+    this.handleValidate = async (content: { type: string }) => {
       return await this.validationComposite.validate({
         type: content.type,
         fields: this.content.fields,
-        body: body,
+        body: personal,
         checkThisType: this.content.checkThisType,
-        checkTheTypeOfThis: body
+        checkTheTypeOfThis: personal
       })
     }
-  }
-
-  async defineProperties (httpRequest: IHttpRequest): Promise<{
-    personal: IHttpRequest['body']['user']['informations']['personal']
-  }> {
-    const { body: { user: { informations: { personal } } } } = httpRequest
 
     return {
-      personal
+      personal,
+      generateTypes: generateTypes,
+      generatedType: generateTypes.next(),
+      validation: {
+        content: [],
+        error: null
+      }
     }
   }
 }

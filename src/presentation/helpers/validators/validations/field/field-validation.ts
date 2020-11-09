@@ -1,8 +1,14 @@
-import { IFieldValidation, IFieldValidationOptions, IFieldValidationInputContent } from '../../../../protocols/validation/field/export-all'
+import {
+  IHttpRequestBody
+} from '../../import-all'
+import {
+  IFieldValidation,
+  IFieldValidationOptions,
+  IFieldValidationInputContent
+} from '../../../../protocols/validation/field/export-all'
 
 export class FieldValidation implements IFieldValidation {
   public readonly fieldValidationOptions: any = {}
-  public readonly invalidFields: string[] = []
 
   constructor (options: IFieldValidationOptions) {
     for (const key in options) {
@@ -16,7 +22,7 @@ export class FieldValidation implements IFieldValidation {
   * @param value
   * the value for validation
   */
-  async options (field: string, value: string): Promise<string> {
+  public async options (field: string, value: string): Promise<string> {
     if (field in this.fieldValidationOptions) {
       return (await this.fieldValidationOptions[field](value)) ? '' : field
     } else {
@@ -28,23 +34,36 @@ export class FieldValidation implements IFieldValidation {
   * @param input
   * the fields and the body to pass an validation
   */
-  async exec (input: IFieldValidationInputContent): Promise<string[]> {
+  public async exec (input: IFieldValidationInputContent): Promise<string[]> {
     const { fields, body } = input
+    let invalidFields: string[] = []
 
     if (Array.isArray(body)) {
-      for (const [index, field] of fields.entries()) {
-        for (const item of field) {
-          this.invalidFields.push(await this.options(item, body[index][item]))
-        }
-      }
+      invalidFields = await this.sequenceOfValidations(fields, body)
     } else {
-      for (const item of fields) {
-        this.invalidFields.push(await this.options(item, body[item]))
-      }
+      invalidFields = await this.anValidation(fields, body)
     }
 
     return (
-      (this.invalidFields.filter(field => field)).slice(0, this.invalidFields.length)
+      (invalidFields.filter(field => field)).slice(0, invalidFields.length)
     )
+  }
+
+  public async sequenceOfValidations (fields: string[], body: IHttpRequestBody, invalidFields: string[] = []) {
+    for (const [index, field] of fields.entries()) {
+      for (const item of field) {
+        invalidFields.push(await this.options(item, body[index][item]))
+      }
+    }
+
+    return invalidFields
+  }
+
+  public async anValidation (fields: string[], body: IHttpRequestBody, invalidFields: string[] = []): Promise<string[]> {
+    for (const item of fields) {
+      invalidFields.push(await this.options(item, body[item]))
+    }
+
+    return invalidFields
   }
 }

@@ -8,7 +8,7 @@ import {
   makeAuthenticationAccount
 } from './sign-in-controller-make'
 import {
-  signInHttpRequestBodyFields, signInHttpRequestBodyMatch, signInHttpRequestBodyNotMatch, signInHttpRequestBodyMissingField
+  fakeDataSignInHttpRequestBodyFields, fakeDataSignInHttpRequestBodyMatch, fakeDataSignInHttpRequestBodyNotMatch, fakeDataSignInHttpRequestBodyMissingField
 } from './sign-in-controller-helpers'
 
 interface ISignUpControllerTypes {
@@ -31,7 +31,7 @@ const httpRequest: any = {
   body: {
     user: {
       informations: {
-        personal: signInHttpRequestBodyMatch
+        personal: fakeDataSignInHttpRequestBodyMatch
       }
     }
   }
@@ -46,12 +46,12 @@ describe('SignInController', () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
     const SpyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
 
-    httpRequest.body.user.informations = await signInHttpRequestBodyMissingField
+    httpRequest.body.user.informations = await fakeDataSignInHttpRequestBodyMissingField
 
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(SpyOnValidate).toHaveBeenCalledWith(({
       type: 'required fields',
-      fields: signInHttpRequestBodyFields,
+      fields: fakeDataSignInHttpRequestBodyFields,
       body: httpRequest.body,
       checkThisType: 'string',
       checkTheTypeOfThis: httpRequest.body
@@ -64,12 +64,12 @@ describe('SignInController', () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
     const SpyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
 
-    httpRequest.body.user.informations = await signInHttpRequestBodyNotMatch
+    httpRequest.body.user.informations = await fakeDataSignInHttpRequestBodyNotMatch
 
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(SpyOnValidate).toHaveBeenCalledWith(({
       type: 'validate fields',
-      fields: signInHttpRequestBodyFields,
+      fields: fakeDataSignInHttpRequestBodyFields,
       body: httpRequest.body,
       checkThisType: 'string',
       checkTheTypeOfThis: httpRequest.body

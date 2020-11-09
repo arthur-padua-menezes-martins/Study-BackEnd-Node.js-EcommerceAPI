@@ -7,7 +7,7 @@ import {
   IUpdateAccessTokenRepository,
   IAccountModel
 } from './db-account-authentication-protocols'
-import { signInHttpRequestBodyMatch, accountModelEnabled } from './db-account-authentication-utils'
+import { fakeDataSignInHttpRequestBodyMatch, accountModelEnabled } from './db-account-authentication-utils'
 
 const makeSearchAccountByEmailRepository = async (): Promise<ISearchAccountByFieldRepository> => {
   class SearchAccountByFieldRepositoryStub implements ISearchAccountByFieldRepository {
@@ -76,7 +76,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   }
 }
 
-const authentication: IAuthenticationModel = signInHttpRequestBodyMatch
+const authentication: IAuthenticationModel = fakeDataSignInHttpRequestBodyMatch
 
 describe('DatabaseAuthenticationController Usecases', () => {
   test('should call SearchAccountByEmailRepository with correct email <version: 0.0.1>', async () => {

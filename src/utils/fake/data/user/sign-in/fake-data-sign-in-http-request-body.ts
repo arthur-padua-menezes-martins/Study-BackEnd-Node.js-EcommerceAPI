@@ -1,30 +1,30 @@
 import { IHttpRequestBody } from '../../../../../presentation/protocols/http/request/http-request-body'
 
-export const signInHttpRequestBodyFields: string[] = ['email', 'password']
+export const fakeDataSignInHttpRequestBodyFields: string[] = ['email', 'password']
 
-const signInHttpRequestBodyMatchData: any = {
+const fakeDataSignInHttpRequestBodyMatchData: any = {
   personal: {
     email: 'arthur.software.developer@gmail.com' as string,
     password: 'password123' as string
   }
 }
-export const signInHttpRequestBodyMatch: IHttpRequestBody['user']['informations']['personal'] = {
-  ...signInHttpRequestBodyMatchData
+export const fakeDataSignInHttpRequestBodyMatch: IHttpRequestBody['user']['informations']['personal'] = {
+  ...fakeDataSignInHttpRequestBodyMatchData
 }
 
-export const signInHttpRequestBodyNotMatch: any = {
+export const fakeDataSignInHttpRequestBodyNotMatch: any = {
   personal: {
     email: '$#@!%¨&*()_+[]{}`^?:;/~@' as string,
     password: 'pass' as string
   }
 }
 
-export const signInHttpRequestBodyMissingField: any = {
+export const fakeDataSignInHttpRequestBodyMissingField: any = {
   personal: {
     email: 'arthur.software.developer@gmail.com' as string
   }
 }
 
-export const getsignInHttpRequestBodyNotMatchField = (fieldName: string): string => {
-  return signInHttpRequestBodyNotMatch[fieldName]
+export const getfakeDataSignInHttpRequestBodyNotMatchField = (fieldName: string): string => {
+  return fakeDataSignInHttpRequestBodyNotMatch[fieldName]
 }

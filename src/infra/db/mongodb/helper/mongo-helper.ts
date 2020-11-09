@@ -71,6 +71,6 @@ export const mongoHelper = {
   map_id  (resultOf: any): IAccountModel {
     const { _id, ...result } = resultOf || { _id: null }
 
-    return _id && result && Object.assign({}, result, { id: _id })
+    return (_id && result) && Object.assign({}, result, { id: _id })
   }
 }

@@ -6,5 +6,5 @@ export {
   ok, badRequest, unauthorized, serverError
 } from '../../../helpers/http/response/export-all'
 export {
-  signInHttpRequestBodyFields, signInHttpRequestBodyMatch, signInHttpRequestBodyNotMatch, signInHttpRequestBodyMissingField
+  fakeDataSignInHttpRequestBodyFields, fakeDataSignInHttpRequestBodyMatch, fakeDataSignInHttpRequestBodyNotMatch, fakeDataSignInHttpRequestBodyMissingField
 } from '../../../../utils/fake/data/user/sign-in/fake-data-sign-in-http-request-body'

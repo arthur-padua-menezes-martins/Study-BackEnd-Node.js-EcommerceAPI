@@ -6,6 +6,9 @@ import {
   ISendEmailSignUp
 } from './sign-up-controller-protocols'
 import {
+  SuperClassSignInAndSignUpController
+} from './sign-up-controller-components'
+import {
   MissingParamError, InvalidParamError,
   created, accepted, badRequest, unprocessable, serverError,
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields
@@ -15,21 +18,7 @@ import {
 * @method handle
 * validates the insertion of a new account in the database
 */
-export class SignUpController implements IController {
-  public handleValidate: Function
-
-  public generateTypes: Generator<string>
-
-  public content: {
-    fields: string[]
-    checkThisType: string
-    validationTypes: string[]
-  } = {
-    fields: signUpHttpRequestBodyFields.concat(signUpHttpRequestBodyAddressFields),
-    checkThisType: 'string',
-    validationTypes: ['required fields', 'verify types', 'compare fields', 'validate fields']
-  }
-
+export class SignUpController extends SuperClassSignInAndSignUpController implements IController {
   /**
   * @param {IValidation} validationComposite
   * implementation of the validation
@@ -47,7 +36,15 @@ export class SignUpController implements IController {
     private readonly writeAccount: IAddAccount,
     private readonly updateAccount: IUpdateEnabledAccount,
     private readonly emailSender: ISendEmailSignUp
-  ) {}
+  ) {
+    super()
+
+    this.content = {
+      fields: signUpHttpRequestBodyFields.concat(signUpHttpRequestBodyAddressFields),
+      checkThisType: 'string',
+      validationTypes: ['required fields', 'verify types', 'compare fields', 'validate fields']
+    }
+  }
 
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
@@ -57,12 +54,13 @@ export class SignUpController implements IController {
 
         return created()
       } else if (httpRequest.body?.user?.informations) {
-        let { body, generateTypes, validation } = await this.defineProperties(httpRequest)
+        let { personal, address, generateTypes, generatedType, validation } = await this.defineProperties(httpRequest)
+
         do {
-          validation.content = await this.handleValidate({ type: generateTypes.value })
+          validation.content = await this.handleValidate({ type: generatedType.value })
 
           if (validation.content.length > 0) {
-            if (generateTypes.value === this.content.validationTypes[0]) {
+            if (generatedType.value === this.content.validationTypes[0]) {
               validation.error = badRequest(undefined, undefined, new MissingParamError(validation.content.join(' ')), validation.content)
             } else {
               validation.error = badRequest(undefined, undefined, new InvalidParamError(validation.content.join(' ')), validation.content)
@@ -71,22 +69,22 @@ export class SignUpController implements IController {
             break
           }
 
-          generateTypes = this.generateTypes.next()
-        } while (!(generateTypes.done))
+          generatedType = generateTypes.next()
+        } while (!(generatedType.done))
 
         if (validation.error) {
           return validation.error
         }
 
         const account = await this.writeAccount.add({
-          personal: body.personal,
-          address: body.address
+          personal: personal,
+          address: address
         })
         if (!account) {
           return unprocessable()
         }
 
-        await this.handleSendEmail(account.id, body.personal.name, body.personal.email)
+        await this.handleSendEmail(account.id, personal.name, personal.email)
 
         return accepted()
       }
@@ -102,42 +100,38 @@ export class SignUpController implements IController {
   }
 
   async defineProperties (httpRequest: IHttpRequest): Promise<{
-    body: IHttpRequest['body']['user']['informations']
-    generateTypes: IteratorResult<string, any>
+    personal: IHttpRequest['body']['user']['informations']['personal']
+    address: IHttpRequest['body']['user']['informations']['address']
+    generateTypes: Generator<string, any, unknown>
+    generatedType: IteratorResult<string, any>
     validation: {
       content: string[]
       error: IHttpResponse | null
     }
   }> {
     const { address, personal } = httpRequest.body.user.informations
-    const body = { personal: personal, address: address }
+    const generateTypes: Generator<string> = (this.generateTypes(this.content.validationTypes, 0))()
 
-    this.generateTypes = generateTypes(this.content.validationTypes, 0)
     this.handleValidate = async (content: { type: string }) => {
       return await this.validationComposite.validate({
         type: content.type,
         fields: this.content.fields,
-        body: Object.assign({}, { ...body.personal }, { ...body.address }),
-        checkThis: body.personal.password,
-        withThis: body.personal.passwordConfirmation,
+        body: Object.assign({}, { ...personal }, { ...address }),
+        checkThis: personal.password,
+        withThis: personal.passwordConfirmation,
         checkThisType: this.content.checkThisType,
-        checkTheTypeOfThis: Object.assign({}, { ...body.personal }, { ...body.address })
+        checkTheTypeOfThis: Object.assign({}, { ...personal }, { ...address })
       })
     }
 
     return {
-      body: body,
-      generateTypes: this.generateTypes.next(),
+      personal,
+      address,
+      generateTypes: generateTypes,
+      generatedType: generateTypes.next(),
       validation: {
         content: [],
         error: null
-      }
-    }
-
-    function * generateTypes (types: string[], index: number): Generator<string> {
-      while (index < types.length) {
-        yield types[index]
-        index++
       }
     }
   }

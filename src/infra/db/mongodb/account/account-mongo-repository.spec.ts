@@ -3,7 +3,8 @@ import { AccountMongoRepository } from './account-mongo-repository'
 import { mongoHelper } from '../helper/mongo-helper'
 import {
   signUpHttpRequestBodyFields, signUpHttpRequestBodyAddressFields,
-  signUpHttpRequestBodyMatch, signInHttpRequestBodyMatch
+  signUpHttpRequestBodyMatch, fakeDataSignInHttpRequestBodyMatch,
+  fakeDataSearchAccountByField
 } from '../../../../utils/fake/data/export-all'
 
 interface ISystemUnderTestTypes {
@@ -17,7 +18,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   }
 }
 
-let accountsCollection: Collection
+let collection: Collection
 const anyToken = 'any_token'
 
 describe('AccountMongoRepository', () => {
@@ -25,8 +26,8 @@ describe('AccountMongoRepository', () => {
     await mongoHelper.connect('mongodb://localhost:27017')
   })
   beforeEach(async () => {
-    accountsCollection = await mongoHelper.getCollection('accounts')
-    await accountsCollection.deleteMany({})
+    collection = await mongoHelper.getCollection('accounts')
+    await collection.deleteMany({})
   })
   afterAll(async () => {
     await mongoHelper.disconnect()
@@ -47,8 +48,8 @@ describe('AccountMongoRepository', () => {
 
   test('Should return an account on searchByField success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    await accountsCollection.insertOne(signUpHttpRequestBodyMatch)
-    const account = await systemUnderTest.searchByField({ email: signInHttpRequestBodyMatch.email })
+    await collection.insertOne(signUpHttpRequestBodyMatch)
+    const account = await systemUnderTest.searchByField({ ...fakeDataSearchAccountByField, email: fakeDataSignInHttpRequestBodyMatch.email })
 
     expect(account).toBeTruthy()
     if (account) {
@@ -63,16 +64,16 @@ describe('AccountMongoRepository', () => {
 
   test('Should return null on searchByField fails <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const account = await systemUnderTest.searchByField({ email: signInHttpRequestBodyMatch.email })
+    const account = await systemUnderTest.searchByField({ ...fakeDataSearchAccountByField, email: fakeDataSignInHttpRequestBodyMatch.email })
 
     expect(account).toBeFalsy()
   })
 
   test('Should update the account accessToken on updateAccessToken success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
-    const accountOptions = await accountsCollection.insertOne(signUpHttpRequestBodyMatch)
+    const accountOptions = await collection.insertOne(signUpHttpRequestBodyMatch)
     await systemUnderTest.updateAccessToken((accountOptions.ops[0])._id, anyToken)
-    const account = await accountsCollection.findOne({ _id: (accountOptions.ops[0])._id })
+    const account = await collection.findOne({ _id: (accountOptions.ops[0])._id })
 
     expect(account).toBeTruthy()
     expect(account.accessToken).toBe(anyToken)

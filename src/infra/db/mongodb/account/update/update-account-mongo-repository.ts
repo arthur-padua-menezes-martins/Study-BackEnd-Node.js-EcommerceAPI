@@ -1,3 +1,4 @@
+import { Collection } from 'mongodb'
 import { IUpdateAccessTokenRepository, IUpdateEnabledAccountRepository } from '../../../../../data/protocols/repository/account/update/export-all'
 import {
   mongoHelper
@@ -10,19 +11,25 @@ export class AccountMongoRepositoryUpdate implements IUpdateAccessTokenRepositor
   * @param {string} accessToken
   * new value to update accessToken field
   */
-  async updateAccessToken (id: string, accessToken: string): Promise<void> {
-    const accountsCollection = await mongoHelper.getCollection('accounts')
-    await accountsCollection.updateOne(
+  public async updateAccessToken (id: string, accessToken: string): Promise<void> {
+    const collection = await AccountMongoRepositoryUpdate.getCollection()
+
+    await collection.updateOne(
       { _id: await mongoHelper.createObjectId(id) },
       { $set: { accessToken } }
     )
   }
 
-  async updateEnabled (id: string, status: boolean): Promise<void> {
-    const accountsCollection = await mongoHelper.getCollection('accounts')
-    await accountsCollection.updateOne(
+  public async updateEnabled (id: string, status: boolean): Promise<void> {
+    const collection = await AccountMongoRepositoryUpdate.getCollection()
+
+    await collection.updateOne(
       { _id: await mongoHelper.createObjectId(id) },
       { $set: { enabled: status } }
     )
+  }
+
+  static async getCollection (): Promise<Collection> {
+    return await mongoHelper.getCollection('accounts')
   }
 }
