@@ -1,5 +1,13 @@
+import {
+  IHttpRequest, IHttpResponse
+} from '../../../protocols/export-all'
+
 export {
-  IController, IHttpRequest, IHttpResponse
+  IHttpRequest,
+  IHttpResponse
+}
+export {
+  IController
 } from '../../../protocols/export-all'
 export {
   IValidation
@@ -14,3 +22,14 @@ export {
 export {
   IAccountModel
 } from '../../../../domain/models/account/account'
+
+export interface IDefineProperties {
+  personal: IHttpRequest['body']['user']['informations']['personal']
+  address: IHttpRequest['body']['user']['informations']['address']
+  generateTypes: Generator<string, any, unknown>
+  generatedType: IteratorResult<string, any>
+  validation: {
+    content: string[]
+    error: IHttpResponse | null
+  }
+}

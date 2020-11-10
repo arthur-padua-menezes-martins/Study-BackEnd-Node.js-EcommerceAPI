@@ -1,9 +1,16 @@
-import { Collection } from 'mongodb'
-import { SurveyMongoRepository } from './survey-mongo-repository'
-import { MongoHelper } from '../helper/mongo-helper'
+import {
+  Collection
+} from 'mongodb'
+import {
+  SurveyMongoRepository
+} from './survey-mongo-repository'
+import {
+  MongoHelper
+} from '../helper/mongo-helper'
 import {
   fakeDataAddSurveyHttpRequestBody
 } from '../../../../utils/fake/data/survey/add/fake-data-add-survey-http-request-body'
+import env from '../../../../main/config/env'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: SurveyMongoRepository
@@ -21,10 +28,10 @@ const httpRequest = fakeDataAddSurveyHttpRequestBody
 
 describe('AccountMongoRepository', () => {
   beforeAll(async () => {
-    await MongoHelper.connect('mongodb://localhost:27017')
+    await MongoHelper.connect(env.mongoUrlLocalhost)
   })
   beforeEach(async () => {
-    collection = await MongoHelper.getCollection('surveys')
+    collection = await MongoHelper.getCollection(env.collections.surveys)
     await collection.deleteMany({})
   })
   afterAll(async () => {

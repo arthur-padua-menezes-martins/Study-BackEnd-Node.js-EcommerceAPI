@@ -4,10 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const sign_up_and_sign_in_1 = __importDefault(require("../routes/authentication/sign-up-and-sign-in"));
+const authentication_routes_1 = __importDefault(require("../routes/authentication/authentication-routes"));
+const survey_routes_1 = __importDefault(require("../routes/administrator/survey/survey-routes"));
 exports.default = (app) => {
     const router = express_1.Router();
-    sign_up_and_sign_in_1.default(router);
+    authentication_routes_1.default(router);
+    survey_routes_1.default(router);
     app.use('/api', router);
 };
 //# sourceMappingURL=routes.js.map

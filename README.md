@@ -39,9 +39,8 @@
 * 🏆 *autenticar informações e disponibilizar opções referentes à enquete*
 * ✔️ *log de erros*
 * ❌ *somente acesso administrativo*
-* ❌ *verificar a procedência das informações (**question** e **answers**)*
-* ❌ *criação da enquete*
-* ❌ *retornar dados da enquete*
+* ✔️ *verificar a procedência das informações (**question** e **answers**)*
+* ✔️ *criação da enquete*
 
 <br/></br></br>
 

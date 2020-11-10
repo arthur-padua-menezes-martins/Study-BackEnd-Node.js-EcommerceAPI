@@ -11,7 +11,6 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mongoHelper = void 0;
 const mongodb_1 = require("mongodb");
 /**
 * @method `connect`
@@ -29,7 +28,7 @@ const mongodb_1 = require("mongodb");
 * @this `this.client`
 * references a MongoClient connect
 */
-exports.mongoHelper = {
+exports.MongoHelper = {
     client: null,
     url: '',
     /**

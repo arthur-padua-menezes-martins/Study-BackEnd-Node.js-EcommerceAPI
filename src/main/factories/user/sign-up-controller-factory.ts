@@ -1,5 +1,5 @@
 import { IController, SignUpController } from './import-all'
-import { accountValidation } from './sign-up/sign-up-controller-account-validation-factory'
+import { accountValidation } from './sign-up/sign-up-controller-validation-composite-factory'
 import { writeAccount } from './sign-up/sign-up-controller-add-account-factory'
 import { updateAccount } from './sign-up/sign-up-controller-update-enabled-account-factory'
 import { emailSender } from './sign-up/sign-up-controller-email-sender-factory'

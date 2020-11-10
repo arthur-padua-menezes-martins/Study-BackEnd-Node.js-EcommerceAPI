@@ -2,6 +2,7 @@ export interface IHttpRequestBody {
   [field: string]: string | boolean | object | any
   user: {
     informations: {
+      [field: string]: object
       personal: {
         [field: string]: string
         name: string
@@ -22,6 +23,7 @@ export interface IHttpRequestBody {
     }
   }
   survey: {
+    [field: string]: string | object
     question: string
     answers: [{
       image: string

@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     api: (_a = process.env.API) !== null && _a !== void 0 ? _a : 'http://localhost:5050/api',
     mongoUrl: (_b = process.env.MONGO_URL) !== null && _b !== void 0 ? _b : 'mongodb://mongo:27017/ecommerce-sertao-nerd',
+    mongoUrlLocalhost: 'mongodb://localhost:27017',
     port: (_c = process.env.PORT) !== null && _c !== void 0 ? _c : 5050,
     jwtSecret: (_d = process.env.PORT) !== null && _d !== void 0 ? _d : '7b205b22ff506a1f2fa12fea5da18c07',
     sendEmail: {
@@ -17,8 +18,10 @@ exports.default = {
         }
     },
     collections: {
+        accounts: 'accounts',
+        surveys: 'surveys',
         log: {
-            error: 'log-error'
+            error: 'errorLog'
         }
     }
 };

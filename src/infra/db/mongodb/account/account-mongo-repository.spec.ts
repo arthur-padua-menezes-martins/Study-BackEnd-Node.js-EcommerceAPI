@@ -1,6 +1,12 @@
-import { Collection } from 'mongodb'
-import { AccountMongoRepository } from './account-mongo-repository'
-import { MongoHelper } from '../helper/mongo-helper'
+import {
+  Collection
+} from 'mongodb'
+import {
+  AccountMongoRepository
+} from './account-mongo-repository'
+import {
+  MongoHelper
+} from '../helper/mongo-helper'
 import {
   fakeDataSignUpHttpRequestBodyFields, fakeDataSignUpHttpRequestBodyAddressFields,
   fakeDataSignUpHttpRequestBodyMatch, fakeDataSignInHttpRequestBodyMatch,
@@ -24,7 +30,7 @@ const anyToken = 'any_token'
 
 describe('AccountMongoRepository', () => {
   beforeAll(async () => {
-    await MongoHelper.connect('mongodb://localhost:27017')
+    await MongoHelper.connect(env.mongoUrlLocalhost)
   })
   beforeEach(async () => {
     collection = await MongoHelper.getCollection(env.collections.accounts)

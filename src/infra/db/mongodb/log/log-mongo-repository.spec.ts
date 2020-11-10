@@ -1,5 +1,9 @@
-import { Collection } from 'mongodb'
-import { LogMongoRepository } from './log-mongo-repository'
+import {
+  Collection
+} from 'mongodb'
+import {
+  LogMongoRepository
+} from './log-mongo-repository'
 import {
   MongoHelper
 } from './import-all'
@@ -20,7 +24,7 @@ describe('LogMongoRepository', () => {
   let logErrorCollection: Collection
 
   beforeAll(async () => {
-    await MongoHelper.connect('mongodb://localhost:27017')
+    await MongoHelper.connect(env.mongoUrlLocalhost)
   })
   beforeEach(async () => {
     logErrorCollection = await MongoHelper.getCollection(env.collections.log.error)

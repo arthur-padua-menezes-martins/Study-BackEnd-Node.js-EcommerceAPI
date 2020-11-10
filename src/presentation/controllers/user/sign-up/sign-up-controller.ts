@@ -3,7 +3,8 @@ import {
   IValidation,
   IAddAccount,
   IUpdateEnabledAccount,
-  ISendEmailSignUp
+  ISendEmailSignUp,
+  IDefineProperties
 } from './sign-up-controller-protocols'
 import {
   SuperClassSignInAndSignUpController
@@ -14,16 +15,6 @@ import {
   fakeDataSignUpHttpRequestBodyFields, fakeDataSignUpHttpRequestBodyAddressFields
 } from './sign-up-controller-helpers'
 
-interface IDefineProperties {
-  personal: IHttpRequest['body']['user']['informations']['personal']
-  address: IHttpRequest['body']['user']['informations']['address']
-  generateTypes: Generator<string, any, unknown>
-  generatedType: IteratorResult<string, any>
-  validation: {
-    content: string[]
-    error: IHttpResponse | null
-  }
-}
 /**
 * @method handle
 * validates the insertion of a new account in the database

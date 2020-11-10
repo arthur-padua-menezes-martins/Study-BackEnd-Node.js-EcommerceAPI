@@ -1,6 +1,8 @@
 import {
   IController, IHttpRequest, IHttpResponse,
-  IAuthentication, IValidation
+  IAuthentication,
+  IValidation,
+  IDefineProperties
 } from './sign-in-controller-protocols'
 import {
   SuperClassSignInAndSignUpController
@@ -11,15 +13,6 @@ import {
   fakeDataSignInHttpRequestBodyFields
 } from './sign-in-controller-helpers'
 
-interface IDefineProperties {
-  personal: IHttpRequest['body']['user']['informations']['personal']
-  generateTypes: Generator<string, any, unknown>
-  generatedType: IteratorResult<string, any>
-  validation: {
-    content: string[]
-    error: IHttpResponse | null
-  }
-}
 /**
 * @implements {Controller}
 *

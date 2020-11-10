@@ -8,7 +8,7 @@ interface IValidationCompositeComponents {
 interface IValidationCompositeParams {
   type: string
   fields?: string[] | [string[], string[]]
-  body?: IHttpRequestBody
+  body?: IHttpRequestBody | IHttpRequestBody['user']['informations'] | IHttpRequestBody['survey']
   checkThisType?: string
   checkTheTypeOfThis?: object
   checkThis?: string

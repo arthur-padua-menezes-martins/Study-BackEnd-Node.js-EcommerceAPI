@@ -12,7 +12,7 @@ export const expressRouteAdapter = (controller: IController) => {
     const httpResponse: IHttpResponse = await controller.handle(httpRequest)
     const response = Object.assign({}, httpResponse)
 
-    if (response.statusCode === 200) {
+    if (response.statusCode <= 200 || response.statusCode <= 299) {
       res.status(response.statusCode).json(httpResponse)
     } else {
       res.status(response.statusCode).json({

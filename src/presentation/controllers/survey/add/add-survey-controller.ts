@@ -5,23 +5,15 @@ import {
   IController,
   IHttpRequest, IHttpResponse,
   IValidation,
-  IAddSurvey
+  IAddSurvey,
+  IDefineProperties
 } from './add-survey-controller-protocols'
 import {
   MissingParamError,
-  noContent, badRequest, serverError
+  noContent, badRequest, serverError,
+  fakeDataAddSurveyHttpRequestBodyFields
 } from './add-survey-controller-helpers'
 
-interface IDefineProperties {
-  answers: IHttpRequest['body']['survey']['answers']
-  question: IHttpRequest['body']['survey']['question']
-  generateTypes: Generator<string, any, unknown>
-  generatedType: IteratorResult<string, any>
-  validation: {
-    content: string[]
-    error: IHttpResponse | null
-  }
-}
 export class AddSurveyController extends SuperClassAddSurveyController implements IController {
   /**
   * @param {ValidationComposite} validationComposite
@@ -36,7 +28,8 @@ export class AddSurveyController extends SuperClassAddSurveyController implement
     super()
 
     this.content = {
-      validationTypes: ['']
+      fields: fakeDataAddSurveyHttpRequestBodyFields,
+      validationTypes: ['required_fields']
     }
   }
 
@@ -56,7 +49,7 @@ export class AddSurveyController extends SuperClassAddSurveyController implement
         generatedType = generateTypes.next()
       } while (!(generatedType.done))
 
-      if (validation.error) {
+      if (validation.error !== null) {
         return validation.error
       }
 
@@ -73,12 +66,14 @@ export class AddSurveyController extends SuperClassAddSurveyController implement
 
   async defineProperties (httpRequest: IHttpRequest): Promise<IDefineProperties> {
     const { answers, question } = httpRequest.body.survey
+
     const generateTypes: Generator<string> = (this.generateTypes(this.content.validationTypes, 0))()
 
     this.handleValidate = async (content: { type: string }) => {
       return await this.validationComposite.validate({
         type: content.type,
-        body: { ...answers, question }
+        fields: this.content.fields,
+        body: { answers, question }
       })
     }
 
