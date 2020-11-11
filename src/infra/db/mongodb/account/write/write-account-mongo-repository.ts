@@ -16,8 +16,6 @@ export class AccountMongoRepositoryWrite implements IAddAccountRepository {
   * insert the body sign-up request into the collection
   * @param {IAddAccountModel} accountData
   * sign-up body
-* @param {string} getThisCollection
-  * the schema to add a new account
   */
   async add (accountData: IAddAccountModel): Promise<IAccountModel> {
     const accountsCollection = await MongoHelper.getCollection(env.collections.accounts)

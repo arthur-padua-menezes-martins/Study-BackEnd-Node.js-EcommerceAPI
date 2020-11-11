@@ -1,6 +1,10 @@
 import bcrypt from 'bcrypt'
-import { BcryptAdapter } from './bcrypt-adapter'
-import { informationsOfSignUpHttpRequestBodyMatch, informationsOfSignInHttpRequestBodyMatch } from '../../../../utils/fake/data/export-all'
+import {
+  BcryptAdapter
+} from './bcrypt-adapter'
+import {
+  informationsOfSignUpHttpRequestBodyMatch, informationsOfSignInHttpRequestBodyMatch
+} from '../../../../utils/fake/informations-of/export-all'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: BcryptAdapter

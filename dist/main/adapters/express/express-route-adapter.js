@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.expressRouteAdapter = void 0;
 exports.expressRouteAdapter = (controller) => {
     return async (req, res) => {
         var _a;
         const httpRequest = {
+            body: req.body || {},
             params: req.params || {},
             query: req.query || {},
-            body: req.body || {}
+            headers: req.headers || {}
         };
         const httpResponse = await controller.handle(httpRequest);
         const response = Object.assign({}, httpResponse);

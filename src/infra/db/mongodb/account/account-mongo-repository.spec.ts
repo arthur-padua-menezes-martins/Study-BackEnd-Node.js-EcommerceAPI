@@ -11,7 +11,7 @@ import {
   informationsOfSignUpHttpRequestBodyFields, informationsOfSignUpHttpRequestBodyAddressFields,
   informationsOfSignUpHttpRequestBodyMatch, informationsOfSignInHttpRequestBodyMatch,
   informationsOfSearchAccountByField
-} from '../../../../utils/fake/data/export-all'
+} from '../../../../utils/fake/informations-of/export-all'
 import env from '../../../../main/config/env'
 
 interface ISystemUnderTestTypes {

@@ -4,9 +4,10 @@ import { IHttpRequest, IHttpResponse, IController } from '../../../presentation/
 export const expressRouteAdapter = (controller: IController) => {
   return async (req: Request, res: Response) => {
     const httpRequest: IHttpRequest = {
+      body: req.body || {},
       params: req.params || {},
       query: req.query || {},
-      body: req.body || {}
+      headers: req.headers || {}
     }
 
     const httpResponse: IHttpResponse = await controller.handle(httpRequest)

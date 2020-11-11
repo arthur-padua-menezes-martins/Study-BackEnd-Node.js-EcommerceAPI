@@ -4,6 +4,7 @@ export interface ISearchAccountByFieldRepositoryParams {
   [field: string]: string
   id: string
   email: string
+  accessToken: string
 }
 /**
 * @interface
@@ -15,6 +16,8 @@ export interface ISearchAccountByFieldRepository {
   /**
   * @param field
   * key and value to search an account
+  * @param role
+  * permission type
   */
-  searchByField: (fields: ISearchAccountByFieldRepositoryParams) => Promise<IAccountModel | null>
+  searchByField: (fields: ISearchAccountByFieldRepositoryParams, role?: string) => Promise<IAccountModel | null>
 }

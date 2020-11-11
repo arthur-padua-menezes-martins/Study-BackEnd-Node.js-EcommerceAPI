@@ -1,5 +1,5 @@
 export {
-  ISearchAccountByFieldRepository
+  ISearchAccountByFieldRepository, ISearchAccountByFieldRepositoryParams
 } from '../../../protocols/repository/account/read/search-account-by-field-repository'
 export {
   IAccountModel,

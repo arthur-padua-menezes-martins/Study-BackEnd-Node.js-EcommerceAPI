@@ -3,7 +3,7 @@ import {
 } from './add-survey-controller-validation-composite-factory'
 import {
   informationsOfAddSurveyHttpRequestBodyFields, informationsOfAddSurveyHttpRequestBody
-} from '../../../../utils/fake/data/survey/add/fake-data-add-survey-http-request-body'
+} from '../../../../utils/fake/informations-of/survey/add/fake-data-add-survey-http-request-body'
 
 describe('', () => {
   test('shuold return an not empty array if validation don´t bypass', async () => {

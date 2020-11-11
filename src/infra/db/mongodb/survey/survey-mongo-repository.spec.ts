@@ -9,7 +9,7 @@ import {
 } from '../helper/mongo-helper'
 import {
   informationsOfAddSurveyHttpRequestBody
-} from '../../../../utils/fake/data/survey/add/fake-data-add-survey-http-request-body'
+} from '../../../../utils/fake/informations-of/survey/add/fake-data-add-survey-http-request-body'
 import env from '../../../../main/config/env'
 
 interface ISystemUnderTestTypes {

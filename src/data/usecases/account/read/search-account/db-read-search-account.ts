@@ -9,7 +9,9 @@ export class DatabaseSearchAccountController implements ISearchAccountByFieldRep
   ) {}
 
   async searchByField (field: ISearchAccountByFieldModel): Promise<IAccountModel | null> {
-    const account = await this.accountRepositoryRead.searchByField({ email: '', id: '', ...field })
+    const account = await this.accountRepositoryRead.searchByField({
+      id: '', email: '', accessToken: '', ...field
+    })
 
     return account
   }
