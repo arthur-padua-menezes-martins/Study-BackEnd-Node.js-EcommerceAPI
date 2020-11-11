@@ -76,8 +76,7 @@ describe('DatabaseAuthenticationController Usecases', () => {
 
     await systemUnderTest.auth(authentication)
     expect(spyOnSearchByField).toHaveBeenCalledWith({
-      id: '',
-      email: authentication.email
+      id: '', accessToken: '', email: authentication.email
     })
   })
 

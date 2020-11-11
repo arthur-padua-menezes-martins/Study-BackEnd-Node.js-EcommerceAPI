@@ -15,7 +15,9 @@ export class DatabaseAccountAuthenticationController implements IAuthentication 
   ) {}
 
   async auth (authentication: IAuthenticationModel): Promise<string | null> {
-    const account = await this.accountRepositoryRead.searchByField({ id: '', email: authentication.email })
+    const account = await this.accountRepositoryRead.searchByField({
+      id: '', accessToken: '', email: authentication.email
+    })
     let accessToken: string = ''
 
     if (

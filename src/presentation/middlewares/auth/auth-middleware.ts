@@ -7,7 +7,7 @@ import {
   AccessDeniedError
 } from './add-survey-controller-errors'
 import {
-  forbidden
+  ok, forbidden
 } from './add-survey-controller-helpers'
 
 export class AuthMiddleare implements IMiddleware {
@@ -20,6 +20,10 @@ export class AuthMiddleare implements IMiddleware {
 
     if (accessToken) {
       const account = await this.readAccount.searchByField({ accessToken })
+
+      if (account) {
+        return ok({ account: { id: account.id } })
+      }
     }
 
     return forbidden(new AccessDeniedError())

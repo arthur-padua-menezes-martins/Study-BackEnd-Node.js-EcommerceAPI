@@ -1,3 +1,3 @@
 export {
-  forbidden
+  ok, forbidden
 } from '../../helpers/http/response/export-all'

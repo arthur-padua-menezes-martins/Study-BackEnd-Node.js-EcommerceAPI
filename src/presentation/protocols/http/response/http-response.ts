@@ -1,3 +1,9 @@
+interface IHttpResponseBody {
+  account?: {
+    id: string
+  }
+}
+
 /**
 * @interface
 * general interface for HTTP Response
@@ -14,7 +20,7 @@
 */
 export interface IHttpResponse {
   statusCode: number
-  body: object
+  body: IHttpResponseBody
   successMessage?: string
   errorMessage?: Error
   invalidFields?: string[]
