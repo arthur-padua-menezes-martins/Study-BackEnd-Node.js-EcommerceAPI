@@ -1,3 +1,3 @@
 export { IAddAccountRepository } from './write/add-account-repository'
-export { ISearchAccountByFieldRepository } from './read/search-account-by-field-repository'
-export { IUpdateAccessTokenRepository, IUpdateEnabledAccountRepository } from './update/export-all'
+export * from './read/export-all'
+export * from './update/export-all'

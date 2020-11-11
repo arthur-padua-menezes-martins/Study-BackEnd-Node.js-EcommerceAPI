@@ -1,18 +1,17 @@
 import {
-  ISearchAccountByFieldRepository, ISearchAccountByFieldModel,
-  IAccountModel
-} from './db-read-search-account-protocols'
+  DatabaseSearchAccountByAccessToken
+} from './by-access-token/db-read-search-account-by-access-token'
+import {
+  DatabaseSearchAccountByFields
+} from './by-field/db-read-search-account-by-fields'
+import {
+  applyMixins
+} from '../../import-all'
 
-export class DatabaseSearchAccountController implements ISearchAccountByFieldRepository {
-  constructor (
-    private readonly accountRepositoryRead: ISearchAccountByFieldRepository
-  ) {}
+export interface DatabaseSearchAccountController extends DatabaseSearchAccountByAccessToken, DatabaseSearchAccountByFields {}
+export class DatabaseSearchAccountController implements DatabaseSearchAccountController {}
 
-  async searchByField (field: ISearchAccountByFieldModel): Promise<IAccountModel | null> {
-    const account = await this.accountRepositoryRead.searchByField({
-      id: '', email: '', accessToken: '', ...field
-    })
-
-    return account
-  }
-}
+applyMixins(DatabaseSearchAccountController, [
+  DatabaseSearchAccountByAccessToken,
+  DatabaseSearchAccountByAccessToken
+])

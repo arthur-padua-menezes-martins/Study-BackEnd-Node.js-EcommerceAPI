@@ -1,3 +1,3 @@
 export {
   IEncrypter
-} from '../../../protocols/cryptography/encrypter'
+} from '../../../protocols/cryptography/encrypt/encrypter'

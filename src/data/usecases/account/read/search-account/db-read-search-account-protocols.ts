@@ -1,3 +1,10 @@
-export { ISearchAccountByFieldRepository } from '../../../../protocols/repository/account/read/search-account-by-field-repository'
-export { ISearchAccountByFieldModel } from '../../../../../domain/usecases/account/read/search-account-by-field'
-export { IAccountModel } from '../../import-all'
+export {
+  ISearchAccountByFieldRepository,
+  ISearchAccountByAccessTokenRepository
+} from '../../../../protocols/repository/account/read/export-all'
+export {
+  ISearchAccountByFieldModel
+} from '../../../../../domain/usecases/account/read/search-account-by-field'
+export {
+  IAccountModel
+} from '../../import-all'

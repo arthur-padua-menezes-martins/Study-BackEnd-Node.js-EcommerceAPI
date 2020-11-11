@@ -1,10 +1,9 @@
 import { IAccountModel } from '../import-all'
 
-export interface ISearchAccountByFieldRepositoryParams {
+export interface ISearchAccountByFieldRepositoryModel {
   [field: string]: string
   id: string
   email: string
-  accessToken: string
 }
 /**
 * @interface
@@ -16,8 +15,6 @@ export interface ISearchAccountByFieldRepository {
   /**
   * @param field
   * key and value to search an account
-  * @param role
-  * permission type
   */
-  searchByField: (fields: ISearchAccountByFieldRepositoryParams, role?: string) => Promise<IAccountModel | null>
+  searchByField: (fields: ISearchAccountByFieldRepositoryModel) => Promise<IAccountModel | null>
 }

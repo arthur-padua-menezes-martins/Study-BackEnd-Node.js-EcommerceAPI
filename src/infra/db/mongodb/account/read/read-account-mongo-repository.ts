@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { ISearchAccountByFieldRepository, ISearchAccountByFieldRepositoryParams } from '../../../../../data/protocols/repository/account/read/search-account-by-field-repository'
+import { ISearchAccountByFieldRepository, ISearchAccountByFieldRepositoryModel } from '../../../../../data/protocols/repository/account/read/search-account-by-field-repository'
 import {
   IAccountModel,
   MongoHelper
@@ -8,10 +8,10 @@ import env from '../../../../../main/config/env'
 
 export class AccountMongoRepositoryRead implements ISearchAccountByFieldRepository {
   /**
-  * @param {ISearchAccountByFieldRepositoryParams} fields
+  * @param {ISearchAccountByFieldRepositoryModel} fields
   * field to search for an account
   */
-  public async searchByField (fields: ISearchAccountByFieldRepositoryParams): Promise<IAccountModel | null> {
+  public async searchByField (fields: ISearchAccountByFieldRepositoryModel): Promise<IAccountModel | null> {
     const collection = await AccountMongoRepositoryRead.getCollection()
     let account: IAccountModel | null = null
 
