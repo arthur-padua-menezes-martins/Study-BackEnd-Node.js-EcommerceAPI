@@ -7,7 +7,7 @@ import {
   MongoHelper
 } from '../../../../infra/db/mongodb/helper/mongo-helper'
 import {
-  fakeDataAddSurveyHttpRequestBody
+  informationsOfAddSurveyHttpRequestBody
 } from '../../../../utils/fake/data/survey/add/fake-data-add-survey-http-request-body'
 import env from '../../../config/env'
 
@@ -29,7 +29,7 @@ describe('survey routes', () => {
     await request(app)
       .post('/add-survey')
       .send({
-        survey: fakeDataAddSurveyHttpRequestBody
+        survey: informationsOfAddSurveyHttpRequestBody
       })
       .expect(204)
   })

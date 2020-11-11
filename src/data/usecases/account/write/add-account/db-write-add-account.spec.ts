@@ -12,7 +12,7 @@ import {
   makeWriteAccount
 } from './db-write-add-account-make'
 import {
-  fakeDataSignUpHttpRequestBodyMatch,
+  informationsOfSignUpHttpRequestBodyMatch,
   accountModelDisabled
 } from './db-write-add-account-utils'
 
@@ -41,16 +41,16 @@ describe('DatabaseAddAccountController', () => {
     const { systemUnderTest, hasherStub } = await makeSystemUnderTest()
 
     const spyOnHash = jest.spyOn(hasherStub, 'hash')
-    await systemUnderTest.add(fakeDataSignUpHttpRequestBodyMatch)
+    await systemUnderTest.add(informationsOfSignUpHttpRequestBodyMatch)
 
-    expect(spyOnHash).toHaveBeenCalledWith(fakeDataSignUpHttpRequestBodyMatch.personal.password)
+    expect(spyOnHash).toHaveBeenCalledWith(informationsOfSignUpHttpRequestBodyMatch.personal.password)
   })
 
   test('Should throw if Encrypter throws <version: 0.0.1>', async () => {
     const { systemUnderTest, hasherStub } = await makeSystemUnderTest()
 
     jest.spyOn(hasherStub, 'hash').mockReturnValueOnce(Promise.reject(new Error()))
-    const promiseAccount = systemUnderTest.add(fakeDataSignUpHttpRequestBodyMatch)
+    const promiseAccount = systemUnderTest.add(informationsOfSignUpHttpRequestBodyMatch)
 
     await expect(promiseAccount).rejects.toThrow()
   })
@@ -59,14 +59,14 @@ describe('DatabaseAddAccountController', () => {
     const { systemUnderTest, writeAccountStub } = await makeSystemUnderTest()
 
     const spyOnAdd = jest.spyOn(writeAccountStub, 'add')
-    await systemUnderTest.add(fakeDataSignUpHttpRequestBodyMatch)
+    await systemUnderTest.add(informationsOfSignUpHttpRequestBodyMatch)
 
     expect(spyOnAdd).toHaveBeenCalledWith({
       personal: {
-        ...fakeDataSignUpHttpRequestBodyMatch.personal,
+        ...informationsOfSignUpHttpRequestBodyMatch.personal,
         password: accountModelDisabled.personal.password
       },
-      address: fakeDataSignUpHttpRequestBodyMatch.address,
+      address: informationsOfSignUpHttpRequestBodyMatch.address,
       enabled: false
     })
   })
@@ -74,7 +74,7 @@ describe('DatabaseAddAccountController', () => {
   test('Should return an account on success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
-    const account = await systemUnderTest.add(fakeDataSignUpHttpRequestBodyMatch)
+    const account = await systemUnderTest.add(informationsOfSignUpHttpRequestBodyMatch)
 
     expect(account).toEqual({
       personal: {

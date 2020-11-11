@@ -8,7 +8,7 @@ import {
   MongoHelper
 } from '../helper/mongo-helper'
 import {
-  fakeDataAddSurveyHttpRequestBody
+  informationsOfAddSurveyHttpRequestBody
 } from '../../../../utils/fake/data/survey/add/fake-data-add-survey-http-request-body'
 import env from '../../../../main/config/env'
 
@@ -24,7 +24,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
 }
 
 let collection: Collection
-const httpRequest = fakeDataAddSurveyHttpRequestBody
+const httpRequest = informationsOfAddSurveyHttpRequestBody
 
 describe('AccountMongoRepository', () => {
   beforeAll(async () => {

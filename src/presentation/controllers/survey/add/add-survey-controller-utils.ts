@@ -1,3 +1,3 @@
 export {
-  fakeDataAddSurveyHttpRequestBodyFields, fakeDataAddSurveyHttpRequestBody
-} from '../../../../utils/fake/data/survey/add/fake-data-add-survey-http-request-body'
+  informationsOfAddSurveyHttpRequestBodyFields, informationsOfAddSurveyHttpRequestBody
+} from '../../../../utils/fake/informations-of/survey/add/fake-data-add-survey-http-request-body'

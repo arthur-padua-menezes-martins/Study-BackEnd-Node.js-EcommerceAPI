@@ -15,7 +15,7 @@ import {
   noContent, badRequest, serverError
 } from './add-survey-controller-helpers'
 import {
-  fakeDataAddSurveyHttpRequestBodyFields
+  informationsOfAddSurveyHttpRequestBodyFields
 } from './add-survey-controller-utils'
 
 export class AddSurveyController extends SuperClassAddSurveyController implements IController {
@@ -32,7 +32,7 @@ export class AddSurveyController extends SuperClassAddSurveyController implement
     super()
 
     this.content = {
-      fields: fakeDataAddSurveyHttpRequestBodyFields,
+      fields: informationsOfAddSurveyHttpRequestBodyFields,
       validationTypes: ['required_fields']
     }
   }

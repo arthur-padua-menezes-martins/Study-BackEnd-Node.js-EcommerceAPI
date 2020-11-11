@@ -11,7 +11,7 @@ import {
   validationCompositeStub
 } from './add-survey-controller-components'
 import {
-  fakeDataAddSurveyHttpRequestBody, fakeDataAddSurveyHttpRequestBodyFields
+  informationsOfAddSurveyHttpRequestBody, informationsOfAddSurveyHttpRequestBodyFields
 } from './add-survey-controller-utils'
 
 interface ISystemUnderTestTypes {
@@ -32,7 +32,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
 
 const httpRequest: any = {
   body: {
-    survey: fakeDataAddSurveyHttpRequestBody
+    survey: informationsOfAddSurveyHttpRequestBody
   }
 }
 let httpResponse: IHttpResponse = {
@@ -62,7 +62,7 @@ describe('AddSurveyController', () => {
     await systemUnderTest.handle(httpRequest)
     expect(spyOnValidate).toHaveBeenCalledWith({
       type: 'required_fields',
-      fields: fakeDataAddSurveyHttpRequestBodyFields,
+      fields: informationsOfAddSurveyHttpRequestBodyFields,
       body: { answers, question }
     })
   })

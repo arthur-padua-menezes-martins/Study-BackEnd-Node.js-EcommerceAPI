@@ -1,6 +1,6 @@
 export {
-  fakeDataSignUpHttpRequestBodyFields, fakeDataSignUpHttpRequestBodyAddressFields, fakeDataSignUpHttpRequestBodyMatch, fakeDataSignUpHttpRequestBodyMissingField, fakeDataSignUpHttpRequestBodyInvalidPasswordConfirmation
-} from '../../../../utils/fake/data/user/sign-up/fake-data-sign-up-http-request-body'
+  informationsOfSignUpHttpRequestBodyFields, informationsOfSignUpHttpRequestBodyAddressFields, informationsOfSignUpHttpRequestBodyMatch, informationsOfSignUpHttpRequestBodyMissingField, informationsOfSignUpHttpRequestBodyInvalidPasswordConfirmation
+} from '../../../../utils/fake/informations-of/user/sign-up/fake-data-sign-up-http-request-body'
 export {
   accountModelDisabled
-} from '../../../../utils/fake/data/account/fake-data-account-model'
+} from '../../../../utils/fake/informations-of/account/model/fake-data-account-model'

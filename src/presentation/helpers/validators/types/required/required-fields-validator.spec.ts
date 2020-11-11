@@ -1,7 +1,7 @@
 import { RequiredFieldsValidator } from './required-fields-validator'
 import {
   IHttpRequestBody,
-  fakeDataSignUpHttpRequestBodyFields, fakeDataSignUpHttpRequestBodyMatch
+  informationsOfSignUpHttpRequestBodyFields, informationsOfSignUpHttpRequestBodyMatch
 } from '../../import-all'
 
 interface IRequiredFieldsValidatorTypes {
@@ -15,9 +15,9 @@ const makeSystemUnderTest = async (): Promise<IRequiredFieldsValidatorTypes> => 
   return {
     requiredFieldsValidator: new RequiredFieldsValidator(),
     input: {
-      fields: fakeDataSignUpHttpRequestBodyFields,
+      fields: informationsOfSignUpHttpRequestBodyFields,
       body: {
-        ...fakeDataSignUpHttpRequestBodyMatch
+        ...informationsOfSignUpHttpRequestBodyMatch
       }
     }
   }

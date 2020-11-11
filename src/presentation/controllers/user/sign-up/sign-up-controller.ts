@@ -17,7 +17,7 @@ import {
   created, accepted, badRequest, unprocessable, serverError
 } from './sign-up-controller-helpers'
 import {
-  fakeDataSignUpHttpRequestBodyFields, fakeDataSignUpHttpRequestBodyAddressFields
+  informationsOfSignUpHttpRequestBodyFields, informationsOfSignUpHttpRequestBodyAddressFields
 } from './sign-up-controller-utils'
 
 /**
@@ -46,7 +46,7 @@ export class SignUpController extends SuperClassSignInAndSignUpController implem
     super()
 
     this.content = {
-      fields: fakeDataSignUpHttpRequestBodyFields.concat(fakeDataSignUpHttpRequestBodyAddressFields),
+      fields: informationsOfSignUpHttpRequestBodyFields.concat(informationsOfSignUpHttpRequestBodyAddressFields),
       checkThisType: 'string',
       validationTypes: ['required_fields', 'verify_types', 'compare_fields', 'validate_fields']
     }

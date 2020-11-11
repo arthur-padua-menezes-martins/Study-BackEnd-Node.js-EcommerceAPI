@@ -8,7 +8,7 @@ import {
   makeWriteSurvey
 } from './db-write-add-survey-make'
 import {
-  fakeDataAddSurveyHttpRequestBody
+  informationsOfAddSurveyHttpRequestBody
 } from './db-write-add-survey-utils'
 
 interface ISystemUnderTestTypes {
@@ -25,7 +25,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   }
 }
 
-const httpRequest = fakeDataAddSurveyHttpRequestBody
+const httpRequest = informationsOfAddSurveyHttpRequestBody
 
 describe('DatabaseAddSurveyController', () => {
   test('should call AddSurveyRepository with correct values <version: 0.0.1>', async () => {

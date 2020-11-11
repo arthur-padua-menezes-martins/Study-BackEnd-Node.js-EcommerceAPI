@@ -1,2 +1,2 @@
-export { fakeDataSignInHttpRequestBodyMatch } from '../../../../utils/fake/data/user/sign-in/fake-data-sign-in-http-request-body'
-export { accountModelDisabled, accountModelEnabled } from '../../../../utils/fake/data/account/fake-data-account-model'
+export { informationsOfSignInHttpRequestBodyMatch } from '../../../../utils/fake/informations-of/user/sign-in/fake-data-sign-in-http-request-body'
+export { accountModelDisabled, accountModelEnabled } from '../../../../utils/fake/informations-of/account/model/fake-data-account-model'

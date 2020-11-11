@@ -15,7 +15,7 @@ import {
   IUpdateAccessTokenRepository
 } from './db-account-authentication-protocols'
 import {
-  fakeDataSignInHttpRequestBodyMatch,
+  informationsOfSignInHttpRequestBodyMatch,
   accountModelEnabled
 } from './db-account-authentication-utils'
 
@@ -45,7 +45,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   }
 }
 
-const authentication: IAuthenticationModel = fakeDataSignInHttpRequestBodyMatch
+const authentication: IAuthenticationModel = informationsOfSignInHttpRequestBodyMatch
 const accessToken: string = 'any_token'
 
 describe('DatabaseAuthenticationController Usecases', () => {

@@ -3,4 +3,4 @@ export {
 } from '../../domain/models/account/account'
 export {
   accountModelDisabled, accountModelEnabled
-} from '../../utils/fake/data/account/fake-data-account-model'
+} from '../../utils/fake/informations-of/account/model/fake-data-account-model'
