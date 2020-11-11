@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LogControllerDecorator = void 0;
 class LogControllerDecorator {
     constructor(controller, logErrorRepository) {
         this.controller = controller;

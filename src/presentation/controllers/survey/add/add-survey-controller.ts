@@ -9,10 +9,14 @@ import {
   IDefineProperties
 } from './add-survey-controller-protocols'
 import {
-  MissingParamError,
-  noContent, badRequest, serverError,
-  fakeDataAddSurveyHttpRequestBodyFields
+  MissingParamError
+} from './add-survey-controller-errors'
+import {
+  noContent, badRequest, serverError
 } from './add-survey-controller-helpers'
+import {
+  fakeDataAddSurveyHttpRequestBodyFields
+} from './add-survey-controller-utils'
 
 export class AddSurveyController extends SuperClassAddSurveyController implements IController {
   /**

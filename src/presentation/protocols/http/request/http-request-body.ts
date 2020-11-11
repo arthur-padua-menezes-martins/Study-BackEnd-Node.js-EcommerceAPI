@@ -1,6 +1,7 @@
 export interface IHttpRequestBody {
   [field: string]: string | boolean | object | any
   user: {
+    [field: string]: object
     informations: {
       [field: string]: object
       personal: {
@@ -26,6 +27,7 @@ export interface IHttpRequestBody {
     [field: string]: string | object
     question: string
     answers: [{
+      [field: string]: string
       image: string
       answer: string
     }]

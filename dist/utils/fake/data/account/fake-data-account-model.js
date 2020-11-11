@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.accountModelDisabled = exports.accountModelEnabled = void 0;
 const fake_data_sign_up_http_request_body_1 = require("../user/sign-up/fake-data-sign-up-http-request-body");
 exports.accountModelEnabled = {
     personal: Object.assign(Object.assign({}, fake_data_sign_up_http_request_body_1.fakeDataSignUpHttpRequestBodyMatch.personal), { password: 'encrypted_password' }),

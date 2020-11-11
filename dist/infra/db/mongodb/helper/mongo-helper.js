@@ -11,6 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MongoHelper = void 0;
 const mongodb_1 = require("mongodb");
 /**
 * @method `connect`

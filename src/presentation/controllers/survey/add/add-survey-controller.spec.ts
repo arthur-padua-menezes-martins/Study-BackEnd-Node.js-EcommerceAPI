@@ -11,8 +11,8 @@ import {
   validationCompositeStub
 } from './add-survey-controller-components'
 import {
-  fakeDataAddSurveyHttpRequestBody
-} from './add-survey-controller-helpers'
+  fakeDataAddSurveyHttpRequestBody, fakeDataAddSurveyHttpRequestBodyFields
+} from './add-survey-controller-utils'
 
 interface ISystemUnderTestTypes {
   systemUnderTest: AddSurveyController
@@ -61,8 +61,9 @@ describe('AddSurveyController', () => {
 
     await systemUnderTest.handle(httpRequest)
     expect(spyOnValidate).toHaveBeenCalledWith({
-      type: '',
-      body: { ...answers, question }
+      type: 'required_fields',
+      fields: fakeDataAddSurveyHttpRequestBodyFields,
+      body: { answers, question }
     })
   })
 

@@ -9,7 +9,7 @@ import {
 } from './sign-in-controller-make'
 import {
   fakeDataSignInHttpRequestBodyFields, fakeDataSignInHttpRequestBodyMatch, fakeDataSignInHttpRequestBodyNotMatch, fakeDataSignInHttpRequestBodyMissingField
-} from './sign-in-controller-helpers'
+} from './sign-in-controller-utils'
 
 interface ISignUpControllerTypes {
   systemUnderTest: SignInController

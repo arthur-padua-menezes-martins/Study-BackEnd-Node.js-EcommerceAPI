@@ -1,5 +1,6 @@
 import {
-  IController, IHttpRequest, IHttpResponse,
+  IController,
+  IHttpRequest, IHttpResponse,
   IValidation,
   IAddAccount,
   IUpdateEnabledAccount,
@@ -10,10 +11,14 @@ import {
   SuperClassSignInAndSignUpController
 } from './sign-up-controller-components'
 import {
-  MissingParamError, InvalidParamError,
-  created, accepted, badRequest, unprocessable, serverError,
-  fakeDataSignUpHttpRequestBodyFields, fakeDataSignUpHttpRequestBodyAddressFields
+  MissingParamError, InvalidParamError
+} from './sign-up-controller-errors'
+import {
+  created, accepted, badRequest, unprocessable, serverError
 } from './sign-up-controller-helpers'
+import {
+  fakeDataSignUpHttpRequestBodyFields, fakeDataSignUpHttpRequestBodyAddressFields
+} from './sign-up-controller-utils'
 
 /**
 * @method handle

@@ -13,7 +13,7 @@ import {
 } from './sign-up-controller-make'
 import {
   fakeDataSignUpHttpRequestBodyMatch, fakeDataSignUpHttpRequestBodyMissingField, fakeDataSignUpHttpRequestBodyInvalidPasswordConfirmation
-} from './sign-up-controller-helpers'
+} from './sign-up-controller-utils'
 
 interface ISignUpControllerTypes {
   systemUnderTest: SignUpController

@@ -1,5 +1,6 @@
 import {
-  IController, IHttpRequest, IHttpResponse,
+  IController,
+  IHttpRequest, IHttpResponse,
   IAuthentication,
   IValidation,
   IDefineProperties
@@ -8,10 +9,14 @@ import {
   SuperClassSignInAndSignUpController
 } from '../super/super-class-controller'
 import {
-  MissingParamError, InvalidParamError,
-  ok, badRequest, unauthorized, serverError,
-  fakeDataSignInHttpRequestBodyFields
+  MissingParamError, InvalidParamError
+} from './sign-in-controller-errors'
+import {
+  ok, badRequest, unauthorized, serverError
 } from './sign-in-controller-helpers'
+import {
+  fakeDataSignInHttpRequestBodyFields
+} from './sign-in-controller-utils'
 
 /**
 * @implements {Controller}

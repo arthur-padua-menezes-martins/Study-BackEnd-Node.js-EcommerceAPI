@@ -5,7 +5,8 @@ import { IHttpRequestBody } from './http-request-body'
 * general interface for HTTP Request
 */
 export interface IHttpRequest {
+  body: IHttpRequestBody
   params?: any
   query?: any
-  body: IHttpRequestBody
+  headers?: any
 }
