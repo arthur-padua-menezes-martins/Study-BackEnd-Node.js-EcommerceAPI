@@ -32,6 +32,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
 
 const accessToken = informationsOfAccessTokenHttpRequestHeaders['x-access-token']
 const role = 'any_role'
+const decryptedToken = 'any_decrypted_string'
 
 describe('DatabaseSearchAccountByAccessToken', () => {
   test('should call decrypter with correct values <version: 0.0.1>', async () => {
@@ -40,14 +41,14 @@ describe('DatabaseSearchAccountByAccessToken', () => {
     const spyOnDecrypt = jest.spyOn(decrypterStub, 'decrypt')
     await systemUnderTest.searchByAccessToken(accessToken, role)
 
-    expect(spyOnDecrypt).toHaveBeenCalledWith(accessToken, role)
+    expect(spyOnDecrypt).toHaveBeenCalledWith(accessToken)
   })
 
   test('should return null if decrypter return null <version: 0.0.1>', async () => {
     const { systemUnderTest, decrypterStub } = await makeSystemUnderTest()
 
-    jest.spyOn(decrypterStub, 'decrypt').mockReturnValueOnce(null)
-    const account = await systemUnderTest.searchByAccessToken(accessToken, role)
+    jest.spyOn(decrypterStub, 'decrypt').mockReturnValueOnce(Promise.resolve(null))
+    const account = await systemUnderTest.searchByAccessToken(accessToken)
 
     expect(account).toBeNull()
   })
@@ -56,8 +57,25 @@ describe('DatabaseSearchAccountByAccessToken', () => {
     const { systemUnderTest, readAccountStub } = await makeSystemUnderTest()
 
     const spyOnSearchByAccessToken = jest.spyOn(readAccountStub, 'searchByAccessToken')
-    await systemUnderTest.searchByAccessToken(accessToken, role)
+    await systemUnderTest.searchByAccessToken(accessToken)
 
-    expect(spyOnSearchByAccessToken).toHaveBeenCalledWith(accessToken, role)
+    expect(spyOnSearchByAccessToken).toHaveBeenCalledWith(decryptedToken)
+  })
+
+  test('should return null if searchByAccessToken return null <version: 0.0.1>', async () => {
+    const { systemUnderTest, readAccountStub } = await makeSystemUnderTest()
+
+    jest.spyOn(readAccountStub, 'searchByAccessToken').mockReturnValueOnce(Promise.resolve(null))
+    const account = await systemUnderTest.searchByAccessToken(accessToken)
+
+    expect(account).toBeNull()
+  })
+
+  test('should return an account if searchByAccessToken match account with accessToken <version: 0.0.1>', async () => {
+    const { systemUnderTest } = await makeSystemUnderTest()
+
+    const account = await systemUnderTest.searchByAccessToken(accessToken)
+
+    expect(account).toBeTruthy()
   })
 })
