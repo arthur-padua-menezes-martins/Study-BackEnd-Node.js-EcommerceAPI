@@ -1,6 +1,7 @@
 import { IHttpRequestBody } from '../../import-all'
 
 export const informationsOfAddSurveyHttpRequestBodyFields: string[] = ['question', 'answers']
+export const informationsOfAddSurveyHttpRequestBodyAnswersFields: string[] = ['image', 'answer']
 
 export const informationsOfAddSurveyHttpRequestBody: IHttpRequestBody['survey'] = {
   question: 'any_question',

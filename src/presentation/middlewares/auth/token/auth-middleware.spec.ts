@@ -48,10 +48,10 @@ describe('Auth Middleware', () => {
     const { systemUnderTest, readAccountStub } = await makeSystemUnderTest(role)
 
     httpRequest.headers = informationsOfAccessTokenHttpRequestHeaders
-    const spyOnLoadByToken = jest.spyOn(readAccountStub, 'searchByAccessToken')
+    const spyOnSearchByAccessToken = jest.spyOn(readAccountStub, 'searchByAccessToken')
     await systemUnderTest.handle(httpRequest)
 
-    expect(spyOnLoadByToken).toHaveBeenCalledWith(accessToken, role)
+    expect(spyOnSearchByAccessToken).toHaveBeenCalledWith(accessToken, role)
   })
 
   test('should return status code 403 if accessToken does not represents a valid token <version: 0.0.1>', async () => {

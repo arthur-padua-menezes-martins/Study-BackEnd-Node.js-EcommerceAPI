@@ -1,5 +1,5 @@
 export {
-  informationsOfSignUpHttpRequestBodyFields, informationsOfSignUpHttpRequestBodyAddressFields, informationsOfSignUpHttpRequestBodyMatch, informationsOfSignUpHttpRequestBodyMissingField, informationsOfSignUpHttpRequestBodyInvalidPasswordConfirmation
+  informationsOfSignUpHttpRequestBodyFields
 } from '../../../../utils/fake/informations-of/user/sign-up/fake-data-sign-up-http-request-body'
 export {
   accountModelDisabled

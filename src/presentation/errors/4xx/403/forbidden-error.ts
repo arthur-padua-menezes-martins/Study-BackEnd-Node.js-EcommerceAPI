@@ -4,7 +4,7 @@ export class ForbiddenError extends Error {
   * references the type of error
   */
   constructor () {
-    super('proibido')
+    super('forbidden')
 
     this.name = 'ForbiddenError'
   }

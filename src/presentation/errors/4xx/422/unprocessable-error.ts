@@ -4,7 +4,7 @@ export class UnprocessableError extends Error {
   * references the type of error
   */
   constructor () {
-    super('não foi possível processar as instruções')
+    super('instructions could not be processed')
 
     this.name = 'UnprocessableError'
   }

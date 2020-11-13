@@ -1,4 +1,6 @@
-import { RequiredFieldsValidator } from './required-fields-validator'
+import {
+  RequiredFieldsValidator
+} from './user/authentication/required-fields-validator'
 import {
   IHttpRequestBody,
   informationsOfSignUpHttpRequestBodyFields, informationsOfSignUpHttpRequestBodyMatch
@@ -8,7 +10,7 @@ interface IRequiredFieldsValidatorTypes {
   requiredFieldsValidator: RequiredFieldsValidator
   input: {
     fields: string[]
-    body: IHttpRequestBody['user']['informations']
+    body: IHttpRequestBody['user']['informations']['personal'] | IHttpRequestBody['user']['informations']['address']
   }
 }
 const makeSystemUnderTest = async (): Promise<IRequiredFieldsValidatorTypes> => {
@@ -17,7 +19,8 @@ const makeSystemUnderTest = async (): Promise<IRequiredFieldsValidatorTypes> => 
     input: {
       fields: informationsOfSignUpHttpRequestBodyFields,
       body: {
-        ...informationsOfSignUpHttpRequestBodyMatch
+        ...informationsOfSignUpHttpRequestBodyMatch.personal,
+        ...informationsOfSignUpHttpRequestBodyMatch.address
       }
     }
   }

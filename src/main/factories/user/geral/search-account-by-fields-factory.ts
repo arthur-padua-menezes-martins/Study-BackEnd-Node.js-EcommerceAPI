@@ -2,4 +2,4 @@ import { DatabaseSearchAccountController } from '../../../../data/usecases/accou
 import { AccountMongoRepositoryRead } from '../../../../infra/db/mongodb/account/read/read-account-mongo-repository'
 
 const accountRepositoryRead = new AccountMongoRepositoryRead()
-export const readAccount = new DatabaseSearchAccountController(accountRepositoryRead)
+export const readAccount = new DatabaseSearchAccountController()

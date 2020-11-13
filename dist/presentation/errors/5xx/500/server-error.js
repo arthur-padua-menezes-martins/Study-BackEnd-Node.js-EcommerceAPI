@@ -13,7 +13,7 @@ class ServerError extends Error {
     * references a errorStack
     */
     constructor(errorStack) {
-        super('um problema afetou o funcionamento do servidor, tente novamente em breve!');
+        super('a problem affects the functioning of the server, try again later!');
         this.name = 'ServerError';
         this.stack = errorStack;
     }

@@ -7,14 +7,14 @@ import {
 export class DatabaseSearchAccountByAccessToken implements ISearchAccountByAccessTokenRepository {
   constructor (
     private readonly decrypter: IDecrypter,
-    private readonly accountRepositoryRead: ISearchAccountByAccessTokenRepository
+    private readonly accountRepositoryReadSearchAccountByAccessToken: ISearchAccountByAccessTokenRepository
   ) {}
 
   async searchByAccessToken (accessToken: string, role?: string): Promise<IAccountModel | null> {
     const token = await this.decrypter.decrypt(accessToken)
 
     if (token) {
-      const account = await this.accountRepositoryRead.searchByAccessToken(token)
+      const account = await this.accountRepositoryReadSearchAccountByAccessToken.searchByAccessToken(token)
 
       if (account) {
         return account

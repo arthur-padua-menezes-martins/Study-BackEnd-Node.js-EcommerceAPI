@@ -35,6 +35,7 @@ export class AccountMongoRepositoryRead implements ISearchAccountByFieldReposito
 
   static async searchByOneField (collection: Collection<any>, fields: object): Promise<IAccountModel | null> {
     let search: IAccountModel | null = null
+
     for (const [key, value] of Object.entries(fields)) {
       search = await collection.findOne({ [`personal.${key}`]: value })
     }
@@ -44,6 +45,7 @@ export class AccountMongoRepositoryRead implements ISearchAccountByFieldReposito
 
   static async searchByManyFields (collection: Collection<any>, fields: object): Promise<IAccountModel | null> {
     let search: object = {}
+
     for (const [key, value] of Object.entries(fields)) {
       if (value) {
         search = Object.assign({}, search, { [`personal.${key}`]: value })

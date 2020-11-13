@@ -6,10 +6,10 @@ export class InvalidParamError extends Error {
   * references the type of error
   */
   constructor (invalidParameter?: string) {
-    if (typeof invalidParameter !== 'undefined' && invalidParameter !== '') {
-      super(`preencha corretamente o(s) seguinte(s) campo(s) ${invalidParameter}`)
+    if (invalidParameter) {
+      super(`correctly fill in the following field (s) ${invalidParameter}`)
     } else {
-      super('preencha todos os campos corretamente')
+      super('complete all the fields correctly')
     }
 
     this.name = 'InvalidParamError'

@@ -9,11 +9,11 @@ class MissingParamError extends Error {
     * references the type of error
     */
     constructor(missingParameter) {
-        if (typeof missingParameter !== 'undefined' && missingParameter !== '') {
-            super(`preencha corretamente o(s) campo(s) ${missingParameter}`);
+        if (missingParameter) {
+            super(`correctly fill in the field (s) ${missingParameter}`);
         }
         else {
-            super('preencha corretamente todos os campos');
+            super('fill out all the fields');
         }
         this.name = 'MissingParamError';
     }

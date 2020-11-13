@@ -2,16 +2,16 @@ import {
   DatabaseSearchAccountByAccessToken
 } from './by-access-token/db-read-search-account-by-access-token'
 import {
-  DatabaseSearchAccountByFields
-} from './by-field/db-read-search-account-by-fields'
+  DatabaseSearchAccountByField
+} from './by-field/db-read-search-account-by-field'
 import {
   applyMixins
 } from '../../import-all'
 
-export interface DatabaseSearchAccountController extends DatabaseSearchAccountByAccessToken, DatabaseSearchAccountByFields {}
+export interface DatabaseSearchAccountController extends DatabaseSearchAccountByAccessToken, DatabaseSearchAccountByField {}
 export class DatabaseSearchAccountController implements DatabaseSearchAccountController {}
 
 applyMixins(DatabaseSearchAccountController, [
   DatabaseSearchAccountByAccessToken,
-  DatabaseSearchAccountByAccessToken
+  DatabaseSearchAccountByField
 ])

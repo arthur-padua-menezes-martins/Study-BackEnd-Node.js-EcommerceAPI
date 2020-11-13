@@ -24,7 +24,7 @@ export interface IHttpRequestBody {
     }
   }
   survey: {
-    [field: string]: string | object
+    [field: string]: string | object[]
     question: string
     answers: [{
       [field: string]: string

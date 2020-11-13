@@ -9,8 +9,8 @@ export class ServerError extends Error {
   * @this `this.stack`
   * references a errorStack
   */
-  constructor (errorStack: string | undefined) {
-    super('um problema afetou o funcionamento do servidor, tente novamente em breve!')
+  constructor (errorStack?: string) {
+    super('a problem affects the functioning of the server, try again later!')
 
     this.name = 'ServerError'
     this.stack = errorStack

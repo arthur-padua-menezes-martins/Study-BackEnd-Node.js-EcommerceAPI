@@ -1,8 +1,19 @@
 import {
   ValidationComposite,
-  CompareFieldsValidator, RequiredFieldsValidator, ValidateFieldsValidator, VerifyTypesValidator,
   FieldValidation
 } from '../../../../presentation/helpers/validators/export-all'
+import {
+  CompareFieldsValidator
+} from '../../../../presentation/helpers/validators/types/compare/compare-fields-validator'
+import {
+  RequiredFieldsValidator
+} from '../../../../presentation/helpers/validators/types/required/user/authentication/required-fields-validator'
+import {
+  ValidateFieldsValidator
+} from '../../../../presentation/helpers/validators/types/validation/validate-fields-validator'
+import {
+  VerifyTypesValidator
+} from '../../../../presentation/helpers/validators/types/verify/verify-types-validator'
 import {
   NameValidatorAdapter,
   EmailValidatorAdapter,
