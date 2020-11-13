@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.expressRouteAdapter = void 0;
 exports.expressRouteAdapter = (controller) => {
     return async (req, res) => {
         var _a;

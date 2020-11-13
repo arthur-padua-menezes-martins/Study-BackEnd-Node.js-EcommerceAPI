@@ -1,5 +1,6 @@
 import { MongoClient, ObjectID, Collection } from 'mongodb'
-import { IAccountModel } from '../../../../domain/models/account/account'
+// import mongoose, { Collection } from 'mongoose'
+import { IAccountModel } from '../../../../../../domain/models/account/account'
 
 /**
 * @method `connect`
