@@ -68,9 +68,9 @@ export const MongoHelper = {
   * @param resultOf
   * object that will be mapped
   */
-  map_id  (resultOf: any): any {
+  mapTheId  (resultOf: any): any {
     const { _id, ...result } = resultOf || { _id: null }
 
-    return (_id && result) && Object.assign({}, result, { id: _id })
+    return (_id && result) ? Object.assign({}, result, { id: _id }) : null
   }
 }

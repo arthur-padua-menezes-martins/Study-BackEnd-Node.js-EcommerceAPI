@@ -67,6 +67,7 @@ describe('DatabaseAddAccountController', () => {
         password: accountModelDisabled.personal.password
       },
       address: informationsOfSignUpHttpRequestBodyMatch.address,
+      accessToken: '',
       enabled: false
     })
   })

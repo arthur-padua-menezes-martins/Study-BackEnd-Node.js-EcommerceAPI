@@ -16,7 +16,7 @@ export class DatabaseAddAccountController implements IAddAccount {
   ) {}
 
   async add (accountData: IAddAccountModel): Promise<IAccountModel | null> {
-    let account: IAccountModel | null = await MongoHelper.map_id(
+    let account: IAccountModel | null = await MongoHelper.mapTheId(
       await this.accountRepositoryRead.searchByField({
         id: '', email: accountData.personal.email
       })
@@ -26,10 +26,7 @@ export class DatabaseAddAccountController implements IAddAccount {
       const encryptedPassword = await this.hasher.hash(accountData.personal.password)
 
       account = await this.accountRepositoryWrite.add({
-        personal: {
-          ...accountData.personal,
-          password: encryptedPassword
-        },
+        personal: Object.assign({}, accountData.personal, { password: encryptedPassword }),
         address: accountData.address,
         accessToken: '',
         enabled: false

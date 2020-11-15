@@ -15,7 +15,7 @@ export class MongoRepositorySuper {
       _id: await MongoHelper.createObjectId(id)
     })
 
-    return MongoHelper.map_id(result)
+    return MongoHelper.mapTheId(result)
   }
 
   static async searchByOneField (collection: Collection, fields: object): Promise<any> {
@@ -24,7 +24,7 @@ export class MongoRepositorySuper {
         [`personal.${key}`]: value
       })
 
-      return MongoHelper.map_id(result)
+      return MongoHelper.mapTheId(result)
     }
 
     return null
@@ -40,19 +40,19 @@ export class MongoRepositorySuper {
     }
 
     const result: any = await collection.findOne(search)
-    return MongoHelper.map_id(result)
+    return MongoHelper.mapTheId(result)
   }
 
   static async customSearchForOne (collection: Collection, search: object): Promise<any> {
-    const result: any = MongoHelper.map_id(
-      collection.findOne(search)
+    const result: any = MongoHelper.mapTheId(
+      await collection.findOne(search)
     )
 
     return result
   }
 
   static async customSearchForMany (collection: Collection, search: object): Promise<any> {
-    const result: any = MongoHelper.map_id(
+    const result: any = MongoHelper.mapTheId(
       collection.find(search)
     )
 
@@ -61,7 +61,7 @@ export class MongoRepositorySuper {
 
   static async accessOps (content: any): Promise<any> {
     if (content.ops.length === 1) {
-      return MongoHelper.map_id(content.ops[0])
+      return MongoHelper.mapTheId(content.ops[0])
     }
   }
 }

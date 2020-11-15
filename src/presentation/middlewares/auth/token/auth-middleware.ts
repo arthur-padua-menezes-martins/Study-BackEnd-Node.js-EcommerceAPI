@@ -22,8 +22,8 @@ export class AuthMiddleware implements IMiddleware {
       const accessToken = httpRequest.headers?.['x-access-token']
 
       if (accessToken) {
-        const account = await this.readAccount.searchByToken(accessToken)
-        console.log('AuthMiddleware -> account: ', account)
+        const account = await this.readAccount.searchByToken(accessToken, this.role)
+
         if (account) {
           return ok({ account: { id: account.id } })
         }

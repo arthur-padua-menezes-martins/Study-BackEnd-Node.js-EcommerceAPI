@@ -31,8 +31,9 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
 }
 
 const accessToken = informationsOfAccessTokenHttpRequestHeaders['x-access-token']
-const anyRole = 'any_role'
-const decryptedToken = 'any_decrypted_string'
+const role = {
+  any: 'any_role'
+}
 
 describe('DatabaseSearchAccountByAccessToken', () => {
   test('should throw if decrypter throws <version: 0.0.1>', async () => {
@@ -47,7 +48,9 @@ describe('DatabaseSearchAccountByAccessToken', () => {
   test('should return null if decrypter return null <version: 0.0.1>', async () => {
     const { systemUnderTest, decrypterStub } = await makeSystemUnderTest()
 
-    jest.spyOn(decrypterStub, 'decrypt').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    jest.spyOn(decrypterStub, 'decrypt').mockImplementationOnce(async (): Promise<null> => {
+      return null
+    })
     const account = await systemUnderTest.searchByToken(accessToken)
 
     expect(account).toBeNull()
@@ -57,18 +60,9 @@ describe('DatabaseSearchAccountByAccessToken', () => {
     const { systemUnderTest, decrypterStub } = await makeSystemUnderTest()
 
     const spyOnDecrypt = jest.spyOn(decrypterStub, 'decrypt')
-    await systemUnderTest.searchByToken(accessToken, anyRole)
-
-    expect(spyOnDecrypt).toHaveBeenCalledWith(accessToken)
-  })
-
-  test('should call searchByToken with correct values <version: 0.0.1>', async () => {
-    const { systemUnderTest, readAccountStub } = await makeSystemUnderTest()
-
-    const spyOnSearchByToken = jest.spyOn(readAccountStub, 'searchByToken')
     await systemUnderTest.searchByToken(accessToken)
 
-    expect(spyOnSearchByToken).toHaveBeenCalledWith(decryptedToken)
+    expect(spyOnDecrypt).toHaveBeenCalledWith(accessToken)
   })
 
   test('should return null if searchByToken return null <version: 0.0.1>', async () => {
@@ -86,5 +80,23 @@ describe('DatabaseSearchAccountByAccessToken', () => {
     const account = await systemUnderTest.searchByToken(accessToken)
 
     expect(account).toBeTruthy()
+  })
+
+  test('should call searchByToken with correct values an not role <version: 0.0.1>', async () => {
+    const { systemUnderTest, readAccountStub } = await makeSystemUnderTest()
+
+    const spyOnSearchByToken = jest.spyOn(readAccountStub, 'searchByToken')
+    await systemUnderTest.searchByToken(accessToken)
+
+    expect(spyOnSearchByToken).toHaveBeenCalledWith(accessToken, undefined)
+  })
+
+  test('should call searchByToken with correct values and role <version: 0.0.1>', async () => {
+    const { systemUnderTest, readAccountStub } = await makeSystemUnderTest()
+
+    const spyOnSearchByToken = jest.spyOn(readAccountStub, 'searchByToken')
+    await systemUnderTest.searchByToken(accessToken, role.any)
+
+    expect(spyOnSearchByToken).toHaveBeenCalledWith(accessToken, role.any)
   })
 })

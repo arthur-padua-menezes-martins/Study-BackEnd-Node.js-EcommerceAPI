@@ -16,8 +16,12 @@ export class JwtAdapter implements IEncrypter, IDecrypter {
   }
 
   async decrypt (encrypted: string): Promise<string> {
-    const decrypted: any = jwt.verify(encrypted, this.secret)
+    const decrypted: any = await jwt.verify(encrypted, this.secret)
 
-    return typeof decrypted === 'string' ? decrypted : decrypted.iat
+    if (decrypted !== encrypted) {
+      return typeof decrypted === 'string' ? decrypted : decrypted.iat
+    } else {
+      return ''
+    }
   }
 }

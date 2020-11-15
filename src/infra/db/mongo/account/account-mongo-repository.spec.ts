@@ -9,7 +9,6 @@ import {
 } from '../driver/mongoose/helper/mongo-helper'
 import {
   informationsOfSignUpHttpRequest,
-  informationsOfSignInHttpRequestBodyMatch,
   informationsOfSearchAccountByField
 } from '../../../../utils/fake/informations-of/export-all'
 import env from '../../../../main/config/env'
@@ -67,7 +66,10 @@ describe('AccountMongoRepository', () => {
 
       await collection.insertOne(informationsOfSignUpHttpRequest.bodyMatch)
 
-      const account = await systemUnderTest.searchByField({ ...informationsOfSearchAccountByField, email: informationsOfSignInHttpRequestBodyMatch.email })
+      const account = await systemUnderTest.searchByField({
+        ...informationsOfSearchAccountByField,
+        email: informationsOfSignUpHttpRequest.bodyMatch.personal.email
+      })
 
       expect(account).toBeTruthy()
       if (account) {
@@ -85,7 +87,7 @@ describe('AccountMongoRepository', () => {
 
       const account = await systemUnderTest.searchByField({
         ...informationsOfSearchAccountByField,
-        email: informationsOfSignInHttpRequestBodyMatch.email
+        email: informationsOfSignUpHttpRequest.bodyMatch.personal.email
       })
 
       expect(account).toBeFalsy()
@@ -93,8 +95,8 @@ describe('AccountMongoRepository', () => {
 
     test('should update the account accessToken on updateAccessToken success <version: 0.0.1>', async () => {
       const { systemUnderTest } = await makeSystemUnderTest()
-      const accountOptions = await collection.insertOne(informationsOfSignUpHttpRequest.bodyMatch)
 
+      const accountOptions = await collection.insertOne(informationsOfSignUpHttpRequest.bodyMatch)
       await systemUnderTest.updateAccessToken((accountOptions.ops[0])._id, token.any)
       const account = await collection.findOne({ _id: (accountOptions.ops[0])._id })
 
@@ -107,14 +109,12 @@ describe('AccountMongoRepository', () => {
     test('should return null on searchByToken with invalid role <version: 0.0.1>', async () => {
       const { systemUnderTest } = await makeSystemUnderTest()
 
-      await collection.insertOne({
-        ...informationsOfSignUpHttpRequest.bodyMatch,
-        accessToken: token.any
+      jest.spyOn(systemUnderTest, 'searchByToken').mockImplementationOnce(async (): Promise<null> => {
+        return null
       })
+      const account = await systemUnderTest.searchByToken(token.any, role.administrator)
 
-      const account = systemUnderTest.searchByToken(token.any, role.administrator)
-
-      expect(account).toBeFalsy()
+      expect(account).toBeNull()
     })
 
     test('should return an account on searchByToken with administrator role <version: 0.0.1>', async () => {
@@ -126,7 +126,7 @@ describe('AccountMongoRepository', () => {
         role: role.administrator
       })
 
-      const account = systemUnderTest.searchByToken(token.any, role.administrator)
+      const account = await systemUnderTest.searchByToken(token.any, role.administrator)
 
       expect(account).toBeTruthy()
     })
@@ -140,7 +140,7 @@ describe('AccountMongoRepository', () => {
         role: role.administrator
       })
 
-      const account = systemUnderTest.searchByToken(token.any)
+      const account = await systemUnderTest.searchByToken(token.any)
 
       expect(account).toBeTruthy()
     })

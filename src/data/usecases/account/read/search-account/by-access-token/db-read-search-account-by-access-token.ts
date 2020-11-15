@@ -15,7 +15,7 @@ export class DatabaseSearchAccountByAccessToken implements ISearchAccountByToken
 
     if (token) {
       const account = await this.accountRepositoryReadSearchAccountByToken.searchByToken(accessToken, role)
-      console.log('token: ', token)
+
       if (account) {
         return account
       }

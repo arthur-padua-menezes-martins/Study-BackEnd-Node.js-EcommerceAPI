@@ -7,8 +7,9 @@ import {
 } from '../../../../utils/fake/informations-of/account/model/fake-data-account-model'
 
 const secret = 'any_secret'
-const anyToken = 'any_token'
-const decryptedString = 'decrypted_string'
+const token = {
+  any: 'any_token'
+}
 
 interface ISystemUnderTestTypes {
   systemUnderTest: JwtAdapter
@@ -23,10 +24,10 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
 
 jest.mock('jsonwebtoken', () => ({
   async sign (): Promise<string> {
-    return anyToken
+    return token.any
   },
   async verify (): Promise<string> {
-    return anyToken
+    return token.any
   }
 }))
 
@@ -34,9 +35,10 @@ describe('JwtAdapter', () => {
   describe('sign', () => {
     test('should call sign with correct values <version: 0.0.1>', async () => {
       const { systemUnderTest } = await makeSystemUnderTest()
-      const sypOnSign = jest.spyOn(jwt, 'sign')
 
+      const sypOnSign = jest.spyOn(jwt, 'sign')
       await systemUnderTest.encrypt(accountModelEnabled.id)
+
       expect(sypOnSign).toHaveBeenCalledWith({ id: accountModelEnabled.id }, secret)
     })
 
@@ -44,16 +46,18 @@ describe('JwtAdapter', () => {
       const { systemUnderTest } = await makeSystemUnderTest()
 
       const accessToken = await systemUnderTest.encrypt(accountModelEnabled.id)
-      expect(accessToken).toBe(anyToken)
+
+      expect(accessToken).toBe(token.any)
     })
 
     test('should throw if sign thows <version: 0.0.1>', async () => {
       const { systemUnderTest } = await makeSystemUnderTest()
+
       jest.spyOn(jwt, 'sign').mockImplementationOnce(() => {
         throw new Error()
       })
-
       const promise = systemUnderTest.encrypt(accountModelEnabled.id)
+
       await expect(promise).rejects.toThrow()
     })
   })
@@ -64,8 +68,8 @@ describe('JwtAdapter', () => {
       jest.spyOn(jwt, 'verify').mockImplementationOnce(() => {
         throw new Error()
       })
+      const decryptedValue = systemUnderTest.decrypt(token.any)
 
-      const decryptedValue = systemUnderTest.decrypt(anyToken)
       await expect(decryptedValue).rejects.toThrow()
     })
 
@@ -73,16 +77,17 @@ describe('JwtAdapter', () => {
       const { systemUnderTest } = await makeSystemUnderTest()
 
       const sypOnVerify = jest.spyOn(jwt, 'verify')
-      await systemUnderTest.decrypt(anyToken)
+      await systemUnderTest.decrypt(token.any)
 
-      expect(sypOnVerify).toHaveBeenCalledWith(anyToken, secret)
+      expect(sypOnVerify).toHaveBeenCalledWith(token.any, secret)
     })
 
-    test('should return a value on verify success <version: 0.0.1>', async () => {
+    test('should return a empty value on verify fails <version: 0.0.1>', async () => {
       const { systemUnderTest } = await makeSystemUnderTest()
 
-      const decryptedValue = await systemUnderTest.decrypt(anyToken)
-      expect(decryptedValue).toBe(decryptedString)
+      const decryptedValue = await systemUnderTest.decrypt(token.any)
+
+      expect(decryptedValue).toBeFalsy()
     })
   })
 })

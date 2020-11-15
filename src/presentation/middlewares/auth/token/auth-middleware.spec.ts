@@ -70,7 +70,7 @@ describe('Auth Middleware', () => {
     const httpResponse = await systemUnderTest.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(200)
-    expect(httpResponse.body.account.id).toBe(accountModelEnabled.id)
+    expect(httpResponse.body.account?.id).toBe(accountModelEnabled.id)
   })
 
   test('should return status code 500 if searchByAccessToken throws <version: 0.0.1>', async () => {
@@ -80,6 +80,6 @@ describe('Auth Middleware', () => {
     const httpResponse = await systemUnderTest.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.errorMessage.name).toBe('ServerError')
+    expect(httpResponse.errorMessage?.name).toBe('ServerError')
   })
 })
