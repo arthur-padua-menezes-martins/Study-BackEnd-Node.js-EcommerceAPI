@@ -1,4 +1,7 @@
 import {
+  AccountMongoRepositorySuper
+} from '../super/super-account-mongo-repository'
+import {
   IAddAccountRepository
 } from '../../../../../data/protocols/repository/account/write/add-account-repository'
 import {
@@ -8,9 +11,8 @@ import {
   IAccountModel,
   MongoHelper
 } from '../import-all'
-import env from '../../../../../main/config/env'
 
-export class AccountMongoRepositoryWrite implements IAddAccountRepository {
+export class AccountMongoRepositoryWrite extends AccountMongoRepositorySuper implements IAddAccountRepository {
   /**
   * @method `add`
   * insert the body sign-up request into the collection
@@ -18,7 +20,7 @@ export class AccountMongoRepositoryWrite implements IAddAccountRepository {
   * sign-up body
   */
   async add (accountData: IAddAccountModel): Promise<IAccountModel> {
-    const accountsCollection = await MongoHelper.getCollection(env.collections.accounts)
+    const accountsCollection = await AccountMongoRepositoryWrite.getCollection()
     const accountOptions = await accountsCollection.insertOne(accountData)
     const account = MongoHelper.map_id(accountOptions.ops[0])
 

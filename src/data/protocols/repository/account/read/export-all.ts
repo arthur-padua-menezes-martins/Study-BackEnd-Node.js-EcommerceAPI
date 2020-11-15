@@ -1,2 +1,2 @@
-export { ISearchAccountByAccessTokenRepository } from './search-account-by-access-token-repository'
+export { ISearchAccountByTokenRepository } from './search-account-by-token-repository'
 export { ISearchAccountByFieldRepository } from './search-account-by-field-repository'

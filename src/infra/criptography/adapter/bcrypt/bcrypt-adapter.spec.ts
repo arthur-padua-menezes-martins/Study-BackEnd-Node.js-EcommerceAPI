@@ -30,57 +30,60 @@ jest.mock('bcrypt', () => ({
 const anyHash: string = 'any_hash'
 
 describe('BcryptAdapter', () => {
-  test('Should call hash whit correct values <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
-    const spyOnHash = jest.spyOn(bcrypt, 'hash')
+  describe('hash', () => {
+    test('Should call hash whit correct values <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
+      const spyOnHash = jest.spyOn(bcrypt, 'hash')
 
-    await systemUnderTest.hash(informationsOfSignUpHttpRequestBodyMatch.personal.password)
-    expect(spyOnHash).toHaveBeenLastCalledWith(informationsOfSignUpHttpRequestBodyMatch.personal.password, salt)
+      await systemUnderTest.hash(informationsOfSignUpHttpRequestBodyMatch.personal.password)
+      expect(spyOnHash).toHaveBeenLastCalledWith(informationsOfSignUpHttpRequestBodyMatch.personal.password, salt)
+    })
+
+    test('Should return a hashedPassword on success <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
+
+      const hash = await systemUnderTest.hash(informationsOfSignUpHttpRequestBodyMatch.personal.password)
+      expect(hash).toBe('hashed_value')
+    })
+
+    test('Should throw if hash throws <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
+      jest.spyOn(bcrypt, 'hash').mockReturnValue(Promise.reject(await new Error()))
+
+      const hash = systemUnderTest.hash(informationsOfSignUpHttpRequestBodyMatch.personal.password)
+      await expect(hash).rejects.toThrow()
+    })
   })
+  describe('compare', () => {
+    test('Should call compare whit correct values <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
+      const spyOnCompare = jest.spyOn(bcrypt, 'compare')
 
-  test('Should return a hashedPassword on success <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
+      await systemUnderTest.compare(informationsOfSignInHttpRequestBodyMatch.password, anyHash)
+      expect(spyOnCompare).toHaveBeenLastCalledWith(informationsOfSignInHttpRequestBodyMatch.password, anyHash)
+    })
 
-    const hash = await systemUnderTest.hash(informationsOfSignUpHttpRequestBodyMatch.personal.password)
-    expect(hash).toBe('hashed_value')
-  })
+    test('Should return true if compare success <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
 
-  test('Should throw if hash throws <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
-    jest.spyOn(bcrypt, 'hash').mockReturnValue(Promise.reject(await new Error()))
+      const isEqual = await systemUnderTest.compare(informationsOfSignInHttpRequestBodyMatch.password, anyHash)
+      expect(isEqual).toBe(true)
+    })
 
-    const hash = systemUnderTest.hash(informationsOfSignUpHttpRequestBodyMatch.personal.password)
-    await expect(hash).rejects.toThrow()
-  })
+    test('Should return false if compare falils <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
+      jest.spyOn(bcrypt, 'compare').mockReturnValueOnce(Promise.resolve(false))
 
-  test('Should call compare whit correct values <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
-    const spyOnCompare = jest.spyOn(bcrypt, 'compare')
+      const isEqual = await systemUnderTest.compare(informationsOfSignInHttpRequestBodyMatch.password, anyHash)
+      expect(isEqual).toBe(false)
+    })
 
-    await systemUnderTest.compare(informationsOfSignInHttpRequestBodyMatch.password, anyHash)
-    expect(spyOnCompare).toHaveBeenLastCalledWith(informationsOfSignInHttpRequestBodyMatch.password, anyHash)
-  })
+    test('Should throw if compare throws <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
+      jest.spyOn(bcrypt, 'compare').mockReturnValue(Promise.reject(await new Error()))
 
-  test('Should return true if compare success <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
-
-    const isEqual = await systemUnderTest.compare(informationsOfSignInHttpRequestBodyMatch.password, anyHash)
-    expect(isEqual).toBe(true)
-  })
-
-  test('Should return false if compare falils <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
-    jest.spyOn(bcrypt, 'compare').mockReturnValueOnce(Promise.resolve(false))
-
-    const isEqual = await systemUnderTest.compare(informationsOfSignInHttpRequestBodyMatch.password, anyHash)
-    expect(isEqual).toBe(false)
-  })
-
-  test('Should throw if compare throws <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
-    jest.spyOn(bcrypt, 'compare').mockReturnValue(Promise.reject(await new Error()))
-
-    const isEqual = systemUnderTest.compare(informationsOfSignUpHttpRequestBodyMatch.personal.password, anyHash)
-    await expect(isEqual).rejects.toThrow()
+      const isEqual = systemUnderTest.compare(informationsOfSignUpHttpRequestBodyMatch.personal.password, anyHash)
+      await expect(isEqual).rejects.toThrow()
+    })
   })
 })

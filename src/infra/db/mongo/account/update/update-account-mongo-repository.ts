@@ -1,11 +1,12 @@
-import { Collection } from 'mongodb'
+import {
+  AccountMongoRepositorySuper
+} from '../super/super-account-mongo-repository'
 import { IUpdateAccessTokenRepository, IUpdateEnabledAccountRepository } from '../../../../../data/protocols/repository/account/update/export-all'
 import {
   MongoHelper
 } from '../import-all'
-import env from '../../../../../main/config/env'
 
-export class AccountMongoRepositoryUpdate implements IUpdateAccessTokenRepository, IUpdateEnabledAccountRepository {
+export class AccountMongoRepositoryUpdate extends AccountMongoRepositorySuper implements IUpdateAccessTokenRepository, IUpdateEnabledAccountRepository {
   /**
   * @param {string} id
   * id to search for an account
@@ -28,9 +29,5 @@ export class AccountMongoRepositoryUpdate implements IUpdateAccessTokenRepositor
       { _id: await MongoHelper.createObjectId(id) },
       { $set: { enabled: status } }
     )
-  }
-
-  static async getCollection (): Promise<Collection> {
-    return await MongoHelper.getCollection(env.collections.accounts)
   }
 }

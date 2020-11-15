@@ -55,6 +55,7 @@ export const MongoHelper = {
     if (!(await this.isConnected())) {
       await this.connect(this.url)
     }
+
     return this.client.connection.collection(name, options)
   },
 

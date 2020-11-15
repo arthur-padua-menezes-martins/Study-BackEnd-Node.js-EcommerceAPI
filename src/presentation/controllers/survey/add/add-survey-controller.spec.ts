@@ -11,7 +11,7 @@ import {
   validationCompositeStub
 } from './add-survey-controller-components'
 import {
-  informationsOfAddSurveyHttpRequestBody, informationsOfAddSurveyHttpRequestBodyFields
+  informationsOfAddSurveyHttpRequest
 } from './add-survey-controller-utils'
 
 interface ISystemUnderTestTypes {
@@ -32,7 +32,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
 
 const httpRequest: any = {
   body: {
-    survey: informationsOfAddSurveyHttpRequestBody
+    survey: informationsOfAddSurveyHttpRequest.body
   }
 }
 let httpResponse: IHttpResponse = {
@@ -55,15 +55,15 @@ describe('AddSurveyController', () => {
 
   test('should call validationComposite with correct values <version 0.0.1>', async () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
-    const { answers, question } = httpRequest.body.survey
+    const { question, answers } = httpRequest.body.survey
 
     const spyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
 
     await systemUnderTest.handle(httpRequest)
     expect(spyOnValidate).toHaveBeenCalledWith({
       type: 'required_fields',
-      fields: informationsOfAddSurveyHttpRequestBodyFields,
-      body: { answers, question }
+      fields: informationsOfAddSurveyHttpRequest.fields.concat(informationsOfAddSurveyHttpRequest.answersFields),
+      body: { question, answers }
     })
   })
 
@@ -81,6 +81,10 @@ describe('AddSurveyController', () => {
 
   test('returns from httpResponse: "{statusCode: 500}" if writeSurvey throws <version 0.0.1>', async () => {
     const { systemUnderTest, writeSurveyStub } = await makeSystemUnderTest()
+
+    jest.spyOn(validationCompositeStub, 'validate').mockImplementationOnce(async () => {
+      return []
+    })
 
     jest.spyOn(writeSurveyStub, 'add').mockImplementationOnce(async () => {
       throw new Error()

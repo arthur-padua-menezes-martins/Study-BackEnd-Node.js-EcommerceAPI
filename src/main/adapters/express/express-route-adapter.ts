@@ -1,13 +1,16 @@
 import { Request, Response } from 'express'
-import { IHttpRequest, IHttpResponse, IController } from '../../../presentation/protocols/export-all'
+import {
+  IController,
+  IHttpRequest,
+  IHttpResponse
+} from './express-adapter-protocols'
 
 export const expressRouteAdapter = (controller: IController) => {
   return async (req: Request, res: Response) => {
     const httpRequest: IHttpRequest = {
-      body: req.body || {},
-      params: req.params || {},
-      query: req.query || {},
-      headers: req.headers || {}
+      body: req.body ?? {},
+      params: req.params ?? {},
+      query: req.query ?? {}
     }
 
     const httpResponse: IHttpResponse = await controller.handle(httpRequest)

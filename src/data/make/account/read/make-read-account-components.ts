@@ -2,8 +2,8 @@ export {
   ISearchAccountByFieldRepository, ISearchAccountByFieldRepositoryModel
 } from '../../../protocols/repository/account/read/search-account-by-field-repository'
 export {
-  ISearchAccountByAccessTokenRepository
-} from '../../../protocols/repository/account/read/search-account-by-access-token-repository'
+  ISearchAccountByTokenRepository
+} from '../../../protocols/repository/account/read/search-account-by-token-repository'
 export {
   IAccountModel,
   accountModelEnabled

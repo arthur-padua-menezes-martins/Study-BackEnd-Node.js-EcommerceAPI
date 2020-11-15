@@ -1,17 +1,20 @@
 import request from 'supertest'
+import { sign } from 'jsonwebtoken'
 import {
   Collection
 } from 'mongodb'
 import app from '../../../config/app'
 import {
   MongoHelper
-} from '../../../../infra/db/mongodb/helper/mongo-helper'
+} from '../../../../infra/db/mongo/driver/mongoose/helper/mongo-helper'
 import {
-  informationsOfAddSurveyHttpRequestBody
-} from '../../../../utils/fake/informations-of/survey/add/fake-data-add-survey-http-request-body'
+  informationsOfAddSurveyHttpRequest,
+  informationsOfAccountModel
+} from './survey-routes-utils'
 import env from '../../../config/env'
 
-let collection: Collection
+let surveysCollection: Collection
+let accountsCollection: Collection
 
 describe('survey routes', () => {
   beforeAll(async () => {
@@ -21,16 +24,36 @@ describe('survey routes', () => {
     await MongoHelper.disconnect()
   })
   beforeEach(async () => {
-    collection = await MongoHelper.getCollection(env.collections.surveys)
-    await collection.deleteMany({})
+    surveysCollection = await MongoHelper.getCollection(env.collections.surveys)
+    accountsCollection = await MongoHelper.getCollection(env.collections.accounts)
+    await surveysCollection.deleteMany({})
+    await accountsCollection.deleteMany({})
   })
 
-  test('should return 204 on add-survey success', async () => {
+  test('should return 403 on add survey with valid accessToken', async () => {
     await request(app)
-      .post('/add-survey')
-      .send({
-        survey: informationsOfAddSurveyHttpRequestBody
-      })
+      .post('/api/add-survey')
+      .send({ survey: informationsOfAddSurveyHttpRequest.body })
+      .expect(403)
+  })
+
+  test('should return 204 on add survey with valid accessToken', async () => {
+    const account = await accountsCollection.insertOne({
+      ...informationsOfAccountModel.enabled,
+      role: 'administrator'
+    })
+
+    const id = account.ops[0]._id
+    const accessToken = sign({ id }, env.jwtSecret)
+
+    await accountsCollection.updateOne(
+      { _id: id }, { $set: { accessToken } }
+    )
+
+    await request(app)
+      .post('/api/add-survey')
+      .set('x-access-token', accessToken)
+      .send({ survey: informationsOfAddSurveyHttpRequest.body })
       .expect(204)
   })
 })

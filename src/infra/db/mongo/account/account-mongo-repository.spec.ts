@@ -6,10 +6,10 @@ import {
 } from './account-mongo-repository'
 import {
   MongoHelper
-} from '../helper/mongo-helper'
+} from '../driver/mongoose/helper/mongo-helper'
 import {
-  informationsOfSignUpHttpRequestBodyFields, informationsOfSignUpHttpRequestBodyAddressFields,
-  informationsOfSignUpHttpRequestBodyMatch, informationsOfSignInHttpRequestBodyMatch,
+  informationsOfSignUpHttpRequest,
+  informationsOfSignInHttpRequestBodyMatch,
   informationsOfSearchAccountByField
 } from '../../../../utils/fake/informations-of/export-all'
 import env from '../../../../main/config/env'
@@ -26,7 +26,12 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
 }
 
 let collection: Collection
-const anyToken = 'any_token'
+const token = {
+  any: 'any_token'
+}
+const role = {
+  administrator: 'administrator'
+}
 
 describe('AccountMongoRepository', () => {
   beforeAll(async () => {
@@ -40,49 +45,104 @@ describe('AccountMongoRepository', () => {
     await MongoHelper.disconnect()
   })
 
-  test('Should return an account on add success <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
-    const account = await systemUnderTest.add(informationsOfSignUpHttpRequestBodyMatch)
+  describe('add', () => {
+    test('should return an account on add success <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
 
-    expect(account).toBeTruthy()
-    for (const key of informationsOfSignUpHttpRequestBodyFields.slice(0, 2)) {
-      expect(informationsOfSignUpHttpRequestBodyMatch[key]).toEqual(account[key])
-    }
-    for (const key of informationsOfSignUpHttpRequestBodyAddressFields) {
-      expect(informationsOfSignUpHttpRequestBodyMatch[key]).toEqual(account[key])
-    }
-  })
+      const account = await systemUnderTest.add(informationsOfSignUpHttpRequest.bodyMatch)
 
-  test('Should return an account on searchByField success <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
-    await collection.insertOne(informationsOfSignUpHttpRequestBodyMatch)
-    const account = await systemUnderTest.searchByField({ ...informationsOfSearchAccountByField, email: informationsOfSignInHttpRequestBodyMatch.email })
-
-    expect(account).toBeTruthy()
-    if (account) {
-      for (const key of informationsOfSignUpHttpRequestBodyFields.slice(0, 2)) {
-        expect(informationsOfSignUpHttpRequestBodyMatch[key]).toEqual(account[key])
+      expect(account).toBeTruthy()
+      for (const key of (informationsOfSignUpHttpRequest.bodyFields).slice(0, 2)) {
+        expect((informationsOfSignUpHttpRequest.bodyMatch)[key]).toEqual(account[key])
       }
-      for (const key of informationsOfSignUpHttpRequestBodyAddressFields) {
-        expect(informationsOfSignUpHttpRequestBodyMatch[key]).toEqual(account[key])
+      for (const key of informationsOfSignUpHttpRequest.bodyAddressFields) {
+        expect((informationsOfSignUpHttpRequest.bodyMatch)[key]).toEqual(account[key])
       }
-    }
+    })
   })
 
-  test('Should return null on searchByField fails <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
-    const account = await systemUnderTest.searchByField({ ...informationsOfSearchAccountByField, email: informationsOfSignInHttpRequestBodyMatch.email })
+  describe('searchByField', () => {
+    test('should return an account on searchByField success <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
 
-    expect(account).toBeFalsy()
+      await collection.insertOne(informationsOfSignUpHttpRequest.bodyMatch)
+
+      const account = await systemUnderTest.searchByField({ ...informationsOfSearchAccountByField, email: informationsOfSignInHttpRequestBodyMatch.email })
+
+      expect(account).toBeTruthy()
+      if (account) {
+        for (const key of (informationsOfSignUpHttpRequest.bodyFields).slice(0, 2)) {
+          expect((informationsOfSignUpHttpRequest.bodyMatch)[key]).toEqual(account[key])
+        }
+        for (const key of informationsOfSignUpHttpRequest.bodyAddressFields) {
+          expect((informationsOfSignUpHttpRequest.bodyMatch)[key]).toEqual(account[key])
+        }
+      }
+    })
+
+    test('should return null on searchByField fails <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
+
+      const account = await systemUnderTest.searchByField({
+        ...informationsOfSearchAccountByField,
+        email: informationsOfSignInHttpRequestBodyMatch.email
+      })
+
+      expect(account).toBeFalsy()
+    })
+
+    test('should update the account accessToken on updateAccessToken success <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
+      const accountOptions = await collection.insertOne(informationsOfSignUpHttpRequest.bodyMatch)
+
+      await systemUnderTest.updateAccessToken((accountOptions.ops[0])._id, token.any)
+      const account = await collection.findOne({ _id: (accountOptions.ops[0])._id })
+
+      expect(account).toBeTruthy()
+      expect(account.accessToken).toBe(token.any)
+    })
   })
 
-  test('Should update the account accessToken on updateAccessToken success <version: 0.0.1>', async () => {
-    const { systemUnderTest } = await makeSystemUnderTest()
-    const accountOptions = await collection.insertOne(informationsOfSignUpHttpRequestBodyMatch)
-    await systemUnderTest.updateAccessToken((accountOptions.ops[0])._id, anyToken)
-    const account = await collection.findOne({ _id: (accountOptions.ops[0])._id })
+  describe('searchByToken', () => {
+    test('should return null on searchByToken with invalid role <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
 
-    expect(account).toBeTruthy()
-    expect(account.accessToken).toBe(anyToken)
+      await collection.insertOne({
+        ...informationsOfSignUpHttpRequest.bodyMatch,
+        accessToken: token.any
+      })
+
+      const account = systemUnderTest.searchByToken(token.any, role.administrator)
+
+      expect(account).toBeFalsy()
+    })
+
+    test('should return an account on searchByToken with administrator role <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
+
+      await collection.insertOne({
+        ...informationsOfSignUpHttpRequest.bodyMatch,
+        accessToken: token.any,
+        role: role.administrator
+      })
+
+      const account = systemUnderTest.searchByToken(token.any, role.administrator)
+
+      expect(account).toBeTruthy()
+    })
+
+    test('should return an account on searchByToken with user is administrator <version: 0.0.1>', async () => {
+      const { systemUnderTest } = await makeSystemUnderTest()
+
+      await collection.insertOne({
+        ...informationsOfSignUpHttpRequest.bodyMatch,
+        accessToken: token.any,
+        role: role.administrator
+      })
+
+      const account = systemUnderTest.searchByToken(token.any)
+
+      expect(account).toBeTruthy()
+    })
   })
 })

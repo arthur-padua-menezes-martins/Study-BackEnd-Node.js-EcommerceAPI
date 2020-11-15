@@ -1,6 +1,6 @@
 export abstract class SuperClassAddSurveyController {
   public content: {
-    fields: [string[], string[]]
+    fields: string[]
     validationTypes: string[]
   }
 

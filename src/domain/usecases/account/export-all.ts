@@ -1,6 +1,6 @@
 export {
   ISearchAccountByField, ISearchAccountByFieldModel,
-  ISearchAccountByAccessToken
+  ISearchAccountByToken
 } from './read/export-all'
 export {
   IAddAccount, IAddAccountModel

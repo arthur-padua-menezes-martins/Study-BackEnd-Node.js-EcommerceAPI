@@ -1,7 +1,7 @@
 import { IAccountModel } from '../import-all'
 
 export interface IAddAccountModel {
-  [field: string]: boolean | object
+  [field: string]: string | boolean | object
   personal: {
     [field: string]: string
     name: string

@@ -1,6 +1,6 @@
 export {
   ISearchAccountByFieldRepository,
-  ISearchAccountByAccessTokenRepository
+  ISearchAccountByTokenRepository
 } from '../../../../protocols/repository/account/read/export-all'
 export {
   ISearchAccountByFieldModel

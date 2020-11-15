@@ -1,7 +1,8 @@
 import {
   IMiddleware,
-  IHttpRequest, IHttpResponse,
-  ISearchAccountByAccessToken
+  IHttpRequestHeaders,
+  IHttpResponse,
+  ISearchAccountByToken
 } from './auth-middleware-protocols'
 import {
   AccessDeniedError
@@ -12,17 +13,17 @@ import {
 
 export class AuthMiddleware implements IMiddleware {
   constructor (
-    private readonly readAccount: ISearchAccountByAccessToken,
+    private readonly readAccount: ISearchAccountByToken,
     private readonly role?: string
   ) {}
 
-  async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
+  async handle (httpRequest: IHttpRequestHeaders): Promise<IHttpResponse> {
     try {
       const accessToken = httpRequest.headers?.['x-access-token']
 
       if (accessToken) {
-        const account = await this.readAccount.searchByAccessToken(accessToken, this.role)
-
+        const account = await this.readAccount.searchByToken(accessToken)
+        console.log('AuthMiddleware -> account: ', account)
         if (account) {
           return ok({ account: { id: account.id } })
         }

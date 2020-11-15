@@ -1,16 +1,26 @@
 import { IHttpRequestBody } from '../../import-all'
 
-export const informationsOfAddSurveyHttpRequestBodyFields: string[] = ['question', 'answers']
-export const informationsOfAddSurveyHttpRequestBodyAnswersFields: string[] = ['image', 'answer']
+interface IInformationsOfAddSurveyHttpRequestTypes {
+  fields: string[]
+  answersFields: string[]
+  body: IHttpRequestBody['survey']
+  bodyAnswer: IHttpRequestBody['survey']['answers'][0]
+}
 
-export const informationsOfAddSurveyHttpRequestBody: IHttpRequestBody['survey'] = {
-  question: 'any_question',
-  answers: [{
+export const informationsOfAddSurveyHttpRequest: IInformationsOfAddSurveyHttpRequestTypes = {
+  fields: ['question', 'answers'],
+  answersFields: ['image', 'answer'],
+
+  body: {
+    question: 'any_question',
+    answers: [{
+      image: 'any_image',
+      answer: 'any_answer'
+    }]
+  },
+
+  bodyAnswer: {
     image: 'any_image',
     answer: 'any_answer'
-  }]
-}
-export const informationsOfAddSurveyHttpRequestBodyAnswer: IHttpRequestBody['survey']['answers'][0] = {
-  image: 'any_image',
-  answer: 'any_answer'
+  }
 }

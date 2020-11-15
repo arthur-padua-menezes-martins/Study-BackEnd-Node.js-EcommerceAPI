@@ -2,7 +2,7 @@ export {
   IDecrypter
 } from '../../../../../protocols/cryptography/encrypt/decrypter'
 export {
-  ISearchAccountByAccessTokenRepository
+  ISearchAccountByTokenRepository
 } from '../../../../../protocols/repository/account/read/export-all'
 export {
   IAccountModel

@@ -1,4 +1,6 @@
-import { IHttpRequest, IHttpResponse } from '../export-all'
+import {
+  IHttpRequestHeaders, IHttpResponse
+} from '../export-all'
 
 /**
 * @method `handle`
@@ -7,5 +9,5 @@ import { IHttpRequest, IHttpResponse } from '../export-all'
 * implemetation of IHttpRequest
 */
 export interface IMiddleware {
-  handle: (httpRequest: IHttpRequest) => Promise<IHttpResponse>
+  handle: (httpRequest: IHttpRequestHeaders) => Promise<IHttpResponse>
 }

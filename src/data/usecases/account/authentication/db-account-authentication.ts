@@ -18,13 +18,9 @@ export class DatabaseAccountAuthenticationController implements IAuthentication 
     const account = await this.accountRepositoryRead.searchByField({
       id: '', email: authentication.email
     })
-    let accessToken: string = ''
 
-    if (
-      account?.enabled &&
-      await this.hashComparer.compare(authentication.password, account.personal.password)
-    ) {
-      accessToken = await this.encrypter.encrypt(account.id)
+    if (account?.enabled && await this.hashComparer.compare(authentication.password, account.personal.password)) {
+      const accessToken: string = await this.encrypter.encrypt(account.id)
       await this.accountRepositoryUpdate.updateAccessToken(account.id, accessToken)
 
       return accessToken

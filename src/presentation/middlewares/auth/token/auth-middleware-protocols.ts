@@ -1,7 +1,8 @@
 export {
   IMiddleware,
-  IHttpRequest, IHttpResponse
+  IHttpRequest, IHttpRequestHeaders,
+  IHttpResponse
 } from '../../../protocols/export-all'
 export {
-  ISearchAccountByAccessToken
-} from '../../../../domain/usecases/account/read/search-account-by-access-token'
+  ISearchAccountByToken
+} from '../../../../domain/usecases/account/read/search-account-by-token'

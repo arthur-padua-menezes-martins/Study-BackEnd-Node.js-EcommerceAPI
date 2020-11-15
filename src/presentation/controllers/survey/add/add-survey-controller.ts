@@ -15,7 +15,7 @@ import {
   noContent, badRequest, serverError
 } from './add-survey-controller-helpers'
 import {
-  informationsOfAddSurveyHttpRequestBodyFields, informationsOfAddSurveyHttpRequestBodyAnswersFields
+  informationsOfAddSurveyHttpRequest
 } from './add-survey-controller-utils'
 
 export class AddSurveyController extends SuperClassAddSurveyController implements IController {
@@ -32,17 +32,17 @@ export class AddSurveyController extends SuperClassAddSurveyController implement
     super()
 
     this.content = {
-      fields: [informationsOfAddSurveyHttpRequestBodyFields, informationsOfAddSurveyHttpRequestBodyAnswersFields],
+      fields: informationsOfAddSurveyHttpRequest.fields.concat(informationsOfAddSurveyHttpRequest.answersFields),
       validationTypes: ['required_fields']
     }
   }
 
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      let { answers, question, generateTypes, generatedType, validation } = await this.defineProperties(httpRequest)
+      let { question, answers, generateTypes, generatedType, validation } = await this.defineProperties(httpRequest)
 
       do {
-        validation.content = await this.handleValidate({ type: generatedType.value })
+        validation.content = await this.handleValidate(generatedType.value)
 
         if (validation.content.length > 0) {
           validation.error = badRequest(undefined, undefined, new MissingParamError(validation.content.join(' ')), validation.content)
@@ -69,21 +69,20 @@ export class AddSurveyController extends SuperClassAddSurveyController implement
   }
 
   async defineProperties (httpRequest: IHttpRequest): Promise<IDefineProperties> {
-    const { answers, question } = httpRequest.body.survey
-
+    const { question, answers } = httpRequest.body.survey
     const generateTypes: Generator<string> = (this.generateTypes(this.content.validationTypes, 0))()
 
-    this.handleValidate = async (content: { type: string }) => {
+    this.handleValidate = async (type: string) => {
       return await this.validationComposite.validate({
-        type: content.type,
+        type,
         fields: this.content.fields,
-        body: { answers, question }
+        body: { question, answers }
       })
     }
 
     return {
-      answers,
       question,
+      answers,
       generateTypes: generateTypes,
       generatedType: generateTypes.next(),
       validation: {

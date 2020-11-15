@@ -1,16 +1,9 @@
 # dependencies
 node_modules
-dist
 
 # testing
 coverage
 
 # production
-/docker
-
-# dashboard dependencies
-dashboard/node_modules
-
-# virtualStore dependencies
-virtualStore/node_modules
-virtualStore/.next
+dist
+docker

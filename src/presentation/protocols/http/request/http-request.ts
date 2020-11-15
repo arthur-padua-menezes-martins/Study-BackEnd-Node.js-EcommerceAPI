@@ -1,4 +1,6 @@
-import { IHttpRequestBody } from './http-request-body'
+import {
+  IHttpRequestBody
+} from './http-request-body'
 
 /**
 * @interface

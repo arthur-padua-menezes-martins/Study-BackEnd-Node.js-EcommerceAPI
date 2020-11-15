@@ -3,7 +3,7 @@ import {
 } from './auth-middleware'
 import {
   IHttpRequest,
-  ISearchAccountByAccessToken
+  ISearchAccountByToken
 } from './auth-middleware-protocols'
 import {
   makeReadAccount
@@ -15,7 +15,7 @@ import {
 
 interface ISystemUnderTestTypes {
   systemUnderTest: AuthMiddleware
-  readAccountStub: ISearchAccountByAccessToken
+  readAccountStub: ISearchAccountByToken
 }
 const makeSystemUnderTest = async (role?: string): Promise<ISystemUnderTestTypes> => {
   const readAccountStub = await makeReadAccount()
@@ -48,7 +48,7 @@ describe('Auth Middleware', () => {
     const { systemUnderTest, readAccountStub } = await makeSystemUnderTest(role)
 
     httpRequest.headers = informationsOfAccessTokenHttpRequestHeaders
-    const spyOnSearchByAccessToken = jest.spyOn(readAccountStub, 'searchByAccessToken')
+    const spyOnSearchByAccessToken = jest.spyOn(readAccountStub, 'searchByToken')
     await systemUnderTest.handle(httpRequest)
 
     expect(spyOnSearchByAccessToken).toHaveBeenCalledWith(accessToken, role)
@@ -57,7 +57,7 @@ describe('Auth Middleware', () => {
   test('should return status code 403 if accessToken does not represents a valid token <version: 0.0.1>', async () => {
     const { systemUnderTest, readAccountStub } = await makeSystemUnderTest()
 
-    jest.spyOn(readAccountStub, 'searchByAccessToken').mockReturnValueOnce(Promise.resolve(null))
+    jest.spyOn(readAccountStub, 'searchByToken').mockReturnValueOnce(Promise.resolve(null))
     const httpResponse = await systemUnderTest.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(403)
@@ -76,7 +76,7 @@ describe('Auth Middleware', () => {
   test('should return status code 500 if searchByAccessToken throws <version: 0.0.1>', async () => {
     const { systemUnderTest, readAccountStub } = await makeSystemUnderTest()
 
-    jest.spyOn(readAccountStub, 'searchByAccessToken').mockReturnValueOnce(Promise.reject(new Error()))
+    jest.spyOn(readAccountStub, 'searchByToken').mockReturnValueOnce(Promise.reject(new Error()))
     const httpResponse = await systemUnderTest.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(500)
