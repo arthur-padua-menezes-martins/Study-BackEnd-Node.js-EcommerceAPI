@@ -1,7 +1,7 @@
 version: "3"
 services:
   mongo: 
-    container_name: mongo-container
+    container_name: back-end_ecommerce_sertao-nerd_api_MONGO-CONTAINER
     image: mongo:4.2
     restart: always
     volumes: 
@@ -9,7 +9,7 @@ services:
     ports:
       - "27017:27017"
   api: 
-    container_name: api-container
+    container_name: back-end_ecommerce_sertao-nerd_api-API-CONTAINER
     image: node:12
     working_dir: /usr/src
     restart: always

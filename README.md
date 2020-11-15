@@ -44,7 +44,7 @@
 
 <br/></br></br>
 
-> # SUCCESS
+> # CÓDIGOS DE SUCESSO
 
 **2xx**
 * ✨ *200 ok, requisição completa e retorno das informações*
@@ -54,7 +54,7 @@
 
 <br/></br></br>
 
-> # ERRORS
+> # CÓDIGOS DE ERRO
 
 **4xx**
 * ⚠️ *400 bad request, se campos obrigarórios forem omitidos ou inválidos*

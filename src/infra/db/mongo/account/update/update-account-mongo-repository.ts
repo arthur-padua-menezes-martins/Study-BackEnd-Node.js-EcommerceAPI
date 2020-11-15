@@ -1,7 +1,8 @@
 import {
-  AccountMongoRepositorySuper
-} from '../super/super-account-mongo-repository'
-import { IUpdateAccessTokenRepository, IUpdateEnabledAccountRepository } from '../../../../../data/protocols/repository/account/update/export-all'
+  AccountMongoRepositorySuper,
+  IUpdateAccessTokenRepository,
+  IUpdateEnabledAccountRepository
+} from './update-account-mongo-repository-protocols'
 import {
   MongoHelper
 } from '../import-all'

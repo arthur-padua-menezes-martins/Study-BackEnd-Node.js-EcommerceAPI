@@ -1,13 +1,10 @@
 import {
-  AccountMongoRepositorySuper
-} from '../super/super-account-mongo-repository'
-import {
+  AccountMongoRepositorySuper,
   ISearchAccountByFieldRepository, ISearchAccountByFieldRepositoryModel,
   ISearchAccountByTokenRepository
 } from './read-account-mongo-repository-protocols'
 import {
-  IAccountModel,
-  MongoHelper
+  IAccountModel
 } from '../import-all'
 
 export class AccountMongoRepositoryRead extends AccountMongoRepositorySuper implements ISearchAccountByFieldRepository, ISearchAccountByTokenRepository {
@@ -17,31 +14,27 @@ export class AccountMongoRepositoryRead extends AccountMongoRepositorySuper impl
   */
   public async searchByField (fields: ISearchAccountByFieldRepositoryModel): Promise<IAccountModel | null> {
     const collection = await AccountMongoRepositoryRead.getCollection()
-    const { id } = fields
+    let account: IAccountModel | null = null
 
-    if (id) {
-      return await AccountMongoRepositoryRead.searchById(collection, id)
+    if (fields.id) {
+      account = await AccountMongoRepositoryRead.searchById(collection, fields.id)
     } else if (Object.keys(fields).length === 1) {
-      return await AccountMongoRepositoryRead.searchByOneField(collection, fields)
+      account = await AccountMongoRepositoryRead.searchByOneField(collection, fields)
     } else {
-      return await AccountMongoRepositoryRead.searchByManyFields(collection, fields)
+      account = await AccountMongoRepositoryRead.searchByManyFields(collection, fields)
     }
+
+    return account
   }
 
   public async searchByToken (token: string, role?: string): Promise<IAccountModel | null> {
     const collection = await AccountMongoRepositoryRead.getCollection()
 
-    const account: IAccountModel | null = await collection.findOne({
+    const account: IAccountModel | null = await AccountMongoRepositoryRead.customSearchForOne(collection, {
       accessToken: token,
       $or: [{ role }, { role: 'administrator' }]
     })
 
-    const findOne = await collection.findOne({})
-    console.log('findOne: ', findOne)
-
-    console.log('AccountMongoRepositoryRead -> token: ', token)
-    console.log('AccountMongoRepositoryRead -> role: ', role)
-    console.log('AccountMongoRepositoryRead -> account: ', account)
-    return MongoHelper.map_id(account)
+    return account
   }
 }
