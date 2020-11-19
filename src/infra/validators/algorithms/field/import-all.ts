@@ -1,3 +1,3 @@
 export {
   IFieldsValidation
-} from '../../../../validation/protocols/fields/fields-validation'
+} from '@/validation/protocols/fields/fields-validation'

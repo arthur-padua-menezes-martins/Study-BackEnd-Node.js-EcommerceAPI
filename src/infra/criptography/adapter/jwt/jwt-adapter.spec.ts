@@ -4,7 +4,7 @@ import {
 } from './jwt-adapter'
 import {
   informationsOfAccountModel
-} from '../../../../utils/fake/informations-of/account/model/fake-informations-of-account-model'
+} from './jwt-adapter-utils'
 
 const secret = 'any_secret'
 const token = {

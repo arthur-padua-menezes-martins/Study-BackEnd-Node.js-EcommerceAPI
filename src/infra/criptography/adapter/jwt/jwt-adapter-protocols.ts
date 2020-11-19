@@ -1,6 +1,4 @@
 export {
-  IEncrypter
-} from '../../../../data/protocols/cryptography/encrypt/encrypter'
-export {
+  IEncrypter,
   IDecrypter
-} from '../../../../data/protocols/cryptography/encrypt/decrypter'
+} from '@/data/protocols/cryptography/export-all'

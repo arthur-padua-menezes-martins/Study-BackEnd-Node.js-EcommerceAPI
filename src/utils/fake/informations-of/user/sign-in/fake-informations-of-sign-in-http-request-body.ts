@@ -1,32 +1,26 @@
-interface IInformationsOfSignInHttpRequestTypes {
-  bodyFields: string[]
-  bodyMatchData: any
-  bodyMatch: any
-  bodyNotMatch: any
-  bodyMissingField: any
-  getBodyNotMatch: Function
-}
+import { IHttpRequestBody } from '../../import-all'
 
-export const informationsOfSignInHttpRequest: IInformationsOfSignInHttpRequestTypes = {
-  bodyFields: ['email', 'password'],
-  bodyMatchData: {
-    personal: {
-      email: 'arthur.software.developer@gmail.com',
-      password: 'password123'
-    }
-  },
-  bodyMatch: {
+export const informationsOfSignInHttpRequestBodyFields: string[] = ['email', 'password']
+
+const informationsOfSignInHttpRequestBodyMatchData: any = {
+  personal: {
     email: 'arthur.software.developer@gmail.com',
     password: 'password123'
-  },
-  bodyNotMatch: {
-    email: '$#@!%¨&*()_+[]{}`^?:;/~@',
-    password: 'pass123'
-  },
-  bodyMissingField: {
-    email: 'arthur.software.developer@gmail.com'
-  },
-  getBodyNotMatch: (fieldName: string): string => {
-    return informationsOfSignInHttpRequest.bodyNotMatch[fieldName]
   }
+}
+export const informationsOfSignInHttpRequestBodyMatch: IHttpRequestBody['user']['informations']['personal'] = {
+  ...informationsOfSignInHttpRequestBodyMatchData
+}
+
+export const informationsOfSignInHttpRequestBodyNotMatch: any = {
+  email: '$#@!%¨&*()_+[]{}`^?:;/~@',
+  password: 'pass123'
+}
+
+export const informationsOfSignInHttpRequestBodyMissingField: any = {
+  email: 'arthur.software.developer@gmail.com'
+}
+
+export const getinformationsOfSignInHttpRequestBodyNotMatchField = (fieldName: string): string => {
+  return informationsOfSignInHttpRequestBodyNotMatch[fieldName]
 }

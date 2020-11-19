@@ -6,8 +6,8 @@ import {
   ISearchAccountByToken
 } from './auth-middleware-protocols'
 import {
-  mockReadAccount
-} from './auth-middleware-mock'
+  makeReadAccount
+} from './auth-middleware-make'
 import {
   informationsOfAccountModel,
   informationsOfAccessTokenHttpRequestHeaders
@@ -18,7 +18,7 @@ interface ISystemUnderTestTypes {
   readAccountStub: ISearchAccountByToken
 }
 const makeSystemUnderTest = async (role?: string): Promise<ISystemUnderTestTypes> => {
-  const readAccountStub = await mockReadAccount()
+  const readAccountStub = await makeReadAccount()
   const systemUnderTest = new AuthMiddleware(readAccountStub, role)
 
   return {

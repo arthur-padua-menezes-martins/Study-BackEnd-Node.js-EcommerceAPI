@@ -2,11 +2,11 @@ import {
   DatabaseAccountAuthenticationController
 } from './db-account-authentication'
 import {
-  mockReadAccount,
-  mockHasherCryptography,
-  mockEncrypterCryptography,
-  mockUpdateAccount
-} from './db-account-authentication-mock'
+  makeReadAccount,
+  makeHasherCryptography,
+  makeEncrypterCryptography,
+  makeUpdateAccount
+} from './db-account-authentication-make'
 import {
   ISearchAccountByFieldRepository,
   IAuthenticationModel,
@@ -15,7 +15,7 @@ import {
   IUpdateAccessTokenRepository
 } from './db-account-authentication-protocols'
 import {
-  informationsOfSignInHttpRequest,
+  informationsOfSignInHttpRequestBodyMatch,
   informationsOfAccountModel
 } from './db-account-authentication-utils'
 
@@ -27,10 +27,10 @@ interface ISystemUnderTestTypes {
   updateAccountStub: IUpdateAccessTokenRepository
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
-  const readAccountStub = await mockReadAccount()
-  const hashComparerStub = await mockHasherCryptography()
-  const encrypterStub = await mockEncrypterCryptography()
-  const updateAccountStub = await mockUpdateAccount()
+  const readAccountStub = await makeReadAccount()
+  const hashComparerStub = await makeHasherCryptography()
+  const encrypterStub = await makeEncrypterCryptography()
+  const updateAccountStub = await makeUpdateAccount()
 
   const systemUnderTest = new DatabaseAccountAuthenticationController(
     readAccountStub, hashComparerStub, encrypterStub, updateAccountStub
@@ -45,7 +45,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   }
 }
 
-const authentication: IAuthenticationModel = informationsOfSignInHttpRequest.bodyMatch
+const authentication: IAuthenticationModel = informationsOfSignInHttpRequestBodyMatch
 const accessToken: string = 'any_token'
 
 describe('DatabaseAuthenticationController Usecases', () => {

@@ -4,4 +4,4 @@ export {
 
 export {
   informationsOfAccessTokenHttpRequestHeaders
-} from '../../../../utils/fake/informations-of/user/access-token/fake-informations-of-access-token-http-request-headers'
+} from '../../../../utils/fake/informations-of/user/token/fake-informations-of-access-token-http-request-headers'

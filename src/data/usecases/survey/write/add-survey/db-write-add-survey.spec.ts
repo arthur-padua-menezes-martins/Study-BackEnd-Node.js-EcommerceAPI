@@ -5,7 +5,7 @@ import {
   IAddSurveyRepository
 } from './db-write-add-survey-protocols'
 import {
-  mockWriteSurvey
+  makeWriteSurvey
 } from './db-write-add-survey-make'
 import {
   informationsOfAddSurveyHttpRequest
@@ -16,7 +16,7 @@ interface ISystemUnderTestTypes {
   writeSurveyStub: IAddSurveyRepository
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
-  const writeSurveyStub = await mockWriteSurvey()
+  const writeSurveyStub = await makeWriteSurvey()
   const systemUnderTest = new DatabaseAddSurveyController(writeSurveyStub)
 
   return {

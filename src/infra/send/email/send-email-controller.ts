@@ -3,7 +3,7 @@ import {
 } from './import-all'
 import { SendEmailTemplates } from './templates/send-email-templates'
 import { NodemailerAdapter } from './adapter/nodemailer/nodemailer-adapter'
-import env from '../../../main/config/env'
+import env from '@/main/config/env'
 
 export class SendEmailController extends SendEmailTemplates implements ISendEmailController {
   private readonly credentials: SendEmailControllerCredentials = {

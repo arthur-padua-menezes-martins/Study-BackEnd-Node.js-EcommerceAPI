@@ -1,6 +1,4 @@
-import {
-  informationsOfSignUpHttpRequest
-} from '../../user/sign-up/fake-informations-of-sign-up-http-request-body'
+import { informationsOfSignUpHttpRequestBodyMatch } from '../../user/sign-up/fake-informations-of-sign-up-http-request-body'
 
 interface IInformationsOfAccountModelTypes {
   enabled: any
@@ -9,20 +7,20 @@ interface IInformationsOfAccountModelTypes {
 export const informationsOfAccountModel: IInformationsOfAccountModelTypes = {
   enabled: {
     personal: {
-      ...informationsOfSignUpHttpRequest.bodyMatch.personal,
+      ...informationsOfSignUpHttpRequestBodyMatch.personal,
       password: 'encrypted_password'
     },
-    address: informationsOfSignUpHttpRequest.bodyMatch.address,
+    address: informationsOfSignUpHttpRequestBodyMatch.address,
     enabled: true,
     id: 'valid_id'
   },
 
   disabled: {
     personal: {
-      ...informationsOfSignUpHttpRequest.bodyMatch.personal,
+      ...informationsOfSignUpHttpRequestBodyMatch.personal,
       password: 'encrypted_password'
     },
-    address: informationsOfSignUpHttpRequest.bodyMatch.address,
+    address: informationsOfSignUpHttpRequestBodyMatch.address,
     enabled: false,
     id: 'valid_id'
   }

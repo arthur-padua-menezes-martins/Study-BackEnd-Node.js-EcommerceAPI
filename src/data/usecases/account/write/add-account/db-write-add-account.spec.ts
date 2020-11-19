@@ -7,12 +7,12 @@ import {
   IAddAccountRepository
 } from './db-write-add-account-protocols'
 import {
-  mockReadAccount,
-  mockHasherCryptography,
-  mockWriteAccount
+  makeReadAccount,
+  makeHasherCryptography,
+  makeWriteAccount
 } from './db-write-add-account-make'
 import {
-  informationsOfSignUpHttpRequest,
+  informationsOfSignUpHttpRequestBodyMatch,
   informationsOfAccountModel
 } from './db-write-add-account-utils'
 
@@ -23,9 +23,9 @@ interface ISystemUnderTestTypes {
   writeAccountStub: IAddAccountRepository
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
-  const readAccountStub = await mockReadAccount()
-  const hasherStub = await mockHasherCryptography()
-  const writeAccountStub = await mockWriteAccount()
+  const readAccountStub = await makeReadAccount()
+  const hasherStub = await makeHasherCryptography()
+  const writeAccountStub = await makeWriteAccount()
   const systemUnderTest = new DatabaseAddAccountController(readAccountStub, hasherStub, writeAccountStub)
 
   return {
@@ -41,16 +41,16 @@ describe('DatabaseAddAccountController', () => {
     const { systemUnderTest, hasherStub } = await makeSystemUnderTest()
 
     const spyOnHash = jest.spyOn(hasherStub, 'hash')
-    await systemUnderTest.add(informationsOfSignUpHttpRequest.bodyMatch)
+    await systemUnderTest.add(informationsOfSignUpHttpRequestBodyMatch)
 
-    expect(spyOnHash).toHaveBeenCalledWith(informationsOfSignUpHttpRequest.bodyMatch.personal.password)
+    expect(spyOnHash).toHaveBeenCalledWith(informationsOfSignUpHttpRequestBodyMatch.personal.password)
   })
 
   test('Should throw if Encrypter throws <version: 0.0.1>', async () => {
     const { systemUnderTest, hasherStub } = await makeSystemUnderTest()
 
     jest.spyOn(hasherStub, 'hash').mockReturnValueOnce(Promise.reject(new Error()))
-    const promiseAccount = systemUnderTest.add(informationsOfSignUpHttpRequest.bodyMatch)
+    const promiseAccount = systemUnderTest.add(informationsOfSignUpHttpRequestBodyMatch)
 
     await expect(promiseAccount).rejects.toThrow()
   })
@@ -59,14 +59,14 @@ describe('DatabaseAddAccountController', () => {
     const { systemUnderTest, writeAccountStub } = await makeSystemUnderTest()
 
     const spyOnAdd = jest.spyOn(writeAccountStub, 'add')
-    await systemUnderTest.add(informationsOfSignUpHttpRequest.bodyMatch)
+    await systemUnderTest.add(informationsOfSignUpHttpRequestBodyMatch)
 
     expect(spyOnAdd).toHaveBeenCalledWith({
       personal: {
-        ...informationsOfSignUpHttpRequest.bodyMatch.personal,
+        ...informationsOfSignUpHttpRequestBodyMatch.personal,
         password: informationsOfAccountModel.disabled.personal.password
       },
-      address: informationsOfSignUpHttpRequest.bodyMatch.address,
+      address: informationsOfSignUpHttpRequestBodyMatch.address,
       accessToken: '',
       enabled: false
     })
@@ -75,13 +75,15 @@ describe('DatabaseAddAccountController', () => {
   test('Should return an account on success <version: 0.0.1>', async () => {
     const { systemUnderTest } = await makeSystemUnderTest()
 
-    const account = await systemUnderTest.add(informationsOfSignUpHttpRequest.bodyMatch)
+    const account = await systemUnderTest.add(informationsOfSignUpHttpRequestBodyMatch)
 
     expect(account).toEqual({
-      ...informationsOfAccountModel.disabled,
       personal: {
         ...informationsOfAccountModel.disabled.personal
-      }
+      },
+      address: informationsOfAccountModel.disabled.address,
+      enabled: informationsOfAccountModel.disabled.enabled,
+      id: informationsOfAccountModel.disabled.id
     })
   })
 })

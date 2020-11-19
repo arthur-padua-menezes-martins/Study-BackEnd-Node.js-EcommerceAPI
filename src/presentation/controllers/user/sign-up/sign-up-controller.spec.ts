@@ -7,10 +7,10 @@ import {
 } from './sign-up-controller-protocols'
 import {
   validationCompositeStub,
-  mockWriteAccount,
-  mockUpdateAccount,
-  mockEmailSender
-} from './sign-up-controller-mock'
+  makeWriteAccount,
+  makeUpdateAccount,
+  makeEmailSender
+} from './sign-up-controller-make'
 import {
   informationsOfSignUpHttpRequest
 } from './sign-up-controller-utils'
@@ -20,9 +20,9 @@ interface ISignUpControllerTypes {
   writeAccountStub: IAddAccount
 }
 const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
-  const writeAccountStub = await mockWriteAccount()
-  const updateAccountStub = await mockUpdateAccount()
-  const emailSender = await mockEmailSender()
+  const writeAccountStub = await makeWriteAccount()
+  const updateAccountStub = await makeUpdateAccount()
+  const emailSender = await makeEmailSender()
   const systemUnderTest = new SignUpController(validationCompositeStub, writeAccountStub, updateAccountStub, emailSender)
 
   return {

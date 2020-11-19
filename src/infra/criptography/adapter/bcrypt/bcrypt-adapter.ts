@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt'
-import { IHasher, IHashComparer } from '../../../../data/protocols/cryptography/export-all'
-
+import { IHasher, IHashComparer } from './bcrypt-adapter-protocols'
 /**
 * @implements {IHasher}
 *

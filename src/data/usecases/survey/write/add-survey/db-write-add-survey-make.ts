@@ -1,3 +1,3 @@
 export {
-  mockWriteSurvey
-} from '../../../../test/mock/survey/add-survey/mock-add-survey'
+  makeWriteSurvey
+} from '../../../../make/survey/add-survey/make-add-survey'

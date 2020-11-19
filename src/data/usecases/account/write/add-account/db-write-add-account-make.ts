@@ -1,9 +1,9 @@
 export {
-  mockReadAccount
-} from '../../../../test/mock/account/read/mock-read-account'
+  makeReadAccount
+} from '../../../../make/account/read/make-read-account'
 export {
-  mockHasherCryptography
-} from '../../../../test/mock/cryptography/hasher/mock-hasher-cryptography'
+  makeHasherCryptography
+} from '../../../../make/cryptography/hasher/make-hasher-cryptography'
 export {
-  mockWriteAccount
-} from '../../../../test/mock/account/write/mock-write-account'
+  makeWriteAccount
+} from '../../../../make/account/write/make-write-account'

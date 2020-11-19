@@ -7,7 +7,7 @@ import {
 import {
   MongoHelper
 } from '../import-all'
-import env from '../../../../../main/config/env'
+import env from '@/main/config/env'
 
 export class AccountMongoRepositorySuper extends MongoRepositorySuper {
   static async getCollection (collectionName?: string): Promise<Collection> {

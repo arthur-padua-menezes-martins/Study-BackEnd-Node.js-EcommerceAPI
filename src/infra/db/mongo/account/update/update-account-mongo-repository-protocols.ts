@@ -4,4 +4,4 @@ export {
 export {
   IUpdateAccessTokenRepository,
   IUpdateEnabledAccountRepository
-} from '../../../../../data/protocols/repository/account/update/export-all'
+} from '@/data/protocols/repository/account/update/export-all'
