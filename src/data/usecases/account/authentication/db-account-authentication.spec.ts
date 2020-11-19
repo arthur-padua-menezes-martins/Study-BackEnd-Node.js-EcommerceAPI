@@ -2,11 +2,11 @@ import {
   DatabaseAccountAuthenticationController
 } from './db-account-authentication'
 import {
-  makeReadAccount,
-  makeHasherCryptography,
-  makeEncrypterCryptography,
-  makeUpdateAccount
-} from './db-account-authentication-make'
+  mockReadAccount,
+  mockHasherCryptography,
+  mockEncrypterCryptography,
+  mockUpdateAccount
+} from './db-account-authentication-mock'
 import {
   ISearchAccountByFieldRepository,
   IAuthenticationModel,
@@ -15,8 +15,8 @@ import {
   IUpdateAccessTokenRepository
 } from './db-account-authentication-protocols'
 import {
-  informationsOfSignInHttpRequestBodyMatch,
-  accountModelEnabled
+  informationsOfSignInHttpRequest,
+  informationsOfAccountModel
 } from './db-account-authentication-utils'
 
 interface ISystemUnderTestTypes {
@@ -27,10 +27,10 @@ interface ISystemUnderTestTypes {
   updateAccountStub: IUpdateAccessTokenRepository
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
-  const readAccountStub = await makeReadAccount()
-  const hashComparerStub = await makeHasherCryptography()
-  const encrypterStub = await makeEncrypterCryptography()
-  const updateAccountStub = await makeUpdateAccount()
+  const readAccountStub = await mockReadAccount()
+  const hashComparerStub = await mockHasherCryptography()
+  const encrypterStub = await mockEncrypterCryptography()
+  const updateAccountStub = await mockUpdateAccount()
 
   const systemUnderTest = new DatabaseAccountAuthenticationController(
     readAccountStub, hashComparerStub, encrypterStub, updateAccountStub
@@ -45,7 +45,7 @@ const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
   }
 }
 
-const authentication: IAuthenticationModel = informationsOfSignInHttpRequestBodyMatch
+const authentication: IAuthenticationModel = informationsOfSignInHttpRequest.bodyMatch
 const accessToken: string = 'any_token'
 
 describe('DatabaseAuthenticationController Usecases', () => {
@@ -85,7 +85,7 @@ describe('DatabaseAuthenticationController Usecases', () => {
     const spyOnCompare = jest.spyOn(hashComparerStub, 'compare')
 
     await systemUnderTest.auth(authentication)
-    expect(spyOnCompare).toHaveBeenCalledWith(authentication.password, accountModelEnabled.personal.password)
+    expect(spyOnCompare).toHaveBeenCalledWith(authentication.password, informationsOfAccountModel.enabled.personal.password)
   })
 
   test('should throw if HashComparer throws <version: 0.0.1>', async () => {
@@ -109,7 +109,7 @@ describe('DatabaseAuthenticationController Usecases', () => {
     const spyOnEncrypt = jest.spyOn(encrypterStub, 'encrypt')
 
     await systemUnderTest.auth(authentication)
-    expect(spyOnEncrypt).toHaveBeenCalledWith(accountModelEnabled.id)
+    expect(spyOnEncrypt).toHaveBeenCalledWith(informationsOfAccountModel.enabled.id)
   })
 
   test('should return an null if Encrypter fails <version: 0.0.1>', async () => {
@@ -138,7 +138,7 @@ describe('DatabaseAuthenticationController Usecases', () => {
     const spyOnUpdate = jest.spyOn(updateAccountStub, 'updateAccessToken')
 
     await systemUnderTest.auth(authentication)
-    expect(spyOnUpdate).toHaveBeenCalledWith(accountModelEnabled.id, accessToken)
+    expect(spyOnUpdate).toHaveBeenCalledWith(informationsOfAccountModel.enabled.id, accessToken)
   })
 
   test('should return an error if UpdateAccessTokenRepository throws error <version: 0.0.1>', async () => {

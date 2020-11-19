@@ -5,10 +5,10 @@ import {
 } from './sign-in-controller-protocols'
 import {
   validationCompositeStub,
-  makeAuthenticationAccount
-} from './sign-in-controller-make'
+  mockAuthenticationAccount
+} from './sign-in-controller-mock'
 import {
-  informationsOfSignInHttpRequestBodyFields, informationsOfSignInHttpRequestBodyMatch, informationsOfSignInHttpRequestBodyNotMatch, informationsOfSignInHttpRequestBodyMissingField
+  informationsOfSignInHttpRequest
 } from './sign-in-controller-utils'
 
 interface ISignUpControllerTypes {
@@ -17,7 +17,7 @@ interface ISignUpControllerTypes {
   authenticationAccountStub: IAuthentication
 }
 const makeSystemUnderTest = async (): Promise<ISignUpControllerTypes> => {
-  const authenticationAccountStub = await makeAuthenticationAccount()
+  const authenticationAccountStub = await mockAuthenticationAccount()
   const systemUnderTest = new SignInController(validationCompositeStub, authenticationAccountStub)
 
   return {
@@ -31,7 +31,7 @@ const httpRequest: any = {
   body: {
     user: {
       informations: {
-        personal: informationsOfSignInHttpRequestBodyMatch
+        personal: informationsOfSignInHttpRequest.bodyMatch
       }
     }
   }
@@ -44,7 +44,7 @@ let httpResponse: IHttpResponse = {
 describe('SignInController', () => {
   test('returns from httpResponse: "{statusCode: 400}" if any required_fields belonging to httpRequest.body do not exist <version 0.0.1>', async () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
-    httpRequest.body.user.informations.personal = informationsOfSignInHttpRequestBodyMissingField
+    httpRequest.body.user.informations.personal = informationsOfSignInHttpRequest.bodyMissingField
     const { personal } = httpRequest.body.user.informations
 
     const SpyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
@@ -52,7 +52,7 @@ describe('SignInController', () => {
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(SpyOnValidate).toHaveBeenCalledWith(({
       type: 'required_fields',
-      fields: informationsOfSignInHttpRequestBodyFields,
+      fields: informationsOfSignInHttpRequest.bodyFields,
       body: personal,
       checkThisType: 'string',
       checkTheTypeOfThis: personal
@@ -63,7 +63,7 @@ describe('SignInController', () => {
 
   test('returns from httpResponse "{status Code: 400}" if any fields do not match validation <version 0.0.1>', async () => {
     const { systemUnderTest, validationCompositeStub } = await makeSystemUnderTest()
-    httpRequest.body.user.informations.personal = informationsOfSignInHttpRequestBodyNotMatch
+    httpRequest.body.user.informations.personal = informationsOfSignInHttpRequest.bodyNotMatch
     const { personal } = httpRequest.body.user.informations
 
     const SpyOnValidate = jest.spyOn(validationCompositeStub, 'validate')
@@ -71,7 +71,7 @@ describe('SignInController', () => {
     httpResponse = await systemUnderTest.handle(httpRequest)
     expect(SpyOnValidate).toHaveBeenCalledWith(({
       type: 'validate_fields',
-      fields: informationsOfSignInHttpRequestBodyFields,
+      fields: informationsOfSignInHttpRequest.bodyFields,
       body: personal,
       checkThisType: 'string',
       checkTheTypeOfThis: personal

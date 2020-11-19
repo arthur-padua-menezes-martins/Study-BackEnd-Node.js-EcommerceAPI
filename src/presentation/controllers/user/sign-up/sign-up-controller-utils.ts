@@ -1,6 +1,6 @@
 export {
-  informationsOfSignUpHttpRequest, informationsOfSignUpHttpRequestBodyFields
-} from '../../../../utils/fake/informations-of/user/sign-up/fake-data-sign-up-http-request-body'
+  informationsOfSignUpHttpRequest
+} from '../../../../utils/fake/informations-of/user/sign-up/fake-informations-of-sign-up-http-request-body'
 export {
-  accountModelDisabled
-} from '../../../../utils/fake/informations-of/account/model/fake-data-account-model'
+  informationsOfAccountModel
+} from '../../../../utils/fake/informations-of/account/model/fake-informations-of-account-model'

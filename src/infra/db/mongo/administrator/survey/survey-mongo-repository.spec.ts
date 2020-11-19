@@ -9,7 +9,7 @@ import {
 } from './import-all'
 import {
   informationsOfAddSurveyHttpRequest
-} from '../../../../../utils/fake/informations-of/survey/add/fake-data-add-survey-http-request-body'
+} from '../../../../../utils/fake/informations-of/survey/add/fake-informations-of-add-survey-http-request-body'
 import env from '../../../../../main/config/env'
 
 interface ISystemUnderTestTypes {

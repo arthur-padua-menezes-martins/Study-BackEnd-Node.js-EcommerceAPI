@@ -1,6 +1,6 @@
 export {
-  makeDecrypterCryptography
-} from '../../../../../make/cryptography/decrypter/make-decrypter-cryptography'
+  mockDecrypterCryptography
+} from '../../../../../test/mock/cryptography/decrypter/mock-decrypter-cryptography'
 export {
-  makeReadAccount
-} from '../../../../../make/account/read/make-read-account'
+  mockReadAccount
+} from '../../../../../test/mock/account/read/mock-read-account'

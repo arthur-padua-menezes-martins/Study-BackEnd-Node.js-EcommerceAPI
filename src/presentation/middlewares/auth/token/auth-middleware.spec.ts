@@ -6,10 +6,10 @@ import {
   ISearchAccountByToken
 } from './auth-middleware-protocols'
 import {
-  makeReadAccount
-} from './auth-middleware-make'
+  mockReadAccount
+} from './auth-middleware-mock'
 import {
-  accountModelEnabled,
+  informationsOfAccountModel,
   informationsOfAccessTokenHttpRequestHeaders
 } from './auth-middleware-utils'
 
@@ -18,7 +18,7 @@ interface ISystemUnderTestTypes {
   readAccountStub: ISearchAccountByToken
 }
 const makeSystemUnderTest = async (role?: string): Promise<ISystemUnderTestTypes> => {
-  const readAccountStub = await makeReadAccount()
+  const readAccountStub = await mockReadAccount()
   const systemUnderTest = new AuthMiddleware(readAccountStub, role)
 
   return {
@@ -70,7 +70,7 @@ describe('Auth Middleware', () => {
     const httpResponse = await systemUnderTest.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(200)
-    expect(httpResponse.body.account?.id).toBe(accountModelEnabled.id)
+    expect(httpResponse.body.account?.id).toBe(informationsOfAccountModel.enabled.id)
   })
 
   test('should return status code 500 if searchByAccessToken throws <version: 0.0.1>', async () => {

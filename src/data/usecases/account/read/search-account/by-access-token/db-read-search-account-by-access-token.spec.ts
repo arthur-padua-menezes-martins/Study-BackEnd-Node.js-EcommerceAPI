@@ -6,8 +6,8 @@ import {
   ISearchAccountByTokenRepository
 } from './db-read-search-account-by-access-token-protocols'
 import {
-  makeDecrypterCryptography,
-  makeReadAccount
+  mockDecrypterCryptography,
+  mockReadAccount
 } from './db-read-search-account-by-access-token-make'
 import {
   informationsOfAccessTokenHttpRequestHeaders
@@ -19,8 +19,8 @@ interface ISystemUnderTestTypes {
   readAccountStub: ISearchAccountByTokenRepository
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
-  const decrypterStub = await makeDecrypterCryptography()
-  const readAccountStub = await makeReadAccount()
+  const decrypterStub = await mockDecrypterCryptography()
+  const readAccountStub = await mockReadAccount()
   const systemUnderTest = new DatabaseSearchAccountByAccessToken(decrypterStub, readAccountStub)
 
   return {

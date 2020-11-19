@@ -1,7 +1,7 @@
 export {
-  accountModelEnabled
-} from '../../../../utils/fake/informations-of/account/model/fake-data-account-model'
+  informationsOfAccountModel
+} from '../../../../utils/fake/informations-of/account/model/fake-informations-of-account-model'
 
 export {
   informationsOfAccessTokenHttpRequestHeaders
-} from '../../../../utils/fake/informations-of/user/access-token/fake-data-access-token-http-request-headers'
+} from '../../../../utils/fake/informations-of/user/access-token/fake-informations-of-access-token-http-request-headers'

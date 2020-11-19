@@ -19,7 +19,7 @@ import {
   PasswordValidatorAdapter
 } from '../../../../infra/validators/regEx/field/export-all'
 
-export const makeFieldValidation = (): FieldValidation => {
+export const fieldValidation = (): FieldValidation => {
   return new FieldValidation({
     email: (new EmailValidatorAdapter()).isValid,
     password: (new PasswordValidatorAdapter()).isValid
@@ -27,7 +27,7 @@ export const makeFieldValidation = (): FieldValidation => {
 }
 
 export const accountValidation = new ValidationComposite([
-  { content: new ValidateFieldsValidator(makeFieldValidation()), type: 'validate_fields' },
+  { content: new ValidateFieldsValidator(fieldValidation()), type: 'validate_fields' },
   { content: new RequiredFieldsValidator(), type: 'required_fields' },
   { content: new VerifyTypesValidator(), type: 'verify_types' },
   { content: new CompareFieldsValidator(), type: 'compare_fields' }

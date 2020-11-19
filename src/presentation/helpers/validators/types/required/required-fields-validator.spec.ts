@@ -3,7 +3,7 @@ import {
 } from './user/authentication/required-fields-validator'
 import {
   IHttpRequestBody,
-  informationsOfSignUpHttpRequestBodyFields, informationsOfSignUpHttpRequestBodyMatch
+  informationsOfSignUpHttpRequest
 } from '../../import-all'
 
 interface IRequiredFieldsValidatorTypes {
@@ -17,10 +17,10 @@ const makeSystemUnderTest = async (): Promise<IRequiredFieldsValidatorTypes> => 
   return {
     requiredFieldsValidator: new RequiredFieldsValidator(),
     input: {
-      fields: informationsOfSignUpHttpRequestBodyFields,
+      fields: informationsOfSignUpHttpRequest.bodyFields,
       body: {
-        ...informationsOfSignUpHttpRequestBodyMatch.personal,
-        ...informationsOfSignUpHttpRequestBodyMatch.address
+        ...informationsOfSignUpHttpRequest.bodyMatch.personal,
+        ...informationsOfSignUpHttpRequest.bodyMatch.address
       }
     }
   }

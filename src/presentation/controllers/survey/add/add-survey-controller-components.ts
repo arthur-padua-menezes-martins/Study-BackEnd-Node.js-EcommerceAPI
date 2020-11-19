@@ -1,3 +1,3 @@
 export {
   validationCompositeStub
-} from '../../../../data/make/validation/composite/survey/make-validation-composite'
+} from '../../../../data/test/mock/validation/composite/survey/mock-validation-composite'

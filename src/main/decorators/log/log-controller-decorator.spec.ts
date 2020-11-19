@@ -2,7 +2,7 @@ import {
   IController, IHttpResponse,
   LogControllerDecorator, LogErrorRepository,
   serverError,
-  informationsOfSignUpHttpRequestBodyMatch
+  informationsOfSignUpHttpRequest
 } from './import-all'
 
 const makeController = (): IController => {
@@ -52,7 +52,7 @@ describe('LogErrorRepository', () => {
     const { systemUnderTest, logErrorRepositoryStub } = makeSystemUnderTest()
     const spyOnLogErrorRepositoryStubLog = jest.spyOn(logErrorRepositoryStub, 'logErrorStack')
 
-    await systemUnderTest.handle({ body: informationsOfSignUpHttpRequestBodyMatch })
+    await systemUnderTest.handle({ body: informationsOfSignUpHttpRequest.bodyMatchData })
     expect(spyOnLogErrorRepositoryStubLog).toHaveBeenCalledWith('Error.prototype.stack')
   })
 })

@@ -17,7 +17,7 @@ import {
   created, accepted, badRequest, unprocessable, serverError
 } from './sign-up-controller-helpers'
 import {
-  informationsOfSignUpHttpRequestBodyFields
+  informationsOfSignUpHttpRequest
 } from './sign-up-controller-utils'
 
 /**
@@ -46,7 +46,7 @@ export class SignUpController extends SuperClassSignInAndSignUpController implem
     super()
 
     this.content = {
-      fields: informationsOfSignUpHttpRequestBodyFields,
+      fields: informationsOfSignUpHttpRequest.bodyFields,
       checkThisType: 'string',
       validationTypes: ['required_fields', 'verify_types', 'compare_fields', 'validate_fields']
     }

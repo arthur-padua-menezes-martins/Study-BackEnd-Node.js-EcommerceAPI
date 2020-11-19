@@ -15,7 +15,7 @@ import {
   ok, badRequest, unauthorized, serverError
 } from './sign-in-controller-helpers'
 import {
-  informationsOfSignInHttpRequestBodyFields
+  informationsOfSignInHttpRequest
 } from './sign-in-controller-utils'
 
 /**
@@ -38,7 +38,7 @@ export class SignInController extends SuperClassSignInAndSignUpController implem
     super()
 
     this.content = {
-      fields: informationsOfSignInHttpRequestBodyFields,
+      fields: informationsOfSignInHttpRequest.bodyFields,
       checkThisType: 'string',
       validationTypes: ['required_fields', 'verify_types', 'validate_fields']
     }

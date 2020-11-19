@@ -5,8 +5,8 @@ import {
   IAddSurvey
 } from './add-survey-controller-protocols'
 import {
-  makeWriteSurvey
-} from './add-survey-controller-make'
+  mockWriteSurvey
+} from './add-survey-controller-mock'
 import {
   validationCompositeStub
 } from './add-survey-controller-components'
@@ -20,7 +20,7 @@ interface ISystemUnderTestTypes {
   writeSurveyStub: IAddSurvey
 }
 const makeSystemUnderTest = async (): Promise<ISystemUnderTestTypes> => {
-  const writeSurveyStub = await makeWriteSurvey()
+  const writeSurveyStub = await mockWriteSurvey()
   const systemUnderTest = new AddSurveyController(validationCompositeStub, writeSurveyStub)
 
   return {

@@ -1,1 +1,1 @@
-export * from './read/fake-data-search-account-by-field'
+export * from './read/fake-informations-of-search-account-by-field'

@@ -6,5 +6,8 @@ module.exports = {
   preset: '@shelf/jest-mongodb',
   transform: {
     '.+\\.ts$': 'ts-jest' // utilização da lib ts-jest para converter o código .ts para .js e submete-lo ao jest
+  },
+  moduleNameMapper: {
+    '@/(.*)': '<rootDir>/src/$1'
   }
 }

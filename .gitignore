@@ -5,8 +5,8 @@ node_modules
 coverage
 
 # production
-docker
 dist
+docker
 
 # misc
 .DS_Store

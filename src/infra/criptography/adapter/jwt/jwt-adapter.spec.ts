@@ -3,8 +3,8 @@ import {
   JwtAdapter
 } from './jwt-adapter'
 import {
-  accountModelEnabled
-} from '../../../../utils/fake/informations-of/account/model/fake-data-account-model'
+  informationsOfAccountModel
+} from '../../../../utils/fake/informations-of/account/model/fake-informations-of-account-model'
 
 const secret = 'any_secret'
 const token = {
@@ -37,15 +37,15 @@ describe('JwtAdapter', () => {
       const { systemUnderTest } = await makeSystemUnderTest()
 
       const sypOnSign = jest.spyOn(jwt, 'sign')
-      await systemUnderTest.encrypt(accountModelEnabled.id)
+      await systemUnderTest.encrypt(informationsOfAccountModel.enabled.id)
 
-      expect(sypOnSign).toHaveBeenCalledWith({ id: accountModelEnabled.id }, secret)
+      expect(sypOnSign).toHaveBeenCalledWith({ id: informationsOfAccountModel.enabled.id }, secret)
     })
 
     test('should call sign with correct values <version: 0.0.1>', async () => {
       const { systemUnderTest } = await makeSystemUnderTest()
 
-      const accessToken = await systemUnderTest.encrypt(accountModelEnabled.id)
+      const accessToken = await systemUnderTest.encrypt(informationsOfAccountModel.enabled.id)
 
       expect(accessToken).toBe(token.any)
     })
@@ -56,7 +56,7 @@ describe('JwtAdapter', () => {
       jest.spyOn(jwt, 'sign').mockImplementationOnce(() => {
         throw new Error()
       })
-      const promise = systemUnderTest.encrypt(accountModelEnabled.id)
+      const promise = systemUnderTest.encrypt(informationsOfAccountModel.enabled.id)
 
       await expect(promise).rejects.toThrow()
     })

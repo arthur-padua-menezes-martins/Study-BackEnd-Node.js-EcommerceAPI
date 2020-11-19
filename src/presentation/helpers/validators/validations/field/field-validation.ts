@@ -49,7 +49,7 @@ export class FieldValidation implements IFieldValidation {
     )
   }
 
-  public async sequenceOfValidations (fields: string[], body: IHttpRequestBody, invalidFields: string[] = []) {
+  public async sequenceOfValidations (fields: string[], body: IHttpRequestBody, invalidFields: string[] = []): Promise<string[]> {
     for (const [index, field] of fields.entries()) {
       for (const item of field) {
         invalidFields.push(await this.options(item, body[index][item]))
