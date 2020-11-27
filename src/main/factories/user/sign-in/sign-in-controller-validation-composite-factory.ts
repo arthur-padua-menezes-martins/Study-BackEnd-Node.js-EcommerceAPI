@@ -26,7 +26,7 @@ export const makeFieldValidation = (): FieldValidation => {
   })
 }
 
-export const accountValidation = new ValidationComposite([
+export const accountValidationComposite = new ValidationComposite([
   { content: new ValidateFieldsValidator(makeFieldValidation()), type: 'validate_fields' },
   { content: new RequiredFieldsValidator(), type: 'required_fields' },
   { content: new VerifyTypesValidator(), type: 'verify_types' },
